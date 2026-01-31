@@ -23,10 +23,6 @@ classifiers = [
     "Programming Language :: Python :: 3.14"
 ]
 
-[project.urls]
-Homepage = "https://github.com/shanep/osslag"
-Issues = "https://github.com/shanep/osslag/issues"
-
 dependencies = [
     "dotenv>=0.9.9",
     "pandas>=3.0.0",
@@ -38,6 +34,10 @@ dependencies = [
     "rich>=14.3.1",
     "typer>=0.21.1",
 ]
+
+[project.urls]
+Homepage = "https://github.com/shanep/osslag"
+Issues = "https://github.com/shanep/osslag/issues"
 
 [tool.deptry.package_module_name_map]
 python-debian = "debian"

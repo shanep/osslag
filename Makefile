@@ -39,6 +39,9 @@ test:
 install:
 	uv tool install . -e
 
+build:
+	uv build
+
 clean:
 	uv cache clean
 	rm -rf $(VENV)
