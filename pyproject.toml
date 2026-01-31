@@ -1,0 +1,86 @@
+[build-system]
+requires = ["uv_build>=0.9.28,<0.10.0"]
+build-backend = "uv_build"
+
+[project.scripts]
+osslag = "osslag.cli:main"
+
+[project]
+name = "osslag"
+version = "1.0.0"
+description = "Technical Lag tools for Open Source Software Projects"
+readme = "README.md"
+authors = [
+    { name = "Shane Panter", email = "shanepanter@boisestate.edu" }
+]
+requires-python = ">=3.14"
+license = { text = "MIT" }
+keywords = ["oss", "open source", "technical lag", "software lag", "software maintenance"]
+classifiers = [
+    "Development Status :: 2 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.14"
+]
+
+[project.urls]
+Homepage = "https://github.com/shanep/osslag"
+Issues = "https://github.com/shanep/osslag/issues"
+
+dependencies = [
+    "dotenv>=0.9.9",
+    "pandas>=3.0.0",
+    "pygit2>=1.19.1",
+    "pygithub>=2.8.1",
+    "python-dateutil>=2.9.0.post0",
+    "python-debian>=1.0.1",
+    "requests>=2.32.5",
+    "rich>=14.3.1",
+    "typer>=0.21.1",
+]
+
+[tool.deptry.package_module_name_map]
+python-debian = "debian"
+pygithub = "github"
+python-dateutil = "dateutil"
+
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests"
+]
+pythonpath = [
+    "src"
+]
+
+[dependency-groups]
+dev = [
+    "deptry>=0.24.0",
+    "pycheck>=0.1",
+    "pyright>=1.1.408",
+    "pytest>=9.0.2",
+    "ruff>=0.14.14",
+    "uv>=0.9.28",
+]
+
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+
+[tool.ruff.lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`) codes by default.
+select = ["E4", "E7", "E9", "F"]
+ignore = []
+fixable = ["ALL"]
+unfixable = []
+
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"

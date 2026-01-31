@@ -1,0 +1,22 @@
+{
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "cSpell.words": [
+        "checkpointed",
+        "creds",
+        "dateutil",
+        "dotenv",
+        "mrsc",
+        "osslag",
+        "relativedelta",
+        "revparse",
+        "rmvconstants",
+        "rmvs",
+        "sboudrias",
+        "snoyberg",
+        "trixie",
+        "venv"
+    ],
+    "outline.collapseItems": "alwaysCollapse",
+    "outline.problems.enabled": true,
+}
