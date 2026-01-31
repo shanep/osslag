@@ -25,6 +25,7 @@ classifiers = [
 dependencies = [
     "dotenv>=0.9.9",
     "pandas>=3.0.0",
+    "pyarrow>=23.0.0",
     "pygit2>=1.19.1",
     "pygithub>=2.8.1",
     "python-dateutil>=2.9.0.post0",
