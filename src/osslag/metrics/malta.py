@@ -78,11 +78,11 @@ class AggregateScoreComponents(NamedTuple):
     """Final maintenance score and its components"""
 
     s_final: float  # Final S_dev
+    s_final_100: float  # in [0,100]
     s_dev: float  # Development activity score
     s_resp: float  # Responsiveness score
     s_meta: float  # Metadata score
-    s_final: float  # in [0,1]
-    s_final_100: float  # in [0,100]
+
 
 
 class MaltaConstants(NamedTuple):
@@ -214,11 +214,12 @@ class Malta:
             raise ValueError("K must be positive.")
         return min(1.0, math.log1p(x) / math.log1p(K))
 
-    def get_commits_for_package(self) -> Sequence[Commit]:
+    def __get_commits_for_package(self) -> Sequence[Commit]:
         """Extract commits for a given repository URL."""
         repo_url_column = self.malta_constants.repo_url_column
         repo_dates_column = self.malta_constants.repo_dates_column
         repo_is_trivial_column = self.malta_constants.repo_is_trivial_column
+
         repo_commits_df = self.commits_df[
             self.commits_df[repo_url_column] == self.github_repo_url
         ].copy()
@@ -234,7 +235,7 @@ class Malta:
         ]
         return commits
 
-    def get_pull_requests_for_package(self) -> Sequence[PullRequest]:
+    def __get_pull_requests_for_package(self) -> Sequence[PullRequest]:
         """Extract pull requests for a given repository URL."""
         repo_url_column = self.malta_constants.repo_url_column
         pr_created_at_column = self.malta_constants.pr_created_at_column
@@ -269,7 +270,6 @@ class Malta:
 
     def development_activity_score(
         self,
-        commits: Sequence[Commit],
         include_trivial: bool = False,
     ) -> DASComponents:
         """Computes S_dev in [0,1]:
@@ -280,10 +280,6 @@ class Malta:
 
         Parameters
         ----------
-        commits : Sequence[Commit]
-            All commits in both baseline and evaluation windows.
-        tau_days : float
-            Decay half-life in days (default 180).
         include_trivial : bool
             If False, exclude trivial commits from counts and recency calculations.
 
@@ -294,11 +290,13 @@ class Malta:
 
         Notes
         -----
+        - Uses commits from self.commits_df via get_commits_for_package().
         - If baseline rate is 0, we treat D_c as 1 when eval also has activity,
         else 0. This avoids division-by-zero while remaining conservative.
         - t_last is measured since most recent non-trivial commit (unless include_trivial=True).
 
         """
+        commits = self.__get_commits_for_package()
         # Partition commits into the baseline and evaluation sets, filtering trivial if needed.
         commits_baseline: Sequence[Commit] = []
         commits_eval: Sequence[Commit] = []
@@ -369,20 +367,20 @@ class Malta:
 
     def maintainer_responsiveness_score(
         self,
-        pull_requests: Sequence[PullRequest],
     ) -> MRSComponents:
         """Compute the PR-outcome-bound Maintainer Responsiveness Score (S_resp).
-
-        Parameters
-        ----------
-        pull_requests : Sequence[PullRequest]
 
         Returns
         -------
         MRSComponents
             Components of the maintainer responsiveness score.
 
+        Notes
+        -----
+        - Uses pull requests from self.pull_requests_df via get_pull_requests_for_package().
+
         """
+        pull_requests = self.__get_pull_requests_for_package()
         if not pull_requests:
             # No external contribution signal
             return MRSComponents(
@@ -459,7 +457,7 @@ class Malta:
         # ---- Responsiveness Aggregation ----
         S_resp = R_dec * (1.0 - D_dec) * (1.0 - P_open_penalty)
 
-        self.mrsc = MRSComponents(
+        self.mrs = MRSComponents(
             s_resp=self.__clamp(S_resp),
             r_dec=R_dec,
             d_dec=D_dec,
@@ -469,7 +467,7 @@ class Malta:
             n_open=len(P_open),
         )
 
-        return self.mrsc
+        return self.mrs
 
     def repo_metadata_viability_score(
         self,
