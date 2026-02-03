@@ -19,4 +19,7 @@
     ],
     "outline.collapseItems": "alwaysCollapse",
     "outline.problems.enabled": true,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
 }

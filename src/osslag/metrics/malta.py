@@ -233,6 +233,21 @@ class Malta:
         ]
         return prs
 
+    def __get_repo_meta_for_package(self) -> RepoMeta:
+        """Extract repository metadata for a given repository URL."""
+        repo_url_column = self.malta_constants.repo_url_column
+        repo_meta_row = self.repo_meta_df[self.repo_meta_df[repo_url_column] == self.github_repo_url]
+        if len(repo_meta_row) == 0:
+            return RepoMeta()
+        row = repo_meta_row.iloc[0]
+        return RepoMeta(
+            stars=int(row.get("stars", 0)),
+            forks=int(row.get("forks", 0)),
+            watchers=int(row.get("watchers", 0)),
+            open_issues=int(row.get("open_issues", 0)),
+            archived=bool(row.get("archived", False)),
+        )
+
     def development_activity_score(
         self,
         include_trivial: bool = False,
@@ -388,7 +403,7 @@ class Malta:
         # ---- Decision Timeliness (D_dec) ----
         decision_delays = []
         for pr in P_term:
-            closed_time = pr.merged_at or pr.closed_at
+            closed_time = pr.merged_at if pd.notna(pr.merged_at) else pr.closed_at
             delta_days = (closed_time - pr.created_at).days
             decision_delays.append(min(1.0, delta_days / self.mrs_constants.tref_days))
 
@@ -421,7 +436,6 @@ class Malta:
 
     def repo_metadata_viability_score(
         self,
-        meta: RepoMeta,
     ) -> RMVSComponents:
         """Compute repository metadata viability score S_meta.
 
@@ -435,7 +449,12 @@ class Malta:
         Missing-data handling:
         - If all counts are None: return None.
         - If some counts are missing: renormalize betas over observed fields.
+
+        Notes
+        -----
+        - Uses repo metadata from self.repo_meta_df via __get_repo_meta_for_package().
         """
+        meta = self.__get_repo_meta_for_package()
         if not (0.0 <= self.rmv_constants.alpha_archived <= 1.0):
             raise ValueError("alpha_archived must be in [0,1].")
         betas = {
@@ -503,7 +522,7 @@ class Malta:
             before aggregation (still renormalizes if S_meta is None).
         """
         s_dev = self.das.s_dev
-        s_resp = self.mrsc.s_resp
+        s_resp = self.mrs.s_resp
         s_meta = self.rmvs.s_meta
 
         # If the repo is archived, treat as 0.0
