@@ -8,9 +8,7 @@ import requests
 FEDORA_DISTGIT = os.environ.get("FEDORA_DISTGIT", "https://src.fedoraproject.org")
 
 
-def list_rpms(
-    namespace: str = "rpms", page: int = 1, per_page: int = 100
-) -> list[dict]:
+def list_rpms(namespace: str = "rpms", page: int = 1, per_page: int = 100) -> list[dict]:
     # Pagure API: https://src.fedoraproject.org/api/0/projects?namespace=rpms
     url = f"{FEDORA_DISTGIT}/api/0/projects?namespace={namespace}&page={page}&per_page={per_page}"
     r = requests.get(url, timeout=30)

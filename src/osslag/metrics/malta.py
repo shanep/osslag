@@ -84,7 +84,6 @@ class AggregateScoreComponents(NamedTuple):
     s_meta: float  # Metadata score
 
 
-
 class MaltaConstants(NamedTuple):
     """Constants for MALTA metric computations."""
 
@@ -156,44 +155,22 @@ class Malta:
         self.rmvs: RMVSComponents
         self.final: AggregateScoreComponents
 
-        self.malta_constants = (
-            malta_constants if malta_constants is not None else MaltaConstants()
-        )
-        self.das_constants = (
-            das_constants
-            if das_constants is not None
-            else DevelopmentActivityScoreConstants()
-        )
-        self.mrs_constants = (
-            mrs_constants
-            if mrs_constants is not None
-            else MaintainerResponsivenessScoreConstants()
-        )
-        self.rmv_constants = (
-            repo_meta_constants
-            if repo_meta_constants is not None
-            else RepoViabilityScoreConstants()
-        )
-        self.final_constants = (
-            final_agg_constants
-            if final_agg_constants is not None
-            else AggregateScoreConstants()
-        )
+        self.malta_constants = malta_constants if malta_constants is not None else MaltaConstants()
+        self.das_constants = das_constants if das_constants is not None else DevelopmentActivityScoreConstants()
+        self.mrs_constants = mrs_constants if mrs_constants is not None else MaintainerResponsivenessScoreConstants()
+        self.rmv_constants = repo_meta_constants if repo_meta_constants is not None else RepoViabilityScoreConstants()
+        self.final_constants = final_agg_constants if final_agg_constants is not None else AggregateScoreConstants()
         # Precompute evaluation and baseline windows
         if eval_end.tzinfo is None:
             raise ValueError("Datetime object must be timezone-aware")
-        eval_window_start = eval_end - relativedelta(
-            months=self.malta_constants.eval_months
-        )
+        eval_window_start = eval_end - relativedelta(months=self.malta_constants.eval_months)
         # Evaluation window
         self.eval_window = EvaluationWindow(
             start=eval_window_start,
             end=eval_end,
             days=(eval_end - eval_window_start).days,
         )
-        baseline_window_start = eval_window_start - relativedelta(
-            months=self.malta_constants.baseline_months
-        )
+        baseline_window_start = eval_window_start - relativedelta(months=self.malta_constants.baseline_months)
         baseline_window_end = eval_window_start
         # Baseline window
         self.baseline_window = EvaluationWindow(
@@ -220,15 +197,11 @@ class Malta:
         repo_dates_column = self.malta_constants.repo_dates_column
         repo_is_trivial_column = self.malta_constants.repo_is_trivial_column
 
-        repo_commits_df = self.commits_df[
-            self.commits_df[repo_url_column] == self.github_repo_url
-        ].copy()
+        repo_commits_df = self.commits_df[self.commits_df[repo_url_column] == self.github_repo_url].copy()
         if len(repo_commits_df) == 0:
             return []
         # Ensure datetime is timezone-aware UTC
-        repo_commits_df[repo_dates_column] = pd.to_datetime(
-            repo_commits_df[repo_dates_column], utc=True
-        )
+        repo_commits_df[repo_dates_column] = pd.to_datetime(repo_commits_df[repo_dates_column], utc=True)
         commits = [
             Commit(date=row[repo_dates_column], is_trivial=row[repo_is_trivial_column])
             for _, row in repo_commits_df.iterrows()
@@ -242,21 +215,13 @@ class Malta:
         pr_closed_at_column = self.malta_constants.pr_closed_at_column
         pr_merged_at_column = self.malta_constants.pr_merged_at_column
         pr_state_column = self.malta_constants.pr_state_column
-        repo_prs_df = self.pull_requests_df[
-            self.pull_requests_df[repo_url_column] == self.github_repo_url
-        ].copy()
+        repo_prs_df = self.pull_requests_df[self.pull_requests_df[repo_url_column] == self.github_repo_url].copy()
         if len(repo_prs_df) == 0:
             return []
         # Ensure datetime is timezone-aware UTC
-        repo_prs_df[pr_created_at_column] = pd.to_datetime(
-            repo_prs_df[pr_created_at_column], utc=True
-        )
-        repo_prs_df[pr_closed_at_column] = pd.to_datetime(
-            repo_prs_df[pr_closed_at_column], utc=True
-        )
-        repo_prs_df[pr_merged_at_column] = pd.to_datetime(
-            repo_prs_df[pr_merged_at_column], utc=True
-        )
+        repo_prs_df[pr_created_at_column] = pd.to_datetime(repo_prs_df[pr_created_at_column], utc=True)
+        repo_prs_df[pr_closed_at_column] = pd.to_datetime(repo_prs_df[pr_closed_at_column], utc=True)
+        repo_prs_df[pr_merged_at_column] = pd.to_datetime(repo_prs_df[pr_merged_at_column], utc=True)
         prs = [
             PullRequest(
                 created_at=row[pr_created_at_column],
@@ -300,13 +265,8 @@ class Malta:
         # Partition commits into the baseline and evaluation sets, filtering trivial if needed.
         commits_baseline: Sequence[Commit] = []
         commits_eval: Sequence[Commit] = []
-        window_baseline_days: int = (
-            self.baseline_window.end.toordinal()
-            - self.baseline_window.start.toordinal()
-        )
-        window_eval_days: int = (
-            self.eval_window.end.toordinal() - self.eval_window.start.toordinal()
-        )
+        window_baseline_days: int = self.baseline_window.end.toordinal() - self.baseline_window.start.toordinal()
+        window_eval_days: int = self.eval_window.end.toordinal() - self.eval_window.start.toordinal()
 
         for c in commits:
             if self.baseline_window.start <= c.date < self.baseline_window.end:
@@ -317,9 +277,7 @@ class Malta:
         if window_baseline_days <= 0 or window_eval_days <= 0:
             raise ValueError("window_baseline_days and window_eval_days must be > 0")
         if self.baseline_window.end > self.eval_window.start:
-            raise ValueError(
-                "Baseline window must end before evaluation window starts."
-            )
+            raise ValueError("Baseline window must end before evaluation window starts.")
         if self.eval_window.start < self.baseline_window.end:
             raise ValueError("Evaluation window must start after baseline window ends.")
 
@@ -349,12 +307,8 @@ class Malta:
         if candidates:
             last_commit_time = max(c.date for c in candidates)
             if last_commit_time.tzinfo is None:
-                raise ValueError(
-                    "Commit.authored_at must be timezone-aware (UTC recommended)."
-                )
-            t_last = max(
-                0.0, (self.eval_window.end - last_commit_time).total_seconds() / 86400.0
-            )
+                raise ValueError("Commit.authored_at must be timezone-aware (UTC recommended).")
+            t_last = max(0.0, (self.eval_window.end - last_commit_time).total_seconds() / 86400.0)
             R_c = math.exp(-t_last / self.das_constants.tau_days)
         else:
             # No commits at all -> fully inactive.
@@ -393,11 +347,7 @@ class Malta:
                 n_open=0,
             )
         # Filter PRs to those created within the evaluation window
-        P = [
-            pr
-            for pr in pull_requests
-            if self.eval_window.start <= pr.created_at < self.eval_window.end
-        ]
+        P = [pr for pr in pull_requests if self.eval_window.start <= pr.created_at < self.eval_window.end]
         if not P:
             # No PRs in evaluation window
             return MRSComponents(

@@ -25,21 +25,15 @@ def eval_end():
 
 @pytest.fixture
 def empty_prs_df():
-    return pd.DataFrame(
-        columns=["repo_url", "created_at", "closed_at", "merged_at", "state"]
-    )
+    return pd.DataFrame(columns=["repo_url", "created_at", "closed_at", "merged_at", "state"])
 
 
 @pytest.fixture
 def empty_meta_df():
-    return pd.DataFrame(
-        columns=["repo_url", "stars", "forks", "watchers", "open_issues", "archived"]
-    )
+    return pd.DataFrame(columns=["repo_url", "stars", "forks", "watchers", "open_issues", "archived"])
 
 
-def make_commits_df(
-    commits: list[Commit], repo_url: str = "https://github.com/test/repo"
-) -> pd.DataFrame:
+def make_commits_df(commits: list[Commit], repo_url: str = "https://github.com/test/repo") -> pd.DataFrame:
     """Helper to create a commits DataFrame from Commit objects."""
     return pd.DataFrame(
         {
@@ -50,9 +44,7 @@ def make_commits_df(
     )
 
 
-def make_prs_df(
-    prs: list[PullRequest], repo_url: str = "https://github.com/test/repo"
-) -> pd.DataFrame:
+def make_prs_df(prs: list[PullRequest], repo_url: str = "https://github.com/test/repo") -> pd.DataFrame:
     """Helper to create a PRs DataFrame from PullRequest objects."""
     return pd.DataFrame(
         {
@@ -65,9 +57,7 @@ def make_prs_df(
     )
 
 
-def make_meta_df(
-    meta: RepoMeta, repo_url: str = "https://github.com/test/repo"
-) -> pd.DataFrame:
+def make_meta_df(meta: RepoMeta, repo_url: str = "https://github.com/test/repo") -> pd.DataFrame:
     """Helper to create a metadata DataFrame from RepoMeta."""
     return pd.DataFrame(
         {
@@ -136,17 +126,12 @@ class TestDevelopmentActivityScore:
 
         # Eval: 1 commit per month for 12 months
         eval_commits = [
-            Commit(
-                date=malta.eval_window.start + timedelta(days=30 * i), is_trivial=False
-            )
-            for i in range(12)
+            Commit(date=malta.eval_window.start + timedelta(days=30 * i), is_trivial=False) for i in range(12)
         ]
 
         all_commits = baseline_commits + eval_commits
 
-        result = malta.development_activity_score(
-            commits=all_commits, include_trivial=False
-        )
+        result = malta.development_activity_score(commits=all_commits, include_trivial=False)
 
         assert isinstance(result, DASComponents)
         assert result.s_dev > 0.50
@@ -157,23 +142,14 @@ class TestDevelopmentActivityScore:
         malta = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
         # One commit in baseline
-        baseline_commits = [
-            Commit(
-                date=malta.baseline_window.start + timedelta(days=100), is_trivial=False
-            )
-        ]
+        baseline_commits = [Commit(date=malta.baseline_window.start + timedelta(days=100), is_trivial=False)]
 
         # 10 commits in eval, one per day from the end
-        eval_commits = [
-            Commit(date=malta.eval_window.end - timedelta(days=i + 1), is_trivial=False)
-            for i in range(10)
-        ]
+        eval_commits = [Commit(date=malta.eval_window.end - timedelta(days=i + 1), is_trivial=False) for i in range(10)]
 
         all_commits = baseline_commits + eval_commits
 
-        result = malta.development_activity_score(
-            commits=all_commits, include_trivial=False
-        )
+        result = malta.development_activity_score(commits=all_commits, include_trivial=False)
 
         # D_c = (10/days) / (1/days) = 10 -> clamped to 1 in S_dev
         assert result.d_c == 10.0  # Unclamped D_c
@@ -184,15 +160,9 @@ class TestDevelopmentActivityScore:
         malta = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
         # One commit in baseline only
-        commits = [
-            Commit(
-                date=malta.baseline_window.start + timedelta(days=100), is_trivial=False
-            )
-        ]
+        commits = [Commit(date=malta.baseline_window.start + timedelta(days=100), is_trivial=False)]
 
-        result = malta.development_activity_score(
-            commits=commits, include_trivial=False
-        )
+        result = malta.development_activity_score(commits=commits, include_trivial=False)
 
         # No eval commits -> D_c = 0
         assert result.d_c == 0.0
@@ -203,14 +173,9 @@ class TestDevelopmentActivityScore:
         malta = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
         # Only commits in eval
-        eval_commits = [
-            Commit(date=malta.eval_window.end - timedelta(days=i + 1), is_trivial=False)
-            for i in range(5)
-        ]
+        eval_commits = [Commit(date=malta.eval_window.end - timedelta(days=i + 1), is_trivial=False) for i in range(5)]
 
-        result = malta.development_activity_score(
-            commits=eval_commits, include_trivial=False
-        )
+        result = malta.development_activity_score(commits=eval_commits, include_trivial=False)
 
         # D_c = 1 (baseline is zero, eval is nonzero)
         assert result.d_c == 1.0
@@ -232,17 +197,11 @@ class TestDevelopmentActivityScore:
 
         # Baseline: one non-trivial, one trivial
         baseline_commits = [
-            Commit(
-                date=malta.baseline_window.start + timedelta(days=100), is_trivial=False
-            ),
-            Commit(
-                date=malta.baseline_window.start + timedelta(days=150), is_trivial=True
-            ),
+            Commit(date=malta.baseline_window.start + timedelta(days=100), is_trivial=False),
+            Commit(date=malta.baseline_window.start + timedelta(days=150), is_trivial=True),
         ]
         # Eval: one non-trivial
-        eval_commits = [
-            Commit(date=malta.eval_window.end - timedelta(days=100), is_trivial=False)
-        ]
+        eval_commits = [Commit(date=malta.eval_window.end - timedelta(days=100), is_trivial=False)]
 
         all_commits = baseline_commits + eval_commits
 
@@ -262,12 +221,8 @@ class TestDevelopmentActivityScore:
     def test_recency_decay_tau(self, eval_end):
         """Older eval commits should decay more with smaller tau."""
         # Create two Malta instances with different tau values
-        malta_tau_180 = create_malta(
-            eval_end, [], baseline_months=12, eval_months=12, tau_days=180.0
-        )
-        malta_tau_90 = create_malta(
-            eval_end, [], baseline_months=12, eval_months=12, tau_days=90.0
-        )
+        malta_tau_180 = create_malta(eval_end, [], baseline_months=12, eval_months=12, tau_days=180.0)
+        malta_tau_90 = create_malta(eval_end, [], baseline_months=12, eval_months=12, tau_days=90.0)
 
         # One commit in baseline
         baseline_commits = [
@@ -304,21 +259,13 @@ class TestDevelopmentActivityScore:
         """Very recent eval commits should have minimal recency decay."""
         malta = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
-        baseline_commits = [
-            Commit(
-                date=malta.baseline_window.start + timedelta(days=100), is_trivial=False
-            )
-        ]
+        baseline_commits = [Commit(date=malta.baseline_window.start + timedelta(days=100), is_trivial=False)]
         # Commit 1 day before eval_end
-        eval_commits = [
-            Commit(date=malta.eval_window.end - timedelta(days=1), is_trivial=False)
-        ]
+        eval_commits = [Commit(date=malta.eval_window.end - timedelta(days=1), is_trivial=False)]
 
         all_commits = baseline_commits + eval_commits
 
-        result = malta.development_activity_score(
-            commits=all_commits, include_trivial=False
-        )
+        result = malta.development_activity_score(commits=all_commits, include_trivial=False)
 
         # R_c = exp(-1/180) ≈ 0.9944
         expected_approx = math.exp(-1 / 180.0)
@@ -328,26 +275,16 @@ class TestDevelopmentActivityScore:
         """Very old eval commits should have strong recency decay."""
         malta = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
-        baseline_commits = [
-            Commit(
-                date=malta.baseline_window.start + timedelta(days=100), is_trivial=False
-            )
-        ]
+        baseline_commits = [Commit(date=malta.baseline_window.start + timedelta(days=100), is_trivial=False)]
         # Commit at start of eval window
-        eval_commits = [
-            Commit(date=malta.eval_window.start + timedelta(days=1), is_trivial=False)
-        ]
+        eval_commits = [Commit(date=malta.eval_window.start + timedelta(days=1), is_trivial=False)]
 
         all_commits = baseline_commits + eval_commits
 
-        result = malta.development_activity_score(
-            commits=all_commits, include_trivial=False
-        )
+        result = malta.development_activity_score(commits=all_commits, include_trivial=False)
 
         # R_c = exp(-t_last/180) where t_last is close to eval window length
-        t_last = (
-            malta.eval_window.end - (malta.eval_window.start + timedelta(days=1))
-        ).days
+        t_last = (malta.eval_window.end - (malta.eval_window.start + timedelta(days=1))).days
         expected_approx = math.exp(-t_last / 180.0)
         assert result.s_dev == pytest.approx(expected_approx, abs=0.01)
 
@@ -355,22 +292,15 @@ class TestDevelopmentActivityScore:
         """D_c > 1 should be clamped to 1 in final score."""
         malta = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
-        baseline_commits = [
-            Commit(
-                date=malta.baseline_window.start + timedelta(days=100), is_trivial=False
-            )
-        ]
+        baseline_commits = [Commit(date=malta.baseline_window.start + timedelta(days=100), is_trivial=False)]
         # 100 commits in eval
         eval_commits = [
-            Commit(date=malta.eval_window.end - timedelta(days=i + 1), is_trivial=False)
-            for i in range(100)
+            Commit(date=malta.eval_window.end - timedelta(days=i + 1), is_trivial=False) for i in range(100)
         ]
 
         all_commits = baseline_commits + eval_commits
 
-        result = malta.development_activity_score(
-            commits=all_commits, include_trivial=False
-        )
+        result = malta.development_activity_score(commits=all_commits, include_trivial=False)
 
         # D_c = 100 (unclamped)
         # S_dev = min(1, 100) * R_c = 1 * exp(-1/180)
@@ -381,11 +311,7 @@ class TestDevelopmentActivityScore:
         """All trivial eval commits should result in 0 when include_trivial=False."""
         malta = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
-        baseline_commits = [
-            Commit(
-                date=malta.baseline_window.start + timedelta(days=100), is_trivial=False
-            )
-        ]
+        baseline_commits = [Commit(date=malta.baseline_window.start + timedelta(days=100), is_trivial=False)]
         eval_commits = [
             Commit(date=malta.eval_window.end - timedelta(days=100), is_trivial=True),
             Commit(date=malta.eval_window.end - timedelta(days=50), is_trivial=True),
@@ -393,9 +319,7 @@ class TestDevelopmentActivityScore:
 
         all_commits = baseline_commits + eval_commits
 
-        result = malta.development_activity_score(
-            commits=all_commits, include_trivial=False
-        )
+        result = malta.development_activity_score(commits=all_commits, include_trivial=False)
 
         assert result.d_c == 0.0
         assert result.s_dev == 0.0
@@ -405,19 +329,13 @@ class TestDevelopmentActivityScore:
         malta = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
         baseline_commits = [
-            Commit(
-                date=malta.baseline_window.start + timedelta(days=100), is_trivial=True
-            ),
+            Commit(date=malta.baseline_window.start + timedelta(days=100), is_trivial=True),
         ]
-        eval_commits = [
-            Commit(date=malta.eval_window.end - timedelta(days=100), is_trivial=False)
-        ]
+        eval_commits = [Commit(date=malta.eval_window.end - timedelta(days=100), is_trivial=False)]
 
         all_commits = baseline_commits + eval_commits
 
-        result = malta.development_activity_score(
-            commits=all_commits, include_trivial=False
-        )
+        result = malta.development_activity_score(commits=all_commits, include_trivial=False)
 
         assert result.d_c == 1.0
         assert result.s_dev > 0.0
@@ -521,8 +439,7 @@ class TestMaintainerResponsivenessScore:
         prs = [
             PullRequest(
                 created_at=malta.eval_window.start + timedelta(days=10),
-                closed_at=malta.eval_window.start
-                + timedelta(days=190),  # 180 days to close
+                closed_at=malta.eval_window.start + timedelta(days=190),  # 180 days to close
                 merged_at=None,
                 state="closed",
             ),
@@ -545,9 +462,7 @@ class TestRepoMetadataViabilityScore:
         """Popular non-archived repo should have high viability."""
         malta = create_malta(eval_end, [])
 
-        meta = RepoMeta(
-            stars=10000, forks=5000, watchers=1000, open_issues=10, archived=False
-        )
+        meta = RepoMeta(stars=10000, forks=5000, watchers=1000, open_issues=10, archived=False)
         result = malta.repo_metadata_viability_score(meta)
 
         assert isinstance(result, RMVSComponents)
@@ -557,12 +472,8 @@ class TestRepoMetadataViabilityScore:
         """Archived repo should have reduced viability."""
         malta = create_malta(eval_end, [])
 
-        meta_active = RepoMeta(
-            stars=1000, forks=500, watchers=100, open_issues=10, archived=False
-        )
-        meta_archived = RepoMeta(
-            stars=1000, forks=500, watchers=100, open_issues=10, archived=True
-        )
+        meta_active = RepoMeta(stars=1000, forks=500, watchers=100, open_issues=10, archived=False)
+        meta_archived = RepoMeta(stars=1000, forks=500, watchers=100, open_issues=10, archived=True)
 
         result_active = malta.repo_metadata_viability_score(meta_active)
         result_archived = malta.repo_metadata_viability_score(meta_archived)
@@ -574,12 +485,8 @@ class TestRepoMetadataViabilityScore:
         """Many open issues should reduce viability."""
         malta = create_malta(eval_end, [])
 
-        meta_few_issues = RepoMeta(
-            stars=1000, forks=500, watchers=100, open_issues=10, archived=False
-        )
-        meta_many_issues = RepoMeta(
-            stars=1000, forks=500, watchers=100, open_issues=5000, archived=False
-        )
+        meta_few_issues = RepoMeta(stars=1000, forks=500, watchers=100, open_issues=10, archived=False)
+        meta_many_issues = RepoMeta(stars=1000, forks=500, watchers=100, open_issues=5000, archived=False)
 
         result_few = malta.repo_metadata_viability_score(meta_few_issues)
         result_many = malta.repo_metadata_viability_score(meta_many_issues)
@@ -608,9 +515,7 @@ class TestFinalAggregationScore:
 
         # Set up component scores by calling the methods
         commits = [
-            Commit(
-                date=malta.baseline_window.start + timedelta(days=100), is_trivial=False
-            ),
+            Commit(date=malta.baseline_window.start + timedelta(days=100), is_trivial=False),
             Commit(date=malta.eval_window.end - timedelta(days=10), is_trivial=False),
         ]
         malta.development_activity_score(commits=commits)
@@ -625,9 +530,7 @@ class TestFinalAggregationScore:
         ]
         malta.maintainer_responsiveness_score(pull_requests=prs)
 
-        meta = RepoMeta(
-            stars=1000, forks=500, watchers=100, open_issues=10, archived=False
-        )
+        meta = RepoMeta(stars=1000, forks=500, watchers=100, open_issues=10, archived=False)
         malta.repo_metadata_viability_score(meta)
 
         result = malta.final_aggregation_score()
@@ -642,9 +545,7 @@ class TestFinalAggregationScore:
         malta_active = create_malta(eval_end, [])
 
         commits = [
-            Commit(
-                date=malta_active.eval_window.end - timedelta(days=10), is_trivial=False
-            ),
+            Commit(date=malta_active.eval_window.end - timedelta(days=10), is_trivial=False),
         ]
         malta_active.development_activity_score(commits=commits)
 
@@ -659,9 +560,7 @@ class TestFinalAggregationScore:
         ]
         malta_active.maintainer_responsiveness_score(pull_requests=prs)
 
-        meta_active = RepoMeta(
-            stars=1000, forks=500, watchers=100, open_issues=10, archived=False
-        )
+        meta_active = RepoMeta(stars=1000, forks=500, watchers=100, open_issues=10, archived=False)
         malta_active.repo_metadata_viability_score(meta_active)
         result_active = malta_active.final_aggregation_score()
 

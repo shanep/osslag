@@ -52,11 +52,7 @@ def gh_get_rate_limit_info(github_token: str | None = None) -> dict | None:
         core = rate_limit.resources.core
 
         # core.reset is a datetime object
-        reset_dt = (
-            core.reset
-            if isinstance(core.reset, datetime)
-            else datetime.fromtimestamp(core.reset)
-        )
+        reset_dt = core.reset if isinstance(core.reset, datetime) else datetime.fromtimestamp(core.reset)
         # convert to local timezone
         reset_dt = reset_dt.astimezone()
         # convert to a naive datetime in local time
@@ -164,9 +160,7 @@ def gh_check_repo_exists(owner: str, repo: str) -> GithubAPIResult:
         if response.status_code == 403:
             remaining = response.headers.get("X-RateLimit-Remaining", "?")
             reset_time_str = response.headers.get("X-RateLimit-Reset", "")
-            error_msg = (
-                f"Rate limited (remaining: {remaining}, resets: {reset_time_str})"
-            )
+            error_msg = f"Rate limited (remaining: {remaining}, resets: {reset_time_str})"
             return GithubAPIResult(
                 data={"owner": owner, "repo": repo},
                 error=error_msg,
@@ -182,9 +176,7 @@ def gh_check_repo_exists(owner: str, repo: str) -> GithubAPIResult:
                     error_msg = error_data["message"]
             except Exception:
                 pass
-            return GithubAPIResult(
-                data={"owner": owner, "repo": repo}, error=error_msg, success=False
-            )
+            return GithubAPIResult(data={"owner": owner, "repo": repo}, error=error_msg, success=False)
 
         # Other errors
         error_msg = f"HTTP {response.status_code}"
@@ -195,18 +187,12 @@ def gh_check_repo_exists(owner: str, repo: str) -> GithubAPIResult:
         except Exception:
             pass
         logger.warning(f"GitHub API error for {owner}/{repo}: {error_msg}")
-        return GithubAPIResult(
-            data={"owner": owner, "repo": repo}, error=error_msg, success=False
-        )
+        return GithubAPIResult(data={"owner": owner, "repo": repo}, error=error_msg, success=False)
     except requests.RequestException as e:
-        return GithubAPIResult(
-            data={"owner": owner, "repo": repo}, error=str(e), success=False
-        )
+        return GithubAPIResult(data={"owner": owner, "repo": repo}, error=str(e), success=False)
 
 
-def fetch_github_repo_metadata(
-    repo_url: str, github_token: str | None = None
-) -> pd.DataFrame:
+def fetch_github_repo_metadata(repo_url: str, github_token: str | None = None) -> pd.DataFrame:
     """Fetch GitHub repo metadata given repo URL and token.
 
     Handles rate limiting by catching RateLimitExceededException and waiting
@@ -218,9 +204,7 @@ def fetch_github_repo_metadata(
         raise ValueError(f"Invalid repository URL: {repo_url}")
 
     # Configure GitHub client with explicit timeout (30 seconds)
-    github_client = (
-        Github(github_token, timeout=30) if github_token else Github(timeout=30)
-    )
+    github_client = Github(github_token, timeout=30) if github_token else Github(timeout=30)
     repo_obj = github_client.get_repo(f"{owner}/{repo}")
     data = {
         "repo_url": repo_url,

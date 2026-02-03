@@ -210,9 +210,7 @@ def test_add_upstream_version_default_column_name():
 
 def test_add_upstream_version_custom_column_name():
     """Test adding upstream version column with custom naming."""
-    df = pd.DataFrame(
-        {"source": ["pkg1", "pkg2"], "package_version": ["1.0-1", "2.0-1"]}
-    )
+    df = pd.DataFrame({"source": ["pkg1", "pkg2"], "package_version": ["1.0-1", "2.0-1"]})
 
     result = add_upstream_version_column(df, "package_version", "upstream")
 

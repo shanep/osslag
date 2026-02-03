@@ -30,9 +30,7 @@ def test_strip_fragment():
 def test_https_url_with_garbage():
     """Test HTTPS URL with extra parameters."""
     url = "https://github.com/jazzband/django-haystack-redis cache/repos/django-haystack-redis"
-    expected = NormalizeRepoResult(
-        "https://github.com/jazzband/django-haystack-redis", None
-    )
+    expected = NormalizeRepoResult("https://github.com/jazzband/django-haystack-redis", None)
     actual = normalize_https_repo_url(url)
     assert expected == actual
 
@@ -102,9 +100,7 @@ def test_ssh_git2_url():
 def test_git_protocol_url():
     """Test git:// protocol URLs."""
     url = "git://github.com/owner/repo.git"
-    expected = NormalizeRepoResult(
-        None, "URL does not match expected git repository patterns"
-    )
+    expected = NormalizeRepoResult(None, "URL does not match expected git repository patterns")
     actual = normalize_https_repo_url(url)
     assert expected == actual
 
@@ -112,9 +108,7 @@ def test_git_protocol_url():
 def test_ftp_git_url():
     """Test FTP git URLs."""
     url = "ftp://example.com/repo.git"
-    expected = NormalizeRepoResult(
-        None, "URL does not match expected git repository patterns"
-    )
+    expected = NormalizeRepoResult(None, "URL does not match expected git repository patterns")
     actual = normalize_https_repo_url(url)
     assert expected == actual
 
@@ -122,9 +116,7 @@ def test_ftp_git_url():
 def test_ftps_git_url():
     """Test FTPS git URLs."""
     url = "ftps://example.com/repo.git"
-    expected = NormalizeRepoResult(
-        None, "URL does not match expected git repository patterns"
-    )
+    expected = NormalizeRepoResult(None, "URL does not match expected git repository patterns")
     actual = normalize_https_repo_url(url)
     assert expected == actual
 
@@ -135,9 +127,7 @@ def test_ftps_git_url():
 def test_http_git_url():
     """Test HTTP git URLs."""
     url = "http://example.com/repo.git"
-    expected = NormalizeRepoResult(
-        None, "URL does not match expected git repository patterns"
-    )
+    expected = NormalizeRepoResult(None, "URL does not match expected git repository patterns")
     actual = normalize_https_repo_url(url)
     assert expected == actual
 
@@ -145,9 +135,7 @@ def test_http_git_url():
 def test_http_url_without_git():
     """Test regular HTTP URL (not a git repo) returns None."""
     url = "https://example.com/page.html"
-    expected = NormalizeRepoResult(
-        None, "URL does not match expected git repository patterns"
-    )
+    expected = NormalizeRepoResult(None, "URL does not match expected git repository patterns")
     actual = normalize_https_repo_url(url)
     assert expected == actual
 
@@ -155,9 +143,7 @@ def test_http_url_without_git():
 def test_plain_string():
     """Test plain string without protocol returns None."""
     url = "not-a-url"
-    expected = NormalizeRepoResult(
-        None, "URL does not match expected git repository patterns"
-    )
+    expected = NormalizeRepoResult(None, "URL does not match expected git repository patterns")
     actual = normalize_https_repo_url(url)
     assert expected == actual
 
@@ -165,9 +151,7 @@ def test_plain_string():
 def test_url_with_username():
     """Test SSH URL with username."""
     url = "git@gitlab.com:group/subgroup/project.git"
-    expected = NormalizeRepoResult(
-        None, "URL does not match expected git repository patterns"
-    )
+    expected = NormalizeRepoResult(None, "URL does not match expected git repository patterns")
     actual = normalize_https_repo_url(url)
     assert expected == actual
 
@@ -281,9 +265,7 @@ def test_clone_repo_pygit2_error(mock_check_exists, mock_clone, test_dir):
     import pygit2
     from osslag.utils.github_helper import GithubAPIResult
 
-    mock_check_exists.return_value = GithubAPIResult(
-        success=True, data=None, error=None
-    )
+    mock_check_exists.return_value = GithubAPIResult(success=True, data=None, error=None)
 
     mock_clone.side_effect = pygit2.GitError("Clone failed")
 
@@ -310,9 +292,7 @@ def test_clone_repo_with_branch(mock_check_exists, mock_clone, test_dir):
     """Test cloning specific branch."""
     from osslag.utils.github_helper import GithubAPIResult
 
-    mock_check_exists.return_value = GithubAPIResult(
-        success=True, data=None, error=None
-    )
+    mock_check_exists.return_value = GithubAPIResult(success=True, data=None, error=None)
 
     mock_repo_obj = MagicMock()
     mock_clone.return_value = mock_repo_obj
@@ -336,9 +316,7 @@ def test_clone_repo_with_tags(mock_check_exists, mock_clone, test_dir):
     """Test cloning with include_tags=True fetches tags."""
     from osslag.utils.github_helper import GithubAPIResult
 
-    mock_check_exists.return_value = GithubAPIResult(
-        success=True, data=None, error=None
-    )
+    mock_check_exists.return_value = GithubAPIResult(success=True, data=None, error=None)
 
     mock_repo_obj = MagicMock()
     mock_clone.return_value = mock_repo_obj
@@ -359,9 +337,7 @@ def test_clone_repo_without_tags(mock_check_exists, mock_clone, test_dir):
     """Test cloning with include_tags=False skips tag fetching."""
     from osslag.utils.github_helper import GithubAPIResult
 
-    mock_check_exists.return_value = GithubAPIResult(
-        success=True, data=None, error=None
-    )
+    mock_check_exists.return_value = GithubAPIResult(success=True, data=None, error=None)
 
     mock_repo_obj = MagicMock()
     mock_clone.return_value = mock_repo_obj
@@ -379,17 +355,13 @@ def test_clone_repo_without_tags(mock_check_exists, mock_clone, test_dir):
 @patch("os.getenv")
 @patch("pygit2.clone_repository")
 @patch("osslag.utils.github_helper.gh_check_repo_exists")
-def test_clone_repo_with_auth_token(
-    mock_check_exists, mock_clone, mock_getenv, test_dir
-):
+def test_clone_repo_with_auth_token(mock_check_exists, mock_clone, mock_getenv, test_dir):
     """Test cloning with GitHub token authentication."""
     from osslag.utils.github_helper import GithubAPIResult
 
     mock_getenv.return_value = "test_token_123"
 
-    mock_check_exists.return_value = GithubAPIResult(
-        success=True, data=None, error=None
-    )
+    mock_check_exists.return_value = GithubAPIResult(success=True, data=None, error=None)
 
     mock_repo_obj = MagicMock()
     mock_clone.return_value = mock_repo_obj
@@ -570,9 +542,7 @@ def test_get_all_commits_valid_data_types(demo_repo):
     assert len(df["hash"].iloc[0]) == 40
     # timestamp can be int, float, or numpy numeric type
     first_timestamp = df["timestamp"].iloc[0]
-    assert isinstance(first_timestamp, (int, float)) or hasattr(
-        first_timestamp, "__int__"
-    )
+    assert isinstance(first_timestamp, (int, float)) or hasattr(first_timestamp, "__int__")
     assert isinstance(df["date"].iloc[0], datetime)
     assert isinstance(df["files"].iloc[0], list)
 

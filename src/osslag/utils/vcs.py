@@ -72,9 +72,7 @@ def normalize_https_repo_url(url: str) -> NormalizeRepoResult:
         clean_url = f"https://github.com/{match.group(1)}/{match.group(2)}"
         return NormalizeRepoResult(clean_url, None)
 
-    return NormalizeRepoResult(
-        None, "URL does not match expected git repository patterns"
-    )
+    return NormalizeRepoResult(None, "URL does not match expected git repository patterns")
 
 
 def ensure_dir(p: str | os.PathLike) -> pathlib.Path:
@@ -115,9 +113,7 @@ def extract_owner_name_repo(repo_url: str) -> RepoOwnerName:
     if repo_url_normalized and repo_url_normalized.url is not None:
         parts = repo_url_normalized.url.split("/")
         if len(parts) < 2:
-            logger.error(
-                "Could not extract owner/repo from URL: call normalize_repo_url first"
-            )
+            logger.error("Could not extract owner/repo from URL: call normalize_repo_url first")
             return RepoOwnerName(None, None)
         owner = parts[-2]
         repo = parts[-1]
@@ -206,15 +202,11 @@ def clone_repo(
         github_token = os.getenv("GITHUB_TOKEN")
         github_username = os.getenv("GITHUB_USERNAME")
         if github_token and github_username:
-            callbacks = pygit2.RemoteCallbacks(
-                pygit2.UserPass(github_username, github_token)
-            )
+            callbacks = pygit2.RemoteCallbacks(pygit2.UserPass(github_username, github_token))
         else:
             callbacks = None
 
-        repo_obj = pygit2.clone_repository(
-            sanitize_url.url, dest_dir, callbacks=callbacks, bare=False
-        )
+        repo_obj = pygit2.clone_repository(sanitize_url.url, dest_dir, callbacks=callbacks, bare=False)
 
         # Checkout specific branch if requested
         if branch:
@@ -274,9 +266,7 @@ def construct_repo_local_path(
     Examples:
         >>> construct_repo_local_path("https://github.com/owner/repo", "./cache")
         None  # if not cloned yet
-        >>> construct_repo_local_path(
-        ...     "https://github.com/owner/repo", "./cache", must_exist=False
-        ... )
+        >>> construct_repo_local_path("https://github.com/owner/repo", "./cache", must_exist=False)
         PosixPath('./cache/owner--repo')
 
     """
@@ -289,9 +279,7 @@ def construct_repo_local_path(
         return None
 
     REPOS_CACHE_DIR = os.getenv("REPOS_CACHE_DIR") or str(cache_dir)
-    local_repo_path = (
-        pathlib.Path(REPOS_CACHE_DIR) / f"{repo_owner.owner}--{repo_owner.name}"
-    )
+    local_repo_path = pathlib.Path(REPOS_CACHE_DIR) / f"{repo_owner.owner}--{repo_owner.name}"
     if must_exist and not local_repo_path.exists():
         return None
     if local_repo_path.exists():
@@ -332,10 +320,7 @@ def label_trivial_commits(
             return True
 
         # Documentation-only change if all files are .md files
-        rval = all(
-            isinstance(f, str) and pathlib.PurePosixPath(f).suffix.lower() == ".md"
-            for f in files
-        )
+        rval = all(isinstance(f, str) and pathlib.PurePosixPath(f).suffix.lower() == ".md" for f in files)
         return rval
 
     commits_df[label_column] = commits_df[files_column].apply(_is_trivial)
@@ -388,9 +373,7 @@ def load_commits(
 
     git_dir = repo_path / ".git"
     if not git_dir.exists():
-        raise FileNotFoundError(
-            f"Not a Git repository (missing .git directory): {repo_path}"
-        )
+        raise FileNotFoundError(f"Not a Git repository (missing .git directory): {repo_path}")
 
     try:
         repo = pygit2.Repository(str(repo_path))
@@ -406,16 +389,12 @@ def load_commits(
                     ref = repo.references[f"refs/remotes/origin/{branch}"]
                     start_id = ref.peel(pygit2.Commit).id
                 except KeyError as e:
-                    raise ValueError(
-                        f"Branch '{branch}' not found in {repo_path}"
-                    ) from e
+                    raise ValueError(f"Branch '{branch}' not found in {repo_path}") from e
         else:
             try:
                 start_id = repo.head.peel(pygit2.Commit).id
             except pygit2.GitError as e:
-                raise ValueError(
-                    f"Repository has no HEAD (empty repository?): {repo_path}"
-                ) from e
+                raise ValueError(f"Repository has no HEAD (empty repository?): {repo_path}") from e
 
         def _changed_paths(c: pygit2.Commit) -> list[str]:
             """Return list of paths touched by the commit (optimized, skips merge commits)."""
@@ -431,18 +410,14 @@ def load_commits(
                 if c.parents:
                     # Diff from parent to commit (shows what changed in this commit)
                     # context_lines=0 skips computing context around changes
-                    diff = c.parents[0].tree.diff_to_tree(
-                        c.tree, flags=flags, context_lines=0
-                    )
+                    diff = c.parents[0].tree.diff_to_tree(c.tree, flags=flags, context_lines=0)
                 else:
                     # Initial commit - diff against empty tree
                     diff = c.tree.diff_to_tree(flags=flags, context_lines=0)
 
                 # Extract paths directly with list comprehension
                 # new_file.path is set for adds/modifies, old_file.path for deletes
-                return [
-                    delta.new_file.path or delta.old_file.path for delta in diff.deltas
-                ]
+                return [delta.new_file.path or delta.old_file.path for delta in diff.deltas]
             except Exception:
                 return []
 
@@ -480,12 +455,8 @@ def load_commits(
                 continue
             row = {
                 "hash": str(commit.id),
-                "author": _safe_str(
-                    lambda c=commit: c.author.name if c.author else None
-                ),
-                "email": _safe_str(
-                    lambda c=commit: c.author.email if c.author else None
-                ),
+                "author": _safe_str(lambda c=commit: c.author.name if c.author else None),
+                "email": _safe_str(lambda c=commit: c.author.email if c.author else None),
                 "message": _safe_str(lambda c=commit: c.message),
                 "timestamp": commit.commit_time,
                 "date": datetime.fromtimestamp(commit.commit_time),
@@ -524,12 +495,8 @@ def find_upstream_version_tag_commit(
     version_tag_patterns = [
         re.compile(rf"^v{re.escape(version)}$"),  # v1.2.3
         re.compile(rf"^{re.escape(version)}$"),  # 1.2.3
-        re.compile(
-            rf"^release[-_]?{re.escape(version)}$"
-        ),  # release-1.2.3 or release_1.2.3
-        re.compile(
-            rf"^version[-_]?{re.escape(version)}$"
-        ),  # version-1.2.3 or version_1.2.3
+        re.compile(rf"^release[-_]?{re.escape(version)}$"),  # release-1.2.3 or release_1.2.3
+        re.compile(rf"^version[-_]?{re.escape(version)}$"),  # version-1.2.3 or version_1.2.3
     ]
 
     for _, row in commits.iterrows():

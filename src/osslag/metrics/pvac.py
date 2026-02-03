@@ -115,12 +115,8 @@ def version_delta(packages, major_weight, minor_weight, patch_weight):
         if semanticA == "Unknown" or semanticB == "Unknown":
             continue
 
-        weighted_version_A = (
-            (majorA * major_weight) + (minorA * minor_weight) + (patchA * patch_weight)
-        )
-        weighted_version_B = (
-            (majorB * major_weight) + (minorB * minor_weight) + (patchB * patch_weight)
-        )
+        weighted_version_A = (majorA * major_weight) + (minorA * minor_weight) + (patchA * patch_weight)
+        weighted_version_B = (majorB * major_weight) + (minorB * minor_weight) + (patchB * patch_weight)
         version_delta += abs(weighted_version_B - weighted_version_A)
 
     return version_delta

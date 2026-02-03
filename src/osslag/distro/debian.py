@@ -13,9 +13,7 @@ from pandas._libs.missing import NAType  # pyright: ignore[reportPrivateImportUs
 
 import osslag.utils.vcs as gh
 
-debian_packages_source_url_template = (
-    "https://ftp.debian.org/debian/dists/{release}/main/source/Sources.xz"
-)
+debian_packages_source_url_template = "https://ftp.debian.org/debian/dists/{release}/main/source/Sources.xz"
 logger = logging.getLogger(__name__)
 
 
@@ -81,9 +79,7 @@ def add_upstream_version_column(
         ValueError: If the specified version_column doesn't exist in the DataFrame
 
     Examples:
-        >>> df = pd.DataFrame(
-        ...     {"source": ["pkg1", "pkg2"], "version": ["1.2.3-4", "2:1.0-1"]}
-        ... )
+        >>> df = pd.DataFrame({"source": ["pkg1", "pkg2"], "version": ["1.2.3-4", "2:1.0-1"]})
         >>> result = add_upstream_version_column(df, "version")
         >>> result["version_upstream"].tolist()
         ['1.2.3', '1.0']
@@ -133,9 +129,7 @@ def add_local_repo_cache_path_column(
         ...         ],
         ...     }
         ... )
-        >>> result = add_local_repo_cache_path_column(
-        ...     df, "repo_url", cache_dir="./cache"
-        ... )
+        >>> result = add_local_repo_cache_path_column(df, "repo_url", cache_dir="./cache")
         >>> "repo_cache_path" in result.columns
         True
 
@@ -149,11 +143,7 @@ def add_local_repo_cache_path_column(
     df = df.copy()
 
     def _get_cache_path(url: Any) -> str | NAType:
-        if (
-            url is None
-            or (isinstance(url, float) and pd.isna(url))
-            or not isinstance(url, str)
-        ):
+        if url is None or (isinstance(url, float) and pd.isna(url)) or not isinstance(url, str):
             return pd.NA
         path = gh.construct_repo_local_path(url, cache_dir)
         return str(path) if path is not None else pd.NA
@@ -177,9 +167,7 @@ def filter_github_repos(df: pd.DataFrame) -> pd.DataFrame:
 
     """
     if "homepage" not in df.columns:
-        raise ValueError(
-            "DataFrame must contain 'homepage' column to filter GitHub repositories."
-        )
+        raise ValueError("DataFrame must contain 'homepage' column to filter GitHub repositories.")
 
     # First filter to rows containing github.com
     mask = df["homepage"].str.contains("github.com", na=False)
@@ -200,9 +188,7 @@ def filter_github_repos(df: pd.DataFrame) -> pd.DataFrame:
     return github_repos_df
 
 
-def validate_merge_safety(
-    df1: pd.DataFrame, df2: pd.DataFrame, merge_key: str = "source"
-) -> tuple[bool, list[str]]:
+def validate_merge_safety(df1: pd.DataFrame, df2: pd.DataFrame, merge_key: str = "source") -> tuple[bool, list[str]]:
     """Validate if two DataFrames can be safely merged.
 
     Returns:
@@ -228,22 +214,16 @@ def validate_merge_safety(
     df2_dupes = df2[merge_key].duplicated().sum()
 
     if df1_dupes > 0:
-        warnings.append(
-            f"First DataFrame has {df1_dupes} duplicate '{merge_key}' values"
-        )
+        warnings.append(f"First DataFrame has {df1_dupes} duplicate '{merge_key}' values")
     if df2_dupes > 0:
-        warnings.append(
-            f"Second DataFrame has {df2_dupes} duplicate '{merge_key}' values"
-        )
+        warnings.append(f"Second DataFrame has {df2_dupes} duplicate '{merge_key}' values")
 
     # Check overlapping columns and their dtypes
     common_cols = set(df1.columns) & set(df2.columns) - {merge_key}
 
     for col in common_cols:
         if df1[col].dtype != df2[col].dtype:
-            warnings.append(
-                f"Column '{col}' has different dtypes: {df1[col].dtype} vs {df2[col].dtype}"
-            )
+            warnings.append(f"Column '{col}' has different dtypes: {df1[col].dtype} vs {df2[col].dtype}")
 
     # Check merge key overlap
     overlap = set(df1[merge_key]) & set(df2[merge_key])
@@ -277,17 +257,13 @@ def merge_release_packages(
     # drop redundant columns before merge
     redundant_columns = set(df1.columns) & set(df2.columns) - {"source"}
     df2 = df2.drop(columns=list(redundant_columns))
-    logger.info(
-        f"Dropped redundant columns from second DataFrame before merge: {redundant_columns}"
-    )
+    logger.info(f"Dropped redundant columns from second DataFrame before merge: {redundant_columns}")
 
     # Validate merge safety before proceeding
     is_safe, merge_warnings = validate_merge_safety(df1, df2, merge_key="source")
 
     if not is_safe:
-        error_msg = "Cannot safely merge DataFrames:\n  - " + "\n  - ".join(
-            merge_warnings
-        )
+        error_msg = "Cannot safely merge DataFrames:\n  - " + "\n  - ".join(merge_warnings)
         raise ValueError(error_msg)
 
     if merge_warnings:
@@ -295,9 +271,7 @@ def merge_release_packages(
             logger.warning(f"Merge validation: {warning}")
 
     # Merge on 'source' column with indicator to track merge status
-    merged_df = pd.merge(
-        df1, df2, on="source", how="outer", indicator=True, suffixes=("_left", "_right")
-    )
+    merged_df = pd.merge(df1, df2, on="source", how="outer", indicator=True, suffixes=("_left", "_right"))
 
     # Separate matched and unmatched rows
     matched = merged_df[merged_df["_merge"] == "both"].copy()
@@ -323,9 +297,7 @@ def merge_release_packages(
 
             if actual_mismatches.any():
                 mismatch_count = actual_mismatches.sum()
-                logger.warning(
-                    f"Column '{base_name}' has {mismatch_count} mismatches between releases"
-                )
+                logger.warning(f"Column '{base_name}' has {mismatch_count} mismatches between releases")
 
             # Keep left column and rename it, drop right column
             matched = matched.rename(columns={left_col: base_name})

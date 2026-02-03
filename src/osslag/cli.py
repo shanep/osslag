@@ -32,9 +32,7 @@ from osslag.utils import vcs
 
 load_dotenv()
 app = typer.Typer()
-dataset_app = typer.Typer(
-    help="Dataset pipeline commands for building package analysis datasets."
-)
+dataset_app = typer.Typer(help="Dataset pipeline commands for building package analysis datasets.")
 app.add_typer(dataset_app, name="dataset")
 logger = logging.getLogger(__name__)
 console = Console()
@@ -135,9 +133,7 @@ class SuppressConsoleLogging:
         for name in list(logging.Logger.manager.loggerDict.keys()) + ["", "root"]:
             log = logging.getLogger(name) if name else logging.getLogger()
             for handler in log.handlers[:]:
-                if isinstance(handler, logging.StreamHandler) and not isinstance(
-                    handler, logging.FileHandler
-                ):
+                if isinstance(handler, logging.StreamHandler) and not isinstance(handler, logging.FileHandler):
                     original_level = handler.level
                     handler.setLevel(logging.CRITICAL + 1)  # Effectively disable
                     self._disabled_handlers.append((handler, original_level))
@@ -264,9 +260,7 @@ class ParallelExecutor:
         )
         workers_table.add_column("Worker", style="cyan", width=8)
         workers_table.add_column("Status", style="white", width=12)
-        workers_table.add_column(
-            "Current Task", style="yellow", overflow="ellipsis", no_wrap=True, width=60
-        )
+        workers_table.add_column("Current Task", style="yellow", overflow="ellipsis", no_wrap=True, width=60)
         workers_table.add_column("Done", style="green", justify="right", width=6)
         workers_table.add_column("Fail", style="red", justify="right", width=6)
 
@@ -274,9 +268,7 @@ class ParallelExecutor:
             w = self.workers[wid]
             status = "[green]●[/] Working" if w.current_task else "[dim]○ Idle[/]"
             task_display = (
-                w.current_task[:58] + "…"
-                if w.current_task and len(w.current_task) > 58
-                else (w.current_task or "-")
+                w.current_task[:58] + "…" if w.current_task and len(w.current_task) > 58 else (w.current_task or "-")
             )
             workers_table.add_row(
                 f"#{wid}",
@@ -291,9 +283,7 @@ class ParallelExecutor:
         for task_id, success in self.recent_completed[-self.show_recent_completed :]:
             short_id = task_id[:70] + "…" if len(task_id) > 70 else task_id
             recent_text.append("  ")
-            recent_text.append(
-                "✓ " if success else "✗ ", style="bold green" if success else "bold red"
-            )
+            recent_text.append("✓ " if success else "✗ ", style="bold green" if success else "bold red")
             recent_text.append(f"{short_id}\n")
 
         components = [
@@ -304,9 +294,7 @@ class ParallelExecutor:
             workers_table,
             Text(),
             Panel(
-                recent_text
-                if recent_text.plain
-                else Text("  Waiting for tasks...", style="dim italic"),
+                recent_text if recent_text.plain else Text("  Waiting for tasks...", style="dim italic"),
                 title="[bold]Recent Completions[/]",
                 border_style="dim",
             ),
@@ -371,9 +359,7 @@ class ParallelExecutor:
 
         with (
             SuppressConsoleLogging(),
-            Live(
-                self.create_display(progress), refresh_per_second=4, console=console
-            ) as live,
+            Live(self.create_display(progress), refresh_per_second=4, console=console) as live,
         ):
             with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
                 # Map futures to (task, worker_id)
@@ -422,23 +408,17 @@ class ParallelExecutor:
                                 self.workers[worker_id].tasks_failed += 1
                                 self.recent_completed.append((task_id, result.success))
                                 marker = result.failed_marker_path
-                                marker.write_text(
-                                    f"Task failed: {result.error}\n"
-                                ) if marker else None
+                                marker.write_text(f"Task failed: {result.error}\n") if marker else None
 
                         except Exception as e:
-                            error_result = TaskResult(
-                                task_id=task_id, success=False, error=str(e)
-                            )
+                            error_result = TaskResult(task_id=task_id, success=False, error=str(e))
                             results.append(error_result)
                             self.failed_tasks.append(error_result)
                             self.workers[worker_id].tasks_failed += 1
                             self.recent_completed.append((task_id, False))
                             result = error_result  # Assign for progress check below
                             marker = result.failed_marker_path
-                            marker.write_text(
-                                f"Task failed: {result.error}\n"
-                            ) if marker else None
+                            marker.write_text(f"Task failed: {result.error}\n") if marker else None
                         # Update progress
                         progress.advance(progress_task_id)
 
@@ -581,9 +561,7 @@ def rate_limit():
 
 @app.command()
 def pull_requests(
-    repo_url: str = typer.Argument(
-        ..., help="The GitHub repository URL to fetch pull requests for"
-    ),
+    repo_url: str = typer.Argument(..., help="The GitHub repository URL to fetch pull requests for"),
     cache: str = typer.Option("./cache", help="Cache directory"),
 ):
     """Fetch GitHub pull requests for a specified repository and save to a parquet file."""
@@ -602,18 +580,14 @@ def pull_requests(
 
 @dataset_app.command(name="run", rich_help_panel="Full Pipeline")
 def run_dataset_pipeline(
-    distro: str = typer.Option(
-        "debian", help="The Linux distribution to process (e.g., 'debian' 'fedora')"
-    ),
+    distro: str = typer.Option("debian", help="The Linux distribution to process (e.g., 'debian' 'fedora')"),
     releases: list[str] = typer.Option(
         ...,
         "--release",
         help="One or more distro releases to process (e.g., 'trixie', 'bookworm', '40'). Can repeat flag or use comma-separated.",
     ),
     cache: str = typer.Option("./cache", help="Cache directory (EV: CACHE_DIR)"),
-    force: bool = typer.Option(
-        False, "--force", "-f", help="Force re-processing even if cache exists"
-    ),
+    force: bool = typer.Option(False, "--force", "-f", help="Force re-processing even if cache exists"),
 ):
     """Run the full pipeline: fetch packages, filter repos, extract versions,
     merge releases, clone repos, load commits, pull GitHub data.
@@ -644,28 +618,18 @@ def run_dataset_pipeline(
         console.print("[green]✓[/] Step 1/6: Fetched packages")
 
         # Step 2: Filter GitHub repos
-        with Status(
-            "[bold cyan]Step 2/6:[/] Filtering GitHub repos...", console=console
-        ):
-            filter_debian_github_repos(
-                distro=distro, release=to_process, cache=cache_dir, force=force
-            )
+        with Status("[bold cyan]Step 2/6:[/] Filtering GitHub repos...", console=console):
+            filter_debian_github_repos(distro=distro, release=to_process, cache=cache_dir, force=force)
         console.print("[green]✓[/] Step 2/6: Filtered GitHub repos")
 
         # Step 3: Extract the version string and add upstream version columns
-        with Status(
-            "[bold cyan]Step 3/6:[/] Extracting upstream versions...", console=console
-        ):
-            extract_upstream_versions(
-                distro=distro, release=to_process, cache=cache_dir, force=force
-            )
+        with Status("[bold cyan]Step 3/6:[/] Extracting upstream versions...", console=console):
+            extract_upstream_versions(distro=distro, release=to_process, cache=cache_dir, force=force)
         console.print("[green]✓[/] Step 3/6: Extracted upstream versions")
 
         # Step 4: Merge releases into a single DataFrame with all required columns
         with Status("[bold cyan]Step 4/6:[/] Merging releases...", console=console):
-            merge_releases(
-                distro=distro, releases=to_process, cache=cache_dir, force=force
-            )
+            merge_releases(distro=distro, releases=to_process, cache=cache_dir, force=force)
         console.print("[green]✓[/] Step 4/6: Merged releases")
 
     # Step 5: Clone all upstream GitHub repos (has its own UI)
@@ -736,30 +700,22 @@ def fetch_packages(
 
 @dataset_app.command(rich_help_panel="Step 2: Filter Repos")
 def filter_debian_github_repos(
-    distro: str = typer.Argument(
-        ..., help="The Linux distribution to process (e.g., 'debian' 'fedora')"
-    ),
+    distro: str = typer.Argument(..., help="The Linux distribution to process (e.g., 'debian' 'fedora')"),
     release: list[str] = typer.Argument(
         ...,
         help="One or more distro releases to process (e.g., 'trixie', 'bookworm', '40'). Can repeat flag or use comma-separated.",
     ),
     cache: str = typer.Option("./cache", help="Cache directory"),
-    force: bool = typer.Option(
-        False, "--force", "-f", help="Force re-processing even if cache exists"
-    ),
+    force: bool = typer.Option(False, "--force", "-f", help="Force re-processing even if cache exists"),
 ):
     """Filter distro package DataFrames to only include GitHub repositories."""
     cache_dir = os.getenv("CACHE_DIR") or cache
 
     if distro.lower() == "debian":
         for rel in release:
-            filtered_parquet_path = Path(
-                cache_dir, f"{distro}_{rel}_filtered_packages.parquet"
-            )
+            filtered_parquet_path = Path(cache_dir, f"{distro}_{rel}_filtered_packages.parquet")
             if filtered_parquet_path.exists() and not force:
-                logger.info(
-                    f"Using cached filtered packages from {filtered_parquet_path}"
-                )
+                logger.info(f"Using cached filtered packages from {filtered_parquet_path}")
                 continue
 
             parquet_path = Path(cache_dir, f"{distro}_{rel}_all_packages.parquet")
@@ -774,54 +730,36 @@ def filter_debian_github_repos(
             size_before = df.shape[0]
             filtered_df = deb.filter_github_repos(df)
             size_after = filtered_df.shape[0]
-            logger.info(
-                f"Dropped {size_before - size_after} packages due to non-GitHub '{rel}'."
-            )
-            filtered_df = deb.add_local_repo_cache_path_column(
-                filtered_df, cache_dir=cache_dir
-            )
+            logger.info(f"Dropped {size_before - size_after} packages due to non-GitHub '{rel}'.")
+            filtered_df = deb.add_local_repo_cache_path_column(filtered_df, cache_dir=cache_dir)
             filtered_df.reset_index(drop=True, inplace=True)
             filtered_df.to_parquet(filtered_parquet_path)
-            logger.info(
-                f"Filtered GitHub repositories saved to {filtered_parquet_path}"
-            )
+            logger.info(f"Filtered GitHub repositories saved to {filtered_parquet_path}")
     else:
-        logger.error(
-            f"Distro '{distro}' is not supported for filtering GitHub repositories."
-        )
+        logger.error(f"Distro '{distro}' is not supported for filtering GitHub repositories.")
 
 
 @dataset_app.command(rich_help_panel="Step 3: Extract Versions")
 def extract_upstream_versions(
-    distro: str = typer.Argument(
-        ..., help="The Linux distribution to process (e.g., 'debian' 'fedora')"
-    ),
+    distro: str = typer.Argument(..., help="The Linux distribution to process (e.g., 'debian' 'fedora')"),
     release: list[str] = typer.Argument(
         ...,
         help="One or more distro releases to process (e.g., 'trixie', 'bookworm', '40'). Can repeat flag or use comma-separated.",
     ),
     cache: str = typer.Option("./cache", help="Cache directory"),
-    force: bool = typer.Option(
-        False, "--force", "-f", help="Force re-processing even if cache exists"
-    ),
+    force: bool = typer.Option(False, "--force", "-f", help="Force re-processing even if cache exists"),
 ):
     """Extract upstream version strings from Debian package versions and add as a new column."""
     cache_dir = os.getenv("CACHE_DIR") or cache
 
     if distro.lower() == "debian":
         for rel in release:
-            versions_parquet_path = Path(
-                cache_dir, f"{distro}_{rel}_packages_with_upstream_versions.parquet"
-            )
+            versions_parquet_path = Path(cache_dir, f"{distro}_{rel}_packages_with_upstream_versions.parquet")
             if versions_parquet_path.exists() and not force:
-                logger.info(
-                    f"Using cached upstream versions from {versions_parquet_path}"
-                )
+                logger.info(f"Using cached upstream versions from {versions_parquet_path}")
                 continue
 
-            filtered_parquet_path = Path(
-                cache_dir, f"{distro}_{rel}_filtered_packages.parquet"
-            )
+            filtered_parquet_path = Path(cache_dir, f"{distro}_{rel}_filtered_packages.parquet")
             if not filtered_parquet_path.exists():
                 logger.error(
                     f"Required parquet file {filtered_parquet_path} does not exist. Please run the 'filter-debian-github-repos' command first."
@@ -831,65 +769,47 @@ def extract_upstream_versions(
             logger.info(f"Extracting upstream versions for Debian release '{rel}'")
             df: pd.DataFrame = pd.read_parquet(filtered_parquet_path)
             version_column = f"{rel}_upstream_version"
-            df_with_versions = deb.add_upstream_version_column(
-                df, f"{rel}_version", new_column_name=version_column
-            )
+            df_with_versions = deb.add_upstream_version_column(df, f"{rel}_version", new_column_name=version_column)
             drop_before = df_with_versions.shape[0]
             df_with_versions.dropna(subset=[version_column], inplace=True)
             drop_after = df_with_versions.shape[0]
-            logger.info(
-                f"Dropped {drop_before - drop_after} rows with missing upstream versions for release '{rel}'."
-            )
+            logger.info(f"Dropped {drop_before - drop_after} rows with missing upstream versions for release '{rel}'.")
             df_with_versions.reset_index(drop=True, inplace=True)
             df_with_versions.to_parquet(versions_parquet_path)
-            logger.info(
-                f"Upstream versions extracted and saved to {versions_parquet_path}"
-            )
+            logger.info(f"Upstream versions extracted and saved to {versions_parquet_path}")
     else:
-        logger.error(
-            f"Distro '{distro}' is not supported for extracting upstream versions."
-        )
+        logger.error(f"Distro '{distro}' is not supported for extracting upstream versions.")
 
 
 @dataset_app.command(rich_help_panel="Step 4: Merge Releases")
 def merge_releases(
-    distro: str = typer.Argument(
-        ..., help="The Linux distribution to process (e.g., 'debian' 'fedora')"
-    ),
+    distro: str = typer.Argument(..., help="The Linux distribution to process (e.g., 'debian' 'fedora')"),
     releases: list[str] = typer.Argument(
         ...,
         help="One or more distro releases to merge (e.g., 'trixie', 'bookworm', '40'). Can repeat flag or use comma-separated.",
     ),
     cache: str = typer.Option("./cache", help="Cache directory"),
-    force: bool = typer.Option(
-        False, "--force", "-f", help="Force re-processing even if cache exists"
-    ),
+    force: bool = typer.Option(False, "--force", "-f", help="Force re-processing even if cache exists"),
 ):
     """Merge multiple release DataFrames into a single DataFrame with all required columns."""
     cache_dir = os.getenv("CACHE_DIR") or cache
 
     if distro.lower() == "debian":
-        merged_parquet_path = Path(
-            cache_dir, f"{distro}_merged_releases_packages.parquet"
-        )
+        merged_parquet_path = Path(cache_dir, f"{distro}_merged_releases_packages.parquet")
         if merged_parquet_path.exists() and not force:
             logger.info(f"Using cached merged releases from {merged_parquet_path}")
             return
 
         dfs = []
         for rel in releases:
-            versions_parquet_path = Path(
-                cache_dir, f"{distro}_{rel}_packages_with_upstream_versions.parquet"
-            )
+            versions_parquet_path = Path(cache_dir, f"{distro}_{rel}_packages_with_upstream_versions.parquet")
             if not versions_parquet_path.exists():
                 logger.error(
                     f"Required parquet file {versions_parquet_path} does not exist. Please run the 'extract-upstream-versions' command first."
                 )
                 continue
 
-            logger.info(
-                f"Loading packages with upstream versions for Debian release '{rel}'"
-            )
+            logger.info(f"Loading packages with upstream versions for Debian release '{rel}'")
             df: pd.DataFrame = pd.read_parquet(versions_parquet_path)
             dfs.append(df)
         deb_merged_df, deb_dropped_after_merge = deb.merge_release_packages(dfs)
@@ -899,12 +819,8 @@ def merge_releases(
         deb_merged_df.reset_index(drop=True, inplace=True)
         deb_merged_df.to_parquet(merged_parquet_path)
         logger.info(f"Merged release packages saved to {merged_parquet_path}")
-        deb_dropped_after_merge.to_parquet(
-            Path(cache_dir, f"{distro}_dropped_after_merge.parquet")
-        )
-        logger.info(
-            f"Dropped rows after merge saved to {Path(cache_dir, f'{distro}_dropped_after_merge.parquet')}"
-        )
+        deb_dropped_after_merge.to_parquet(Path(cache_dir, f"{distro}_dropped_after_merge.parquet"))
+        logger.info(f"Dropped rows after merge saved to {Path(cache_dir, f'{distro}_dropped_after_merge.parquet')}")
 
     else:
         logger.error(f"Distro '{distro}' is not supported for merging releases.")
@@ -912,16 +828,10 @@ def merge_releases(
 
 @dataset_app.command(rich_help_panel="Step 5: Clone Repos")
 def clone_upstream_repos(
-    distro: str = typer.Argument(
-        ..., help="The distro for (e.g., 'debian' 'fedora', etc.)"
-    ),
-    repos_cache: str = typer.Option(
-        "./cache/repos", help="Cache directory for cloned repositories"
-    ),
+    distro: str = typer.Argument(..., help="The distro for (e.g., 'debian' 'fedora', etc.)"),
+    repos_cache: str = typer.Option("./cache/repos", help="Cache directory for cloned repositories"),
     cache: str = typer.Option("./cache", help="Cache directory"),
-    max_workers: int = typer.Option(
-        4, help="Maximum number of parallel clone processes (env: MAX_WORKERS)"
-    ),
+    max_workers: int = typer.Option(4, help="Maximum number of parallel clone processes (env: MAX_WORKERS)"),
 ):
     """Clone all upstream GitHub repositories in the filtered package DataFrame."""
     cache_dir = os.getenv("CACHE_DIR") or cache
@@ -948,9 +858,7 @@ def clone_upstream_repos(
             invalid = 0
             for _, row in df.iterrows():
                 repo_url = str(row["upstream_repo_url"])
-                target_dir = vcs.construct_repo_local_path(
-                    repo_url, cache_dir=repos_cache_path, must_exist=False
-                )
+                target_dir = vcs.construct_repo_local_path(repo_url, cache_dir=repos_cache_path, must_exist=False)
                 if target_dir is None:
                     invalid += 1
                     continue
@@ -984,26 +892,16 @@ def clone_upstream_repos(
             skipped=skipped,
         )
     else:
-        console.print(
-            f"[red]Error:[/] Distro '{distro}' is not supported for cloning repositories."
-        )
+        console.print(f"[red]Error:[/] Distro '{distro}' is not supported for cloning repositories.")
 
 
 @dataset_app.command(rich_help_panel="Step 6: Load Commits")
 def load_commits_into_dataframe(
-    distro: str = typer.Argument(
-        ..., help="The Linux distribution to process (e.g., 'debian' 'fedora')"
-    ),
+    distro: str = typer.Argument(..., help="The Linux distribution to process (e.g., 'debian' 'fedora')"),
     cache: str = typer.Option("./cache", help="Cache directory"),
-    repo_cache: str = typer.Option(
-        "./cache/repos", help="Cache directory for cloned repositories"
-    ),
-    max_workers: int = typer.Option(
-        4, help="Maximum number of parallel worker processes (env: MAX_WORKERS)"
-    ),
-    force: bool = typer.Option(
-        False, "--force", "-f", help="Force re-processing even if cache exists"
-    ),
+    repo_cache: str = typer.Option("./cache/repos", help="Cache directory for cloned repositories"),
+    max_workers: int = typer.Option(4, help="Maximum number of parallel worker processes (env: MAX_WORKERS)"),
+    force: bool = typer.Option(False, "--force", "-f", help="Force re-processing even if cache exists"),
 ):
     """Load all GitHub commits for the upstream repositories into a single DataFrame."""
     cache_dir = os.getenv("CACHE_DIR") or cache
@@ -1016,9 +914,7 @@ def load_commits_into_dataframe(
         console.print(f"[green]Using cached commits from {commits_parquet_path}[/]")
         return
 
-    all_packages_parquet_path = Path(
-        cache_dir, f"{distro}_merged_releases_packages.parquet"
-    )
+    all_packages_parquet_path = Path(cache_dir, f"{distro}_merged_releases_packages.parquet")
     if not all_packages_parquet_path.exists():
         console.print(
             f"[red]Error:[/] Required parquet file {all_packages_parquet_path} does not exist. Please run the 'merge-releases' and 'clone-upstream-repos' commands first."
@@ -1040,9 +936,7 @@ def load_commits_into_dataframe(
     skipped = 0
     for _, row in df.iterrows():
         repo_url = str(row["upstream_repo_url"])
-        local_repo_path = vcs.construct_repo_local_path(
-            repo_url, cache_dir=Path(repo_cache_dir), must_exist=True
-        )
+        local_repo_path = vcs.construct_repo_local_path(repo_url, cache_dir=Path(repo_cache_dir), must_exist=True)
         if local_repo_path is None or not local_repo_path.exists():
             skipped += 1
             continue
@@ -1068,9 +962,7 @@ def load_commits_into_dataframe(
     # Collect all the checkpointed DataFrames
     if checkpoint_dir.exists():
         try:
-            console.print(
-                f"[green]Loading checkpointed commits from {checkpoint_dir}[/]"
-            )
+            console.print(f"[green]Loading checkpointed commits from {checkpoint_dir}[/]")
             for ck in checkpoint_dir.iterdir():
                 if not ck.name.endswith(".parquet"):
                     continue
@@ -1084,9 +976,7 @@ def load_commits_into_dataframe(
                     )
                 )
         except Exception as e:
-            console.print(
-                f"[yellow]Warning:[/] Failed to load checkpointed commits: {e}[/]"
-            )
+            console.print(f"[yellow]Warning:[/] Failed to load checkpointed commits: {e}[/]")
 
     # Collect successful DataFrames
     all_commits = [r.data for r in results if r.success and r.data is not None]
@@ -1096,49 +986,35 @@ def load_commits_into_dataframe(
         combined_commits_df = pd.concat(all_commits, ignore_index=True)
         commits_parquet_path = Path(cache_dir, f"{distro}_all_upstream_commits.parquet")
         combined_commits_df.to_parquet(commits_parquet_path)
-        console.print(
-            f"[green]Saved {len(combined_commits_df):,} commits to {commits_parquet_path}[/]"
-        )
+        console.print(f"[green]Saved {len(combined_commits_df):,} commits to {commits_parquet_path}[/]")
     else:
         console.print("[yellow]No commits were loaded from any repositories.[/]")
 
 
 @dataset_app.command(rich_help_panel="Step 7: GitHub Metadata")
 def all_github_metadata(
-    distro: str = typer.Option(
-        "debian", help="The Linux distribution to process (default: debian)"
-    ),
+    distro: str = typer.Option("debian", help="The Linux distribution to process (default: debian)"),
     cache: str = typer.Option("./cache", help="Cache directory"),
-    max_workers: int = typer.Option(
-        4, help="Maximum number of parallel GitHub API workers (env: MAX_WORKERS)"
-    ),
-    force: bool = typer.Option(
-        False, "--force", "-f", help="Force re-processing even if cache exists"
-    ),
+    max_workers: int = typer.Option(4, help="Maximum number of parallel GitHub API workers (env: MAX_WORKERS)"),
+    force: bool = typer.Option(False, "--force", "-f", help="Force re-processing even if cache exists"),
 ):
     """Fetch GitHub repository metadata for all unique repos in the commits parquet file."""
     cache_dir = os.getenv("CACHE_DIR") or cache
     max_workers = int(os.getenv("MAX_WORKERS", str(max_workers)))
-    all_packages_parquet_path = Path(
-        cache_dir, f"{distro}_merged_releases_packages.parquet"
-    )
+    all_packages_parquet_path = Path(cache_dir, f"{distro}_merged_releases_packages.parquet")
     output_parquet_path = Path(cache_dir, f"{distro}_github_repo_metadata.parquet")
     checkpoint_dir = Path(cache_dir, "github_metadata_checkpoints")
     # Create checkpoint directory
     vcs.ensure_dir(checkpoint_dir)
 
     if force and checkpoint_dir.exists():
-        console.print(
-            f"[yellow]Removing existing GitHub metadata checkpoint at {checkpoint_dir}[/]"
-        )
+        console.print(f"[yellow]Removing existing GitHub metadata checkpoint at {checkpoint_dir}[/]")
         for ck in checkpoint_dir.iterdir():
             if ck.name.endswith(".parquet"):
                 ck.unlink()
 
     if output_parquet_path.exists() and not force:
-        console.print(
-            f"[green]Using cached GitHub metadata from {output_parquet_path}[/]"
-        )
+        console.print(f"[green]Using cached GitHub metadata from {output_parquet_path}[/]")
         return
 
     if not all_packages_parquet_path.exists():
@@ -1194,9 +1070,7 @@ def all_github_metadata(
     # Collect all the checkpointed DataFrames
     if checkpoint_dir.exists():
         try:
-            console.print(
-                f"[green]Loading checkpointed commits from {checkpoint_dir}[/]"
-            )
+            console.print(f"[green]Loading checkpointed commits from {checkpoint_dir}[/]")
             for ck in checkpoint_dir.iterdir():
                 if not ck.name.endswith(".parquet"):
                     continue
@@ -1210,58 +1084,38 @@ def all_github_metadata(
                     )
                 )
         except Exception as e:
-            console.print(
-                f"[yellow]Warning:[/] Failed to load checkpointed commits: {e}[/]"
-            )
+            console.print(f"[yellow]Warning:[/] Failed to load checkpointed commits: {e}[/]")
     # Collect successful DataFrames
     all_metadata = [r.data for r in results if r.success and r.data is not None]
 
     if all_metadata:
-        console.print(
-            f"[green]Loaded metadata from {len(all_metadata)} repositories.[/]"
-        )
+        console.print(f"[green]Loaded metadata from {len(all_metadata)} repositories.[/]")
         combined_metadata_df = pd.concat(all_metadata, ignore_index=True)
-        metadata_parquet_path = Path(
-            cache_dir, f"{distro}_all_upstream_metadata.parquet"
-        )
+        metadata_parquet_path = Path(cache_dir, f"{distro}_all_upstream_metadata.parquet")
         combined_metadata_df.to_parquet(metadata_parquet_path)
-        console.print(
-            f"[green]Saved {len(combined_metadata_df):,} metadata entries to {metadata_parquet_path}[/]"
-        )
+        console.print(f"[green]Saved {len(combined_metadata_df):,} metadata entries to {metadata_parquet_path}[/]")
     else:
-        console.print(
-            "[yellow]No metadata entries were loaded from any repositories.[/]"
-        )
+        console.print("[yellow]No metadata entries were loaded from any repositories.[/]")
 
 
 @dataset_app.command(rich_help_panel="Step 8: GitHub Metadata")
 def all_github_pull_requests(
-    distro: str = typer.Option(
-        "debian", help="The Linux distribution to process (default: debian)"
-    ),
+    distro: str = typer.Option("debian", help="The Linux distribution to process (default: debian)"),
     cache: str = typer.Option("./cache", help="Cache directory"),
-    max_workers: int = typer.Option(
-        4, help="Maximum number of parallel GitHub API workers (env: MAX_WORKERS)"
-    ),
-    force: bool = typer.Option(
-        False, "--force", "-f", help="Force re-processing even if cache exists"
-    ),
+    max_workers: int = typer.Option(4, help="Maximum number of parallel GitHub API workers (env: MAX_WORKERS)"),
+    force: bool = typer.Option(False, "--force", "-f", help="Force re-processing even if cache exists"),
 ):
     """Fetch GitHub repository pull requests for all unique repos in the commits parquet file."""
     cache_dir = os.getenv("CACHE_DIR") or cache
     max_workers = int(os.getenv("MAX_WORKERS", str(max_workers)))
-    all_packages_parquet_path = Path(
-        cache_dir, f"{distro}_merged_releases_packages.parquet"
-    )
+    all_packages_parquet_path = Path(cache_dir, f"{distro}_merged_releases_packages.parquet")
     output_parquet_path = Path(cache_dir, f"{distro}_github_repo_pull_requests.parquet")
     checkpoint_dir = Path(cache_dir, "github_pr_checkpoints")
     # Create checkpoint directory
     vcs.ensure_dir(checkpoint_dir)
 
     if output_parquet_path.exists() and not force:
-        console.print(
-            f"[green]Using cached GitHub pull requests from {output_parquet_path}[/]"
-        )
+        console.print(f"[green]Using cached GitHub pull requests from {output_parquet_path}[/]")
         return
 
     if not all_packages_parquet_path.exists():
@@ -1271,9 +1125,7 @@ def all_github_pull_requests(
         return
 
     if force and checkpoint_dir.exists():
-        console.print(
-            f"[yellow]Removing existing GitHub pull requests checkpoint at {checkpoint_dir}[/]"
-        )
+        console.print(f"[yellow]Removing existing GitHub pull requests checkpoint at {checkpoint_dir}[/]")
         for ck in checkpoint_dir.iterdir():
             if ck.name.endswith(".parquet"):
                 ck.unlink()
@@ -1307,9 +1159,7 @@ def all_github_pull_requests(
     else:
         console.print("[yellow]Warning:[/] Could not fetch rate limit info")
 
-    console.print(
-        f"[cyan]Fetching GitHub pull requests for {len(tasks)} repositories...[/]"
-    )
+    console.print(f"[cyan]Fetching GitHub pull requests for {len(tasks)} repositories...[/]")
     executor = ParallelExecutor(
         task_name="GitHub Pull Requests Fetch",
         max_workers=min(max_workers, len(tasks)),
@@ -1323,9 +1173,7 @@ def all_github_pull_requests(
     # Collect all the checkpointed DataFrames
     if checkpoint_dir.exists():
         try:
-            console.print(
-                f"[green]Loading checkpointed commits from {checkpoint_dir}[/]"
-            )
+            console.print(f"[green]Loading checkpointed commits from {checkpoint_dir}[/]")
             for ck in checkpoint_dir.iterdir():
                 if not ck.name.endswith(".parquet"):
                     continue
@@ -1339,28 +1187,18 @@ def all_github_pull_requests(
                     )
                 )
         except Exception as e:
-            console.print(
-                f"[yellow]Warning:[/] Failed to load checkpointed commits: {e}[/]"
-            )
+            console.print(f"[yellow]Warning:[/] Failed to load checkpointed commits: {e}[/]")
     # Collect successful DataFrames
     all_metadata = [r.data for r in results if r.success and r.data is not None]
 
     if all_metadata:
-        console.print(
-            f"[green]Loaded pull requests from {len(all_metadata)} repositories.[/]"
-        )
+        console.print(f"[green]Loaded pull requests from {len(all_metadata)} repositories.[/]")
         combined_metadata_df = pd.concat(all_metadata, ignore_index=True)
-        metadata_parquet_path = Path(
-            cache_dir, f"{distro}_all_upstream_pull_requests.parquet"
-        )
+        metadata_parquet_path = Path(cache_dir, f"{distro}_all_upstream_pull_requests.parquet")
         combined_metadata_df.to_parquet(metadata_parquet_path)
-        console.print(
-            f"[green]Saved {len(combined_metadata_df):,} pull request entries to {metadata_parquet_path}[/]"
-        )
+        console.print(f"[green]Saved {len(combined_metadata_df):,} pull request entries to {metadata_parquet_path}[/]")
     else:
-        console.print(
-            "[yellow]No pull request entries were loaded from any repositories.[/]"
-        )
+        console.print("[yellow]No pull request entries were loaded from any repositories.[/]")
 
 
 @app.command()
