@@ -26,12 +26,31 @@ from rich.status import Status
 from rich.table import Table
 from rich.text import Text
 
+from osslag import __version__
 from osslag.distro import debian as deb
 from osslag.utils import github_helper as gh
 from osslag.utils import vcs
 
 load_dotenv()
+
+
+def version_callback(value: bool):
+    if value:
+        print(f"osslag {__version__}")
+        raise typer.Exit()
+
+
 app = typer.Typer()
+
+
+@app.callback()
+def main_callback(
+    version: bool = typer.Option(None, "--version", "-v", callback=version_callback, is_eager=True, help="Show version"),
+):
+    """OSS Lag - Technical Lag tools for Open Source Software Projects."""
+    pass
+
+
 dataset_app = typer.Typer(help="Dataset pipeline commands for building package analysis datasets.")
 app.add_typer(dataset_app, name="dataset")
 logger = logging.getLogger(__name__)

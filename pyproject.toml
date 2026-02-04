@@ -7,7 +7,7 @@ osslag = "osslag.cli:main"
 
 [project]
 name = "osslag"
-version = "1.0.0"
+version = "1.0.1"
 description = "Technical Lag tools for Open Source Software Projects"
 readme = "README.md"
 authors = [

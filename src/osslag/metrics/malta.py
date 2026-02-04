@@ -191,7 +191,7 @@ class Malta:
             raise ValueError("K must be positive.")
         return min(1.0, math.log1p(x) / math.log1p(K))
 
-    def __get_commits_for_package(self) -> Sequence[Commit]:
+    def get_commits_for_package(self) -> Sequence[Commit]:
         """Extract commits for a given repository URL."""
         repo_url_column = self.malta_constants.repo_url_column
         repo_dates_column = self.malta_constants.repo_dates_column
@@ -208,7 +208,7 @@ class Malta:
         ]
         return commits
 
-    def __get_pull_requests_for_package(self) -> Sequence[PullRequest]:
+    def get_pull_requests_for_package(self) -> Sequence[PullRequest]:
         """Extract pull requests for a given repository URL."""
         repo_url_column = self.malta_constants.repo_url_column
         pr_created_at_column = self.malta_constants.pr_created_at_column
@@ -233,7 +233,7 @@ class Malta:
         ]
         return prs
 
-    def __get_repo_meta_for_package(self) -> RepoMeta:
+    def get_repo_meta_for_package(self) -> RepoMeta:
         """Extract repository metadata for a given repository URL."""
         repo_url_column = self.malta_constants.repo_url_column
         repo_meta_row = self.repo_meta_df[self.repo_meta_df[repo_url_column] == self.github_repo_url]
@@ -276,7 +276,7 @@ class Malta:
         - t_last is measured since most recent non-trivial commit (unless include_trivial=True).
 
         """
-        commits = self.__get_commits_for_package()
+        commits = self.get_commits_for_package()
         # Partition commits into the baseline and evaluation sets, filtering trivial if needed.
         commits_baseline: Sequence[Commit] = []
         commits_eval: Sequence[Commit] = []
@@ -349,31 +349,25 @@ class Malta:
         - Uses pull requests from self.pull_requests_df via get_pull_requests_for_package().
 
         """
-        pull_requests = self.__get_pull_requests_for_package()
+        # Initialize components
+        self.mrs = MRSComponents(
+            s_resp=0.0,
+            r_dec=0.0,
+            d_dec=0.0,
+            p_open=0.0,
+            n_prs=0,
+            n_terminated=0,
+            n_open=0,
+        )
+        pull_requests = self.get_pull_requests_for_package()
         if not pull_requests:
             # No external contribution signal
-            return MRSComponents(
-                s_resp=0.0,
-                r_dec=0.0,
-                d_dec=0.0,
-                p_open=0.0,
-                n_prs=0,
-                n_terminated=0,
-                n_open=0,
-            )
+            return self.mrs
         # Filter PRs to those created within the evaluation window
         P = [pr for pr in pull_requests if self.eval_window.start <= pr.created_at < self.eval_window.end]
         if not P:
             # No PRs in evaluation window
-            return MRSComponents(
-                s_resp=0.0,
-                r_dec=0.0,
-                d_dec=0.0,
-                p_open=0.0,
-                n_prs=0,
-                n_terminated=0,
-                n_open=0,
-            )
+            return self.mrs
         # Partition PRs
         P_term = []
         P_open = []
@@ -390,15 +384,7 @@ class Malta:
         if P_term:
             R_dec = len(P_term) / len(P)
         else:
-            return MRSComponents(
-                s_resp=0.0,
-                r_dec=0.0,
-                d_dec=0.0,
-                p_open=0.0,
-                n_prs=len(P),
-                n_terminated=0,
-                n_open=len(P_open),
-            )
+            return self.mrs
 
         # ---- Decision Timeliness (D_dec) ----
         decision_delays = []
@@ -454,7 +440,7 @@ class Malta:
         -----
         - Uses repo metadata from self.repo_meta_df via __get_repo_meta_for_package().
         """
-        meta = self.__get_repo_meta_for_package()
+        meta = self.get_repo_meta_for_package()
         if not (0.0 <= self.rmv_constants.alpha_archived <= 1.0):
             raise ValueError("alpha_archived must be in [0,1].")
         betas = {

@@ -3,6 +3,10 @@
 This repository contains code to build a dataset measuring technical lag and
 abandonment of open source packages across multiple Linux distributions.
 
+The algorithms implemented here are described in the following paper:
+
+- [docs/Paper.pdf](docs/Paper.pdf)
+
 
 ## Installation
 
