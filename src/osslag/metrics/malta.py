@@ -155,6 +155,11 @@ class Malta:
         self.rmvs: RMVSComponents
         self.final: AggregateScoreComponents
 
+        # Cached extracted data (lazily populated)
+        self._commits_cache: Sequence[Commit] | None = None
+        self._prs_cache: Sequence[PullRequest] | None = None
+        self._meta_cache: RepoMeta | None = None
+
         self.malta_constants = malta_constants if malta_constants is not None else MaltaConstants()
         self.das_constants = das_constants if das_constants is not None else DevelopmentActivityScoreConstants()
         self.mrs_constants = mrs_constants if mrs_constants is not None else MaintainerResponsivenessScoreConstants()
@@ -192,61 +197,79 @@ class Malta:
         return min(1.0, math.log1p(x) / math.log1p(K))
 
     def get_commits_for_package(self) -> Sequence[Commit]:
-        """Extract commits for a given repository URL."""
+        """Extract commits for a given repository URL. Results are cached."""
+        if self._commits_cache is not None:
+            return self._commits_cache
+
         repo_url_column = self.malta_constants.repo_url_column
         repo_dates_column = self.malta_constants.repo_dates_column
         repo_is_trivial_column = self.malta_constants.repo_is_trivial_column
 
-        repo_commits_df = self.commits_df[self.commits_df[repo_url_column] == self.github_repo_url].copy()
+        mask = self.commits_df[repo_url_column] == self.github_repo_url
+        repo_commits_df = self.commits_df.loc[mask]
         if len(repo_commits_df) == 0:
-            return []
-        # Ensure datetime is timezone-aware UTC
-        repo_commits_df[repo_dates_column] = pd.to_datetime(repo_commits_df[repo_dates_column], utc=True)
-        commits = [
-            Commit(date=row[repo_dates_column], is_trivial=row[repo_is_trivial_column])
-            for _, row in repo_commits_df.iterrows()
-        ]
-        return commits
+            self._commits_cache = []
+            return self._commits_cache
+
+        # Extract columns as arrays (vectorized datetime conversion)
+        dates = pd.to_datetime(repo_commits_df[repo_dates_column], utc=True).to_numpy()
+        trivials = repo_commits_df[repo_is_trivial_column].to_numpy()
+
+        # Build Commit objects from arrays (faster than iterrows/itertuples)
+        self._commits_cache = [Commit(date=d, is_trivial=t) for d, t in zip(dates, trivials)]
+        return self._commits_cache
 
     def get_pull_requests_for_package(self) -> Sequence[PullRequest]:
-        """Extract pull requests for a given repository URL."""
+        """Extract pull requests for a given repository URL. Results are cached."""
+        if self._prs_cache is not None:
+            return self._prs_cache
+
         repo_url_column = self.malta_constants.repo_url_column
         pr_created_at_column = self.malta_constants.pr_created_at_column
         pr_closed_at_column = self.malta_constants.pr_closed_at_column
         pr_merged_at_column = self.malta_constants.pr_merged_at_column
         pr_state_column = self.malta_constants.pr_state_column
-        repo_prs_df = self.pull_requests_df[self.pull_requests_df[repo_url_column] == self.github_repo_url].copy()
+
+        mask = self.pull_requests_df[repo_url_column] == self.github_repo_url
+        repo_prs_df = self.pull_requests_df.loc[mask]
         if len(repo_prs_df) == 0:
-            return []
-        # Ensure datetime is timezone-aware UTC
-        repo_prs_df[pr_created_at_column] = pd.to_datetime(repo_prs_df[pr_created_at_column], utc=True)
-        repo_prs_df[pr_closed_at_column] = pd.to_datetime(repo_prs_df[pr_closed_at_column], utc=True)
-        repo_prs_df[pr_merged_at_column] = pd.to_datetime(repo_prs_df[pr_merged_at_column], utc=True)
-        prs = [
-            PullRequest(
-                created_at=row[pr_created_at_column],
-                closed_at=row[pr_closed_at_column],
-                merged_at=row[pr_merged_at_column],
-                state=row[pr_state_column],
-            )
-            for _, row in repo_prs_df.iterrows()
+            self._prs_cache = []
+            return self._prs_cache
+
+        # Extract columns as arrays (vectorized datetime conversion)
+        created = pd.to_datetime(repo_prs_df[pr_created_at_column], utc=True).to_numpy()
+        closed = pd.to_datetime(repo_prs_df[pr_closed_at_column], utc=True).to_numpy()
+        merged = pd.to_datetime(repo_prs_df[pr_merged_at_column], utc=True).to_numpy()
+        states = repo_prs_df[pr_state_column].to_numpy()
+
+        # Build PullRequest objects from arrays
+        self._prs_cache = [
+            PullRequest(created_at=c, closed_at=cl, merged_at=m, state=s)
+            for c, cl, m, s in zip(created, closed, merged, states)
         ]
-        return prs
+        return self._prs_cache
 
     def get_repo_meta_for_package(self) -> RepoMeta:
-        """Extract repository metadata for a given repository URL."""
+        """Extract repository metadata for a given repository URL. Results are cached."""
+        if self._meta_cache is not None:
+            return self._meta_cache
+
         repo_url_column = self.malta_constants.repo_url_column
-        repo_meta_row = self.repo_meta_df[self.repo_meta_df[repo_url_column] == self.github_repo_url]
+        mask = self.repo_meta_df[repo_url_column] == self.github_repo_url
+        repo_meta_row = self.repo_meta_df.loc[mask]
         if len(repo_meta_row) == 0:
-            return RepoMeta()
+            self._meta_cache = RepoMeta()
+            return self._meta_cache
+
         row = repo_meta_row.iloc[0]
-        return RepoMeta(
+        self._meta_cache = RepoMeta(
             stars=int(row.get("stars", 0)),
             forks=int(row.get("forks", 0)),
             watchers=int(row.get("watchers", 0)),
             open_issues=int(row.get("open_issues", 0)),
             archived=bool(row.get("archived", False)),
         )
+        return self._meta_cache
 
     def development_activity_score(
         self,
@@ -349,25 +372,35 @@ class Malta:
         - Uses pull requests from self.pull_requests_df via get_pull_requests_for_package().
 
         """
-        # Initialize components
-        self.mrs = MRSComponents(
-            s_resp=0.0,
-            r_dec=0.0,
-            d_dec=0.0,
-            p_open=0.0,
-            n_prs=0,
-            n_terminated=0,
-            n_open=0,
-        )
         pull_requests = self.get_pull_requests_for_package()
         if not pull_requests:
-            # No external contribution signal
+            # No external contribution signal - Sresp is undefined per paper
+            self.mrs = MRSComponents(
+                s_resp=0.0,
+                r_dec=0.0,
+                d_dec=0.0,
+                p_open=0.0,
+                n_prs=0,
+                n_terminated=0,
+                n_open=0,
+            )
             return self.mrs
+
         # Filter PRs to those created within the evaluation window
         P = [pr for pr in pull_requests if self.eval_window.start <= pr.created_at < self.eval_window.end]
         if not P:
             # No PRs in evaluation window
+            self.mrs = MRSComponents(
+                s_resp=0.0,
+                r_dec=0.0,
+                d_dec=0.0,
+                p_open=0.0,
+                n_prs=0,
+                n_terminated=0,
+                n_open=0,
+            )
             return self.mrs
+
         # Partition PRs
         P_term = []
         P_open = []
@@ -380,11 +413,20 @@ class Malta:
             else:
                 raise ValueError(f"Unknown PR state: {pr.state}")
 
-        # If PRs exist but none are handled, score is 0
-        if P_term:
-            R_dec = len(P_term) / len(P)
-        else:
+        # If PRs exist but none are terminated, Sresp = 0 per paper
+        if not P_term:
+            self.mrs = MRSComponents(
+                s_resp=0.0,
+                r_dec=0.0,
+                d_dec=0.0,
+                p_open=0.0,
+                n_prs=len(P),
+                n_terminated=0,
+                n_open=len(P_open),
+            )
             return self.mrs
+
+        R_dec = len(P_term) / len(P)
 
         # ---- Decision Timeliness (D_dec) ----
         decision_delays = []
@@ -458,7 +500,7 @@ class Malta:
         f = self.__phi_count(meta.forks, K)
         w = self.__phi_count(meta.watchers, K)
         i = self.__phi_count(meta.open_issues, K)
-        i_pen = 0 if i == 0 else (1.0 - i)
+        i_pen = 1.0 - i
 
         parts = {"stars": s, "forks": f, "watchers": w, "issues": i_pen}
         observed = {k: v for k, v in parts.items() if v is not None}
@@ -536,3 +578,281 @@ class Malta:
         )
 
         return self.final
+
+
+class MaltaResult(NamedTuple):
+    """Result from scoring a single package with MALTA metrics."""
+
+    source: str
+    repo_url: str
+    # DAS components
+    das_score: float | None
+    das_dc: float | None
+    das_rc: float | None
+    # MRS components
+    mrs_score: float | None
+    mrs_rdec: float | None
+    mrs_ddec: float | None
+    mrs_popen: float | None
+    mrs_n_prs: int | None
+    mrs_n_terminated: int | None
+    mrs_n_open: int | None
+    # RMVS components
+    rmvs_score: float | None
+    rmvs_archived: bool | None
+    rmvs_stars_phi: float | None
+    rmvs_forks_phi: float | None
+    rmvs_issues_penalty: float | None
+    # Final score
+    final_score: float | None
+    final_score_100: float | None
+    # Counts
+    n_commits_total: int | None
+    n_commits_window: int | None
+    n_prs_total: int | None
+    n_prs_window: int | None
+    # Metadata
+    stars: int | None
+    forks: int | None
+    watchers: int | None
+    open_issues: int | None
+    archived: bool | None
+    # Error tracking
+    error: str | None
+
+
+def _score_single_repo(
+    source: str,
+    repo_url: str,
+    repo_commits_df: pd.DataFrame,
+    repo_prs_df: pd.DataFrame,
+    repo_meta_df: pd.DataFrame,
+    eval_end: datetime,
+    malta_constants: MaltaConstants | None,
+    das_constants: DevelopmentActivityScoreConstants | None,
+    mrs_constants: MaintainerResponsivenessScoreConstants | None,
+    repo_meta_constants: RepoViabilityScoreConstants | None,
+    final_agg_constants: AggregateScoreConstants | None,
+) -> MaltaResult:
+    """Score a single repository. Internal function used by score_repos."""
+    try:
+        m = Malta(
+            package=source,
+            github_repo_url=repo_url,
+            eval_end=eval_end,
+            commits_df=repo_commits_df,
+            pull_requests_df=repo_prs_df,
+            repo_meta_df=repo_meta_df,
+            malta_constants=malta_constants,
+            das_constants=das_constants,
+            mrs_constants=mrs_constants,
+            repo_meta_constants=repo_meta_constants,
+            final_agg_constants=final_agg_constants,
+        )
+
+        das = m.development_activity_score()
+        mrs = m.maintainer_responsiveness_score()
+        rmvs = m.repo_metadata_viability_score()
+        final = m.final_aggregation_score()
+
+        commits = m.get_commits_for_package()
+        prs = m.get_pull_requests_for_package()
+        meta = m.get_repo_meta_for_package()
+
+        return MaltaResult(
+            source=source,
+            repo_url=repo_url,
+            das_score=das.s_dev,
+            das_dc=das.d_c,
+            das_rc=das.r_c,
+            mrs_score=mrs.s_resp,
+            mrs_rdec=mrs.r_dec,
+            mrs_ddec=mrs.d_dec,
+            mrs_popen=mrs.p_open,
+            mrs_n_prs=mrs.n_prs,
+            mrs_n_terminated=mrs.n_terminated,
+            mrs_n_open=mrs.n_open,
+            rmvs_score=rmvs.s_meta,
+            rmvs_archived=rmvs.archived,
+            rmvs_stars_phi=rmvs.stars_phi,
+            rmvs_forks_phi=rmvs.forks_phi,
+            rmvs_issues_penalty=rmvs.open_issues_penalty,
+            final_score=final.s_final,
+            final_score_100=final.s_final_100,
+            n_commits_total=len(repo_commits_df),
+            n_commits_window=len(commits),
+            n_prs_total=len(repo_prs_df),
+            n_prs_window=len(prs),
+            stars=meta.stars,
+            forks=meta.forks,
+            watchers=meta.watchers,
+            open_issues=meta.open_issues,
+            archived=meta.archived,
+            error=None,
+        )
+    except Exception as e:
+        return MaltaResult(
+            source=source,
+            repo_url=repo_url,
+            das_score=None,
+            das_dc=None,
+            das_rc=None,
+            mrs_score=None,
+            mrs_rdec=None,
+            mrs_ddec=None,
+            mrs_popen=None,
+            mrs_n_prs=None,
+            mrs_n_terminated=None,
+            mrs_n_open=None,
+            rmvs_score=None,
+            rmvs_archived=None,
+            rmvs_stars_phi=None,
+            rmvs_forks_phi=None,
+            rmvs_issues_penalty=None,
+            final_score=None,
+            final_score_100=None,
+            n_commits_total=None,
+            n_commits_window=None,
+            n_prs_total=None,
+            n_prs_window=None,
+            stars=None,
+            forks=None,
+            watchers=None,
+            open_issues=None,
+            archived=None,
+            error=str(e),
+        )
+
+
+def score_repos(
+    packages: Sequence[tuple[str, str]],
+    commits_df: pd.DataFrame,
+    pull_requests_df: pd.DataFrame,
+    repo_meta_df: pd.DataFrame,
+    eval_end: datetime,
+    n_workers: int | None = None,
+    malta_constants: MaltaConstants | None = None,
+    das_constants: DevelopmentActivityScoreConstants | None = None,
+    mrs_constants: MaintainerResponsivenessScoreConstants | None = None,
+    repo_meta_constants: RepoViabilityScoreConstants | None = None,
+    final_agg_constants: AggregateScoreConstants | None = None,
+    show_progress: bool = True,
+) -> pd.DataFrame:
+    """Score multiple repositories concurrently using MALTA metrics.
+
+    Parameters
+    ----------
+    packages : Sequence[tuple[str, str]]
+        List of (source, repo_url) tuples identifying packages to score.
+    commits_df : pd.DataFrame
+        DataFrame containing commit data with 'repo_url' column.
+    pull_requests_df : pd.DataFrame
+        DataFrame containing PR data with 'repo_url' column.
+    repo_meta_df : pd.DataFrame
+        DataFrame containing repository metadata with 'repo_url' column.
+    eval_end : datetime
+        End of evaluation window (must be timezone-aware).
+    n_workers : int | None
+        Number of worker processes. None for auto (CPU count).
+    malta_constants : MaltaConstants | None
+        Custom MALTA constants.
+    das_constants : DevelopmentActivityScoreConstants | None
+        Custom DAS constants.
+    mrs_constants : MaintainerResponsivenessScoreConstants | None
+        Custom MRS constants.
+    repo_meta_constants : RepoViabilityScoreConstants | None
+        Custom RMVS constants.
+    final_agg_constants : AggregateScoreConstants | None
+        Custom aggregation constants.
+    show_progress : bool
+        Whether to show a progress bar (requires tqdm).
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with MALTA scores for each package. Columns include:
+        - source, repo_url: Package identifiers
+        - das_score, das_dc, das_rc: Development Activity Score components
+        - mrs_score, mrs_rdec, mrs_ddec, mrs_popen, mrs_n_*: MRS components
+        - rmvs_score, rmvs_archived, rmvs_*_phi, rmvs_issues_penalty: RMVS components
+        - final_score, final_score_100: Aggregated scores
+        - n_commits_total, n_commits_window, n_prs_total, n_prs_window: Counts
+        - stars, forks, watchers, open_issues, archived: Repository metadata
+        - error: Error message if scoring failed
+
+    Example
+    -------
+    >>> packages = [("pkg1", "https://github.com/owner/repo1"), ...]
+    >>> results_df = score_repos(
+    ...     packages=packages,
+    ...     commits_df=commits_df,
+    ...     pull_requests_df=prs_df,
+    ...     repo_meta_df=meta_df,
+    ...     eval_end=datetime(2026, 1, 1, tzinfo=timezone.utc),
+    ...     n_workers=8,
+    ... )
+    """
+    from concurrent.futures import ProcessPoolExecutor, as_completed
+    import os
+
+    if n_workers is None:
+        n_workers = os.cpu_count() or 4
+
+    # Get column name for repo_url (default or from constants)
+    repo_url_col = (malta_constants or MaltaConstants()).repo_url_column
+
+    # Pre-group DataFrames by repo_url for efficient lookup
+    commits_grouped = {url: group for url, group in commits_df.groupby(repo_url_col)}
+    prs_grouped = {url: group for url, group in pull_requests_df.groupby(repo_url_col)}
+    meta_grouped = {url: group for url, group in repo_meta_df.groupby(repo_url_col)}
+
+    # Empty DataFrames for repos with no data
+    empty_commits = commits_df.iloc[:0]
+    empty_prs = pull_requests_df.iloc[:0]
+    empty_meta = repo_meta_df.iloc[:0]
+
+    # Prepare work items
+    work_items = []
+    for source, repo_url in packages:
+        work_items.append((
+            source,
+            repo_url,
+            commits_grouped.get(repo_url, empty_commits),
+            prs_grouped.get(repo_url, empty_prs),
+            meta_grouped.get(repo_url, empty_meta),
+            eval_end,
+            malta_constants,
+            das_constants,
+            mrs_constants,
+            repo_meta_constants,
+            final_agg_constants,
+        ))
+
+    results: list[MaltaResult] = []
+
+    # Set up progress bar if requested
+    if show_progress:
+        try:
+            from tqdm import tqdm
+            progress = tqdm(total=len(work_items), desc="Scoring repos")
+        except ImportError:
+            show_progress = False
+            progress = None
+    else:
+        progress = None
+
+    # Process in parallel
+    with ProcessPoolExecutor(max_workers=n_workers) as executor:
+        futures = {executor.submit(_score_single_repo, *item): i for i, item in enumerate(work_items)}
+
+        for future in as_completed(futures):
+            result = future.result()
+            results.append(result)
+            if progress:
+                progress.update(1)
+
+    if progress:
+        progress.close()
+
+    # Convert to DataFrame
+    return pd.DataFrame([r._asdict() for r in results])

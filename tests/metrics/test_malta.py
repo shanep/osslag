@@ -14,6 +14,8 @@ from osslag.metrics.malta import (
     MRSComponents,
     RMVSComponents,
     AggregateScoreComponents,
+    MaltaResult,
+    score_repos,
 )
 
 
@@ -498,14 +500,21 @@ class TestRepoMetadataViabilityScore:
 
         assert result_many.s_meta < result_few.s_meta
 
-    def test_zero_metrics_low_score(self, eval_end):
-        """Repo with zero metrics should have low viability."""
+    def test_zero_metrics_partial_score(self, eval_end):
+        """Repo with zero metrics still gets credit for having no open issues.
+
+        Per the paper: Ipen = 1 - I* where I* = phi(open_issues).
+        When open_issues=0, I*=0, so Ipen=1.0 (full credit for no backlog).
+        With all other metrics at 0: s_meta = 0.25*0 + 0.25*0 + 0.25*0 + 0.25*1.0 = 0.25
+        """
         meta = RepoMeta(stars=0, forks=0, watchers=0, open_issues=0, archived=False)
         malta = create_malta(eval_end, [], meta=meta)
 
         result = malta.repo_metadata_viability_score()
 
-        assert result.s_meta == 0.0
+        # Zero stars/forks/watchers contribute 0, but zero open_issues contributes 0.25
+        assert result.s_meta == 0.25
+        assert result.open_issues_penalty == 1.0  # Full credit for no backlog
 
 
 # =============================================================================
@@ -607,3 +616,438 @@ class TestMaltaInitialization:
 
         # Windows should be contiguous (baseline ends where eval starts)
         assert malta.baseline_window.end == malta.eval_window.start
+
+
+# =============================================================================
+# Performance Tests
+# =============================================================================
+
+
+class TestPerformance:
+    """Performance tests for Malta class with large datasets."""
+
+    @pytest.fixture
+    def large_commits_df(self, eval_end):
+        """Generate a large commits DataFrame with 10,000 commits across 100 repos."""
+        import numpy as np
+
+        n_repos = 100
+        n_commits_per_repo = 100
+        total_commits = n_repos * n_commits_per_repo
+
+        repo_urls = [f"https://github.com/test/repo-{i}" for i in range(n_repos)]
+
+        # Generate random dates within a 4-year window
+        base_date = eval_end - timedelta(days=4 * 365)
+        random_days = np.random.randint(0, 4 * 365, total_commits)
+        dates = [base_date + timedelta(days=int(d)) for d in random_days]
+
+        # 10% trivial commits
+        is_trivial = np.random.random(total_commits) < 0.1
+
+        return pd.DataFrame({
+            "repo_url": [repo_urls[i // n_commits_per_repo] for i in range(total_commits)],
+            "date": dates,
+            "is_trivial": is_trivial,
+        })
+
+    @pytest.fixture
+    def large_prs_df(self, eval_end):
+        """Generate a large PRs DataFrame with 5,000 PRs across 100 repos."""
+        import numpy as np
+
+        n_repos = 100
+        n_prs_per_repo = 50
+        total_prs = n_repos * n_prs_per_repo
+
+        repo_urls = [f"https://github.com/test/repo-{i}" for i in range(n_repos)]
+
+        # Generate random created dates
+        base_date = eval_end - timedelta(days=2 * 365)
+        random_days = np.random.randint(0, 2 * 365, total_prs)
+        created_dates = [base_date + timedelta(days=int(d)) for d in random_days]
+
+        # 70% closed, 30% open
+        states = np.where(np.random.random(total_prs) < 0.7, "closed", "open")
+
+        # Closed PRs have closed_at and possibly merged_at
+        closed_dates = []
+        merged_dates = []
+        for i, (created, state) in enumerate(zip(created_dates, states)):
+            if state == "closed":
+                days_to_close = np.random.randint(1, 60)
+                closed_at = created + timedelta(days=days_to_close)
+                closed_dates.append(closed_at)
+                # 60% of closed PRs are merged
+                merged_dates.append(closed_at if np.random.random() < 0.6 else None)
+            else:
+                closed_dates.append(None)
+                merged_dates.append(None)
+
+        return pd.DataFrame({
+            "repo_url": [repo_urls[i // n_prs_per_repo] for i in range(total_prs)],
+            "created_at": created_dates,
+            "closed_at": closed_dates,
+            "merged_at": merged_dates,
+            "state": states,
+        })
+
+    @pytest.fixture
+    def large_meta_df(self):
+        """Generate metadata for 100 repos."""
+        import numpy as np
+
+        n_repos = 100
+        repo_urls = [f"https://github.com/test/repo-{i}" for i in range(n_repos)]
+
+        return pd.DataFrame({
+            "repo_url": repo_urls,
+            "stars": np.random.randint(0, 50000, n_repos),
+            "forks": np.random.randint(0, 10000, n_repos),
+            "watchers": np.random.randint(0, 5000, n_repos),
+            "open_issues": np.random.randint(0, 1000, n_repos),
+            "archived": np.random.random(n_repos) < 0.05,  # 5% archived
+        })
+
+    def test_caching_commits(self, eval_end, large_commits_df, large_prs_df, large_meta_df):
+        """Verify that commit extraction is cached - second call should be instant."""
+        import time
+
+        malta = Malta(
+            package="test-package",
+            github_repo_url="https://github.com/test/repo-0",
+            eval_end=eval_end,
+            commits_df=large_commits_df,
+            pull_requests_df=large_prs_df,
+            repo_meta_df=large_meta_df,
+        )
+
+        # First call - extracts and caches
+        start = time.perf_counter()
+        commits1 = malta.get_commits_for_package()
+        first_call_time = time.perf_counter() - start
+
+        # Second call - should return cached result
+        start = time.perf_counter()
+        commits2 = malta.get_commits_for_package()
+        second_call_time = time.perf_counter() - start
+
+        assert commits1 is commits2  # Same object (cached)
+        assert second_call_time < first_call_time * 0.1  # At least 10x faster
+
+    def test_caching_prs(self, eval_end, large_commits_df, large_prs_df, large_meta_df):
+        """Verify that PR extraction is cached - second call should be instant."""
+        import time
+
+        malta = Malta(
+            package="test-package",
+            github_repo_url="https://github.com/test/repo-0",
+            eval_end=eval_end,
+            commits_df=large_commits_df,
+            pull_requests_df=large_prs_df,
+            repo_meta_df=large_meta_df,
+        )
+
+        # First call - extracts and caches
+        start = time.perf_counter()
+        prs1 = malta.get_pull_requests_for_package()
+        first_call_time = time.perf_counter() - start
+
+        # Second call - should return cached result
+        start = time.perf_counter()
+        prs2 = malta.get_pull_requests_for_package()
+        second_call_time = time.perf_counter() - start
+
+        assert prs1 is prs2  # Same object (cached)
+        assert second_call_time < first_call_time * 0.1  # At least 10x faster
+
+    def test_caching_meta(self, eval_end, large_commits_df, large_prs_df, large_meta_df):
+        """Verify that metadata extraction is cached - second call should be instant."""
+        import time
+
+        malta = Malta(
+            package="test-package",
+            github_repo_url="https://github.com/test/repo-0",
+            eval_end=eval_end,
+            commits_df=large_commits_df,
+            pull_requests_df=large_prs_df,
+            repo_meta_df=large_meta_df,
+        )
+
+        # First call - extracts and caches
+        start = time.perf_counter()
+        meta1 = malta.get_repo_meta_for_package()
+        first_call_time = time.perf_counter() - start
+
+        # Second call - should return cached result
+        start = time.perf_counter()
+        meta2 = malta.get_repo_meta_for_package()
+        second_call_time = time.perf_counter() - start
+
+        assert meta1 is meta2  # Same object (cached)
+        assert second_call_time < first_call_time * 0.1  # At least 10x faster
+
+    def test_full_scoring_pipeline(self, eval_end, large_commits_df, large_prs_df, large_meta_df):
+        """Test full scoring pipeline completes in reasonable time."""
+        import time
+
+        malta = Malta(
+            package="test-package",
+            github_repo_url="https://github.com/test/repo-0",
+            eval_end=eval_end,
+            commits_df=large_commits_df,
+            pull_requests_df=large_prs_df,
+            repo_meta_df=large_meta_df,
+        )
+
+        start = time.perf_counter()
+        malta.development_activity_score()
+        malta.maintainer_responsiveness_score()
+        malta.repo_metadata_viability_score()
+        result = malta.final_aggregation_score()
+        elapsed = time.perf_counter() - start
+
+        # Full pipeline should complete in under 100ms for a single repo
+        assert elapsed < 0.1, f"Full scoring took {elapsed:.3f}s, expected < 0.1s"
+        assert 0.0 <= result.s_final <= 1.0
+
+    def test_multiple_repos_performance(self, eval_end, large_commits_df, large_prs_df, large_meta_df):
+        """Test scoring multiple repos from the same DataFrames."""
+        import time
+
+        n_repos_to_score = 10
+        repo_urls = [f"https://github.com/test/repo-{i}" for i in range(n_repos_to_score)]
+
+        start = time.perf_counter()
+        results = []
+        for repo_url in repo_urls:
+            malta = Malta(
+                package=f"package-{repo_url}",
+                github_repo_url=repo_url,
+                eval_end=eval_end,
+                commits_df=large_commits_df,
+                pull_requests_df=large_prs_df,
+                repo_meta_df=large_meta_df,
+            )
+            malta.development_activity_score()
+            malta.maintainer_responsiveness_score()
+            malta.repo_metadata_viability_score()
+            results.append(malta.final_aggregation_score())
+        elapsed = time.perf_counter() - start
+
+        # 10 repos should complete in under 1 second
+        assert elapsed < 1.0, f"Scoring 10 repos took {elapsed:.3f}s, expected < 1.0s"
+        assert len(results) == n_repos_to_score
+        for result in results:
+            assert 0.0 <= result.s_final <= 1.0
+
+
+# =============================================================================
+# Tests for Batch Processing (score_repos)
+# =============================================================================
+
+
+class TestScoreRepos:
+    """Tests for the score_repos batch processing function."""
+
+    def test_score_repos_basic(self, eval_end):
+        """Test basic batch scoring functionality."""
+        # Create test data for 3 repos
+        repo_urls = [
+            "https://github.com/test/repo-a",
+            "https://github.com/test/repo-b",
+            "https://github.com/test/repo-c",
+        ]
+
+        # Commits: repo-a has commits, repo-b has none, repo-c has some
+        commits_data = []
+        for i in range(10):
+            commits_data.append({
+                "repo_url": repo_urls[0],
+                "date": eval_end - timedelta(days=30 + i * 10),
+                "is_trivial": False,
+            })
+        for i in range(5):
+            commits_data.append({
+                "repo_url": repo_urls[2],
+                "date": eval_end - timedelta(days=60 + i * 20),
+                "is_trivial": False,
+            })
+        commits_df = pd.DataFrame(commits_data)
+
+        # PRs: only repo-a has PRs
+        prs_data = [{
+            "repo_url": repo_urls[0],
+            "created_at": eval_end - timedelta(days=100),
+            "closed_at": eval_end - timedelta(days=95),
+            "merged_at": eval_end - timedelta(days=95),
+            "state": "closed",
+        }]
+        prs_df = pd.DataFrame(prs_data)
+
+        # Metadata for all repos
+        meta_df = pd.DataFrame([
+            {"repo_url": repo_urls[0], "stars": 1000, "forks": 100, "watchers": 50, "open_issues": 10, "archived": False},
+            {"repo_url": repo_urls[1], "stars": 500, "forks": 50, "watchers": 25, "open_issues": 5, "archived": False},
+            {"repo_url": repo_urls[2], "stars": 100, "forks": 10, "watchers": 5, "open_issues": 1, "archived": True},
+        ])
+
+        packages = [
+            ("pkg-a", repo_urls[0]),
+            ("pkg-b", repo_urls[1]),
+            ("pkg-c", repo_urls[2]),
+        ]
+
+        result_df = score_repos(
+            packages=packages,
+            commits_df=commits_df,
+            pull_requests_df=prs_df,
+            repo_meta_df=meta_df,
+            eval_end=eval_end,
+            n_workers=2,
+            show_progress=False,
+        )
+
+        # Check DataFrame structure
+        assert len(result_df) == 3
+        assert "source" in result_df.columns
+        assert "repo_url" in result_df.columns
+        assert "das_score" in result_df.columns
+        assert "mrs_score" in result_df.columns
+        assert "rmvs_score" in result_df.columns
+        assert "final_score" in result_df.columns
+        assert "error" in result_df.columns
+
+        # All should have scores (no errors)
+        assert result_df["error"].isna().all()
+
+        # Check that all expected columns from notebook are present
+        expected_columns = [
+            "source", "repo_url",
+            "das_score", "das_dc", "das_rc",
+            "mrs_score", "mrs_rdec", "mrs_ddec", "mrs_popen",
+            "mrs_n_prs", "mrs_n_terminated", "mrs_n_open",
+            "rmvs_score", "rmvs_archived", "rmvs_stars_phi",
+            "rmvs_forks_phi", "rmvs_issues_penalty",
+            "final_score", "final_score_100",
+            "n_commits_total", "n_commits_window",
+            "n_prs_total", "n_prs_window",
+            "stars", "forks", "watchers", "open_issues", "archived",
+            "error",
+        ]
+        for col in expected_columns:
+            assert col in result_df.columns, f"Missing column: {col}"
+
+    def test_score_repos_handles_errors(self, eval_end):
+        """Test that errors are captured and don't crash the batch."""
+        # Create minimal valid data
+        commits_df = pd.DataFrame(columns=["repo_url", "date", "is_trivial"])
+        prs_df = pd.DataFrame(columns=["repo_url", "created_at", "closed_at", "merged_at", "state"])
+        meta_df = pd.DataFrame(columns=["repo_url", "stars", "forks", "watchers", "open_issues", "archived"])
+
+        packages = [
+            ("pkg-good", "https://github.com/test/good"),
+            ("pkg-missing", "https://github.com/test/missing"),
+        ]
+
+        result_df = score_repos(
+            packages=packages,
+            commits_df=commits_df,
+            pull_requests_df=prs_df,
+            repo_meta_df=meta_df,
+            eval_end=eval_end,
+            n_workers=1,
+            show_progress=False,
+        )
+
+        # Should return results for all packages
+        assert len(result_df) == 2
+
+    def test_score_repos_parallel_performance(self, eval_end):
+        """Test that parallel processing improves performance."""
+        import time
+        import numpy as np
+
+        # Generate data for 20 repos
+        n_repos = 20
+        repo_urls = [f"https://github.com/test/repo-{i}" for i in range(n_repos)]
+
+        # Generate commits
+        commits_data = []
+        base_date = eval_end - timedelta(days=365)
+        for repo_url in repo_urls:
+            for j in range(50):
+                commits_data.append({
+                    "repo_url": repo_url,
+                    "date": base_date + timedelta(days=np.random.randint(0, 365)),
+                    "is_trivial": np.random.random() < 0.1,
+                })
+        commits_df = pd.DataFrame(commits_data)
+
+        # Generate PRs
+        prs_data = []
+        for repo_url in repo_urls:
+            for j in range(10):
+                created = base_date + timedelta(days=np.random.randint(0, 300))
+                prs_data.append({
+                    "repo_url": repo_url,
+                    "created_at": created,
+                    "closed_at": created + timedelta(days=5),
+                    "merged_at": created + timedelta(days=5),
+                    "state": "closed",
+                })
+        prs_df = pd.DataFrame(prs_data)
+
+        # Generate metadata
+        meta_df = pd.DataFrame([{
+            "repo_url": url,
+            "stars": np.random.randint(100, 10000),
+            "forks": np.random.randint(10, 1000),
+            "watchers": np.random.randint(10, 500),
+            "open_issues": np.random.randint(0, 100),
+            "archived": False,
+        } for url in repo_urls])
+
+        packages = [(f"pkg-{i}", url) for i, url in enumerate(repo_urls)]
+
+        # Run with multiple workers
+        start = time.perf_counter()
+        result_df = score_repos(
+            packages=packages,
+            commits_df=commits_df,
+            pull_requests_df=prs_df,
+            repo_meta_df=meta_df,
+            eval_end=eval_end,
+            n_workers=4,
+            show_progress=False,
+        )
+        elapsed = time.perf_counter() - start
+
+        # Should complete reasonably fast and return all results
+        assert len(result_df) == n_repos
+        assert elapsed < 10.0, f"Batch scoring took {elapsed:.2f}s, expected < 10s"
+
+    def test_malta_result_columns_match_notebook(self):
+        """Verify MaltaResult has all columns expected by the notebook."""
+        # These are the columns used in the RQ1.ipynb notebook
+        notebook_columns = {
+            "source", "repo_url",
+            "das_score", "das_dc", "das_rc",
+            "mrs_score", "mrs_rdec", "mrs_ddec", "mrs_popen",
+            "mrs_n_prs", "mrs_n_terminated", "mrs_n_open",
+            "rmvs_score", "rmvs_archived", "rmvs_stars_phi",
+            "rmvs_forks_phi", "rmvs_issues_penalty",
+            "final_score", "final_score_100",
+            "n_commits_total", "n_commits_window",
+            "n_prs_total", "n_prs_window",
+            "stars", "forks", "watchers", "open_issues", "archived",
+            "error",
+        }
+
+        malta_result_fields = set(MaltaResult._fields)
+
+        assert notebook_columns == malta_result_fields, (
+            f"Column mismatch!\n"
+            f"Missing from MaltaResult: {notebook_columns - malta_result_fields}\n"
+            f"Extra in MaltaResult: {malta_result_fields - notebook_columns}"
+        )
