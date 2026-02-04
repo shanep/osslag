@@ -4,9 +4,12 @@ from __future__ import annotations
 import math
 from statistics import median
 from datetime import datetime
-from typing import NamedTuple, Optional, Sequence
+from typing import TYPE_CHECKING, Any, NamedTuple, Sequence
 import pandas as pd
 from dateutil.relativedelta import relativedelta
+
+if TYPE_CHECKING:
+    from tqdm import tqdm as TqdmType
 
 
 class EvaluationWindow(NamedTuple):
@@ -138,11 +141,11 @@ class Malta:
         commits_df: pd.DataFrame,
         pull_requests_df: pd.DataFrame,
         repo_meta_df: pd.DataFrame,
-        malta_constants: Optional[MaltaConstants] = None,
-        das_constants: Optional[DevelopmentActivityScoreConstants] = None,
-        mrs_constants: Optional[MaintainerResponsivenessScoreConstants] = None,
-        repo_meta_constants: Optional[RepoViabilityScoreConstants] = None,
-        final_agg_constants: Optional[AggregateScoreConstants] = None,
+        malta_constants: MaltaConstants | None = None,
+        das_constants: DevelopmentActivityScoreConstants | None = None,
+        mrs_constants: MaintainerResponsivenessScoreConstants | None = None,
+        repo_meta_constants: RepoViabilityScoreConstants | None = None,
+        final_agg_constants: AggregateScoreConstants | None = None,
     ):
         self.package = package
         self.github_repo_url = github_repo_url
@@ -150,10 +153,11 @@ class Malta:
         self.pull_requests_df = pull_requests_df
         self.repo_meta_df = repo_meta_df
 
-        self.das: DASComponents
-        self.mrs: MRSComponents
-        self.rmvs: RMVSComponents
-        self.final: AggregateScoreComponents
+        # Score components (populated by calling the respective methods)
+        self.das: DASComponents | None = None
+        self.mrs: MRSComponents | None = None
+        self.rmvs: RMVSComponents | None = None
+        self.final: AggregateScoreComponents | None = None
 
         # Cached extracted data (lazily populated)
         self._commits_cache: Sequence[Commit] | None = None
@@ -548,7 +552,19 @@ class Malta:
         Archived override:
         - If archived and S_resp is None: set S_resp = 0.0 (explicit cessation)
             before aggregation (still renormalizes if S_meta is None).
+
+        Raises
+        ------
+        ValueError
+            If component scores have not been computed yet.
         """
+        if self.das is None or self.mrs is None or self.rmvs is None:
+            raise ValueError(
+                "Component scores must be computed before final aggregation. "
+                "Call development_activity_score(), maintainer_responsiveness_score(), "
+                "and repo_metadata_viability_score() first."
+            )
+
         s_dev = self.das.s_dev
         s_resp = self.mrs.s_resp
         s_meta = self.rmvs.s_meta
@@ -831,15 +847,13 @@ def score_repos(
     results: list[MaltaResult] = []
 
     # Set up progress bar if requested
+    progress: Any = None
     if show_progress:
         try:
             from tqdm import tqdm
             progress = tqdm(total=len(work_items), desc="Scoring repos")
         except ImportError:
             show_progress = False
-            progress = None
-    else:
-        progress = None
 
     # Process in parallel
     with ProcessPoolExecutor(max_workers=n_workers) as executor:

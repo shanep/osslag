@@ -1,13 +1,13 @@
 [build-system]
-requires = ["uv_build>=0.9.28,<0.10.0"]
-build-backend = "uv_build"
+requires = ["setuptools>=64", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
 
 [project.scripts]
 osslag = "osslag.cli:main"
 
 [project]
 name = "osslag"
-version = "1.0.1"
+dynamic = ["version"]
 description = "Technical Lag tools for Open Source Software Projects"
 readme = "README.md"
 authors = [
@@ -63,6 +63,13 @@ dev = [
     "uv>=0.9.28",
 ]
 
+
+[tool.setuptools_scm]
+# Version is derived from git tags (e.g., v1.0.2 -> 1.0.2)
+# For development builds, adds .devN+gHASH suffix
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.ruff]
 line-length = 120
