@@ -116,7 +116,10 @@ class MaintainerResponsivenessScoreConstants(NamedTuple):
 class RepoViabilityScoreConstants(NamedTuple):
     """Constants for repository viability score computation."""
 
-    K: int = 10_000
+    K_stars: int = 10_000
+    K_forks: int = 10_000
+    K_watchers: int = 10_000
+    K_issues: int = 10_000
     alpha_archived: float = 0.7
     beta_stars: float = 0.25
     beta_forks: float = 0.25
@@ -499,11 +502,10 @@ class Malta:
         if abs(beta_sum - 1.0) > 1e-9:
             # Keep strict for reproducibility
             raise ValueError("beta weights must sum to 1.0 exactly.")
-        K = self.rmv_constants.K
-        s = self.__phi_count(meta.stars, K)
-        f = self.__phi_count(meta.forks, K)
-        w = self.__phi_count(meta.watchers, K)
-        i = self.__phi_count(meta.open_issues, K)
+        s = self.__phi_count(meta.stars, self.rmv_constants.K_stars)
+        f = self.__phi_count(meta.forks, self.rmv_constants.K_forks)
+        w = self.__phi_count(meta.watchers, self.rmv_constants.K_watchers)
+        i = self.__phi_count(meta.open_issues, self.rmv_constants.K_issues)
         i_pen = 1.0 - i
 
         parts = {"stars": s, "forks": f, "watchers": w, "issues": i_pen}
