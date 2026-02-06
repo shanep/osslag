@@ -5,7 +5,7 @@ import os
 import pathlib
 import re
 import shutil
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING, List, NamedTuple, cast
 
 if TYPE_CHECKING:
@@ -365,7 +365,7 @@ def load_commits(
     """
     # Default to 4 years ago if not specified
     if since is None:
-        since = datetime.now() - relativedelta(years=4)
+        since = datetime.now(tz=timezone.utc) - relativedelta(years=4)
     repo_path = pathlib.Path(repo_path)
 
     if not repo_path.exists():
@@ -459,7 +459,7 @@ def load_commits(
                 "email": _safe_str(lambda c=commit: c.author.email if c.author else None),
                 "message": _safe_str(lambda c=commit: c.message),
                 "timestamp": commit.commit_time,
-                "date": datetime.fromtimestamp(commit.commit_time),
+                "date": datetime.fromtimestamp(commit.commit_time, tz=timezone.utc),
             }
             if include_files:
                 row["files"] = _changed_paths(commit)
@@ -499,12 +499,12 @@ def find_upstream_version_tag_commit(
         re.compile(rf"^version[-_]?{re.escape(version)}$"),  # version-1.2.3 or version_1.2.3
     ]
 
-    for _, row in commits.iterrows():
-        tags = row.get("tags", [])
+    for row in commits.itertuples():
+        tags = getattr(row, "tags", [])
         if not isinstance(tags, list):
             continue
         for tag in tags:
             for pattern in version_tag_patterns:
                 if pattern.match(tag):
-                    return str(row["hash"])
+                    return str(row.hash)
     return None

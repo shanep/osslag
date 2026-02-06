@@ -1,12 +1,15 @@
 # Maintenance-Aware Lag and Technical Abandonment (MALTA) metrics
 from __future__ import annotations
 
+import logging
 import math
 from statistics import median
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, NamedTuple, Sequence
 import pandas as pd
 from dateutil.relativedelta import relativedelta
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from tqdm import tqdm as TqdmType
@@ -416,7 +419,8 @@ class Malta:
             elif pr.state == "open":
                 P_open.append(pr)
             else:
-                raise ValueError(f"Unknown PR state: {pr.state}")
+                logger.warning("Unknown PR state '%s'; skipping PR", pr.state)
+                continue
 
         # If PRs exist but none are terminated, Sresp = 0 per paper
         if not P_term:

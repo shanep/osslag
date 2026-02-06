@@ -20,11 +20,13 @@ logger = logging.getLogger(__name__)
 logging.getLogger("urllib3").setLevel(logging.CRITICAL)
 logging.getLogger("requests").setLevel(logging.CRITICAL)
 
-# Redirect PyGithub's logging to a file for debugging
+# Redirect PyGithub's logging to a file for debugging (opt-in via GITHUB_DEBUG_LOG env var)
 github_logger = logging.getLogger("github")
-filer_handler = logging.FileHandler("github_debug.log")
-filer_handler.setLevel(logging.INFO)
-github_logger.addHandler(filer_handler)
+_github_debug_log = os.getenv("GITHUB_DEBUG_LOG")
+if _github_debug_log:
+    _file_handler = logging.FileHandler(_github_debug_log)
+    _file_handler.setLevel(logging.INFO)
+    github_logger.addHandler(_file_handler)
 github_logger.setLevel(logging.CRITICAL)
 
 
