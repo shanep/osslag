@@ -45,7 +45,9 @@ app = typer.Typer()
 
 @app.callback()
 def main_callback(
-    version: bool = typer.Option(None, "--version", "-v", callback=version_callback, is_eager=True, help="Show version"),
+    version: bool = typer.Option(
+        None, "--version", "-v", callback=version_callback, is_eager=True, help="Show version"
+    ),
 ):
     """OSS Lag - Technical Lag tools for Open Source Software Projects."""
     pass

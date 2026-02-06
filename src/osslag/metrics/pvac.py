@@ -11,6 +11,7 @@ Description:
     numbers.
 """
 
+import math
 import re
 from collections.abc import Sequence
 from typing import NamedTuple, TypedDict
@@ -29,6 +30,17 @@ class VersionInfo(TypedDict):
     major: int | None
     minor: int | None
     patch: int | None
+
+
+class VersionDeltaWeights(NamedTuple):
+    """
+    Constant weights to apply to the major, minor, and patch version numbers
+    when calculating the version delta. Constants default to the values used in the original PVAC implementation.
+    """
+
+    major: float = 0.3337
+    minor: float = 0.3306
+    patch: float = 0.3321
 
 
 class VersionTuple(NamedTuple):
@@ -99,44 +111,68 @@ def lookup_category(version_string: str) -> VersionInfo:
     return version_dict
 
 
-
-def version_delta(
+def version_delta_agg(
     packages: Sequence[tuple[VersionTuple, VersionTuple]],
-    major_weight: float,
-    minor_weight: float,
-    patch_weight: float,
+    weights: VersionDeltaWeights,
+    saturation: float = 10.0,
 ) -> float:
-    """Calculate the version delta between two packages based on the weighted
-        sum of the major, minor, and patch version numbers.
+    """Calculate the sum of normalized version deltas across multiple package pairs.
 
     Args:
         packages: A list of tuples containing version information
-        major_weight: The weight to apply to the major version number
-        minor_weight: The weight to apply to the minor version number
-        patch_weight: The weight to apply to the patch version number
+        weights: The weights to apply to the major, minor, and patch version numbers
+        saturation: The saturation constant K for log normalization passed to version_delta
 
     Returns:
-        A single value representing the sum of the weighted version deltas
+        The sum of the normalized version deltas (each in [0, 1])
 
     """
-    version_delta: float = 0
+    return sum(version_delta(a, b, weights, saturation) for a, b in packages)
 
-    for version_tuple_A, version_tuple_B in packages:
-        # Destructure the version tuples
-        semanticA, epochA, majorA, minorA, patchA = version_tuple_A
-        semanticB, epochB, majorB, minorB, patchB = version_tuple_B
 
-        if epochA != epochB:
-            continue
+def version_delta(
+    a: VersionTuple,
+    b: VersionTuple,
+    weights: VersionDeltaWeights,
+    saturation: float = 10.0,
+) -> float:
+    """Calculate a normalized version delta between two versions.
 
-        if semanticA == "Unknown" or semanticB == "Unknown":
-            continue
+    Uses log-saturated normalization (same approach as MALTA's phi function)
+    to map the raw weighted delta to [0, 1].
 
-        weighted_version_A = (majorA * major_weight) + (minorA * minor_weight) + (patchA * patch_weight)
-        weighted_version_B = (majorB * major_weight) + (minorB * minor_weight) + (patchB * patch_weight)
-        version_delta += abs(weighted_version_B - weighted_version_A)
+    Args:
+        a: First version tuple
+        b: Second version tuple
+        weights: The weights to apply to the major, minor, and patch version numbers
+        saturation: The saturation constant K for log normalization. Deltas at or
+            above this value map to 1.0.
 
-    return version_delta
+    Returns:
+        A float in [0, 1] where 0 means identical versions and 1 means the
+        delta has reached or exceeded the saturation point. Returns 0.0 if
+        epochs differ or either version is Unknown.
+
+    """
+    if a.epoch != b.epoch:
+        return 0.0
+
+    if a.semantic == "Unknown" or b.semantic == "Unknown":
+        return 0.0
+
+    if saturation <= 0:
+        raise ValueError("saturation must be positive")
+
+    weighted_a = (a.major * weights.major) + (a.minor * weights.minor) + (a.patch * weights.patch)
+    weighted_b = (b.major * weights.major) + (b.minor * weights.minor) + (b.patch * weights.patch)
+    raw_delta = weighted_a - weighted_b
+
+    assert raw_delta >= 0, (
+        f"Negative VND: upstream version {a} must be >= distro version {b} "
+        f"(weighted: {weighted_a} < {weighted_b})"
+    )
+
+    return min(1.0, math.log1p(raw_delta) / math.log1p(saturation))
 
 
 def categorize_development_activity(version_string_A: str, version_string_B: str) -> str:

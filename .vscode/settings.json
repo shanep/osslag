@@ -14,7 +14,9 @@
         "rmvs",
         "sboudrias",
         "snoyberg",
+        "trivials",
         "trixie",
+        "pydatetime",
         "venv"
     ],
     "outline.collapseItems": "alwaysCollapse",

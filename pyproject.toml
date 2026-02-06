@@ -56,6 +56,7 @@ pythonpath = [
 [dependency-groups]
 dev = [
     "deptry>=0.24.0",
+    "pandas-stubs>=3.0.0.260204",
     "pycheck>=0.1",
     "pyright>=1.1.408",
     "pytest>=9.0.2",
@@ -73,6 +74,7 @@ where = ["src"]
 
 [tool.pyright]
 include = ["src", "tests"]
+typeCheckingMode = "standard"
 
 [tool.ruff]
 line-length = 120

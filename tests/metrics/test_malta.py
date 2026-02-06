@@ -128,7 +128,8 @@ class TestDevelopmentActivityScore:
 
         # Eval: 1 commit per month for 12 months
         eval_commits = [
-            Commit(date=malta_for_windows.eval_window.start + timedelta(days=30 * i), is_trivial=False) for i in range(12)
+            Commit(date=malta_for_windows.eval_window.start + timedelta(days=30 * i), is_trivial=False)
+            for i in range(12)
         ]
 
         all_commits = baseline_commits + eval_commits
@@ -145,10 +146,14 @@ class TestDevelopmentActivityScore:
         malta_for_windows = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
         # One commit in baseline
-        baseline_commits = [Commit(date=malta_for_windows.baseline_window.start + timedelta(days=100), is_trivial=False)]
+        baseline_commits = [
+            Commit(date=malta_for_windows.baseline_window.start + timedelta(days=100), is_trivial=False)
+        ]
 
         # 10 commits in eval, one per day from the end
-        eval_commits = [Commit(date=malta_for_windows.eval_window.end - timedelta(days=i + 1), is_trivial=False) for i in range(10)]
+        eval_commits = [
+            Commit(date=malta_for_windows.eval_window.end - timedelta(days=i + 1), is_trivial=False) for i in range(10)
+        ]
 
         all_commits = baseline_commits + eval_commits
         malta = create_malta(eval_end, all_commits, baseline_months=12, eval_months=12)
@@ -178,7 +183,9 @@ class TestDevelopmentActivityScore:
         malta_for_windows = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
         # Only commits in eval
-        eval_commits = [Commit(date=malta_for_windows.eval_window.end - timedelta(days=i + 1), is_trivial=False) for i in range(5)]
+        eval_commits = [
+            Commit(date=malta_for_windows.eval_window.end - timedelta(days=i + 1), is_trivial=False) for i in range(5)
+        ]
         malta = create_malta(eval_end, eval_commits, baseline_months=12, eval_months=12)
 
         result = malta.development_activity_score(include_trivial=False)
@@ -255,7 +262,9 @@ class TestDevelopmentActivityScore:
         """Very recent eval commits should have minimal recency decay."""
         malta_for_windows = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
-        baseline_commits = [Commit(date=malta_for_windows.baseline_window.start + timedelta(days=100), is_trivial=False)]
+        baseline_commits = [
+            Commit(date=malta_for_windows.baseline_window.start + timedelta(days=100), is_trivial=False)
+        ]
         # Commit 1 day before eval_end
         eval_commits = [Commit(date=malta_for_windows.eval_window.end - timedelta(days=1), is_trivial=False)]
 
@@ -272,7 +281,9 @@ class TestDevelopmentActivityScore:
         """Very old eval commits should have strong recency decay."""
         malta_for_windows = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
-        baseline_commits = [Commit(date=malta_for_windows.baseline_window.start + timedelta(days=100), is_trivial=False)]
+        baseline_commits = [
+            Commit(date=malta_for_windows.baseline_window.start + timedelta(days=100), is_trivial=False)
+        ]
         # Commit at start of eval window
         eval_commits = [Commit(date=malta_for_windows.eval_window.start + timedelta(days=1), is_trivial=False)]
 
@@ -290,7 +301,9 @@ class TestDevelopmentActivityScore:
         """D_c > 1 should be clamped to 1 in final score."""
         malta_for_windows = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
-        baseline_commits = [Commit(date=malta_for_windows.baseline_window.start + timedelta(days=100), is_trivial=False)]
+        baseline_commits = [
+            Commit(date=malta_for_windows.baseline_window.start + timedelta(days=100), is_trivial=False)
+        ]
         # 100 commits in eval
         eval_commits = [
             Commit(date=malta_for_windows.eval_window.end - timedelta(days=i + 1), is_trivial=False) for i in range(100)
@@ -310,7 +323,9 @@ class TestDevelopmentActivityScore:
         """All trivial eval commits should result in 0 when include_trivial=False."""
         malta_for_windows = create_malta(eval_end, [], baseline_months=12, eval_months=12)
 
-        baseline_commits = [Commit(date=malta_for_windows.baseline_window.start + timedelta(days=100), is_trivial=False)]
+        baseline_commits = [
+            Commit(date=malta_for_windows.baseline_window.start + timedelta(days=100), is_trivial=False)
+        ]
         eval_commits = [
             Commit(date=malta_for_windows.eval_window.end - timedelta(days=100), is_trivial=True),
             Commit(date=malta_for_windows.eval_window.end - timedelta(days=50), is_trivial=True),
@@ -645,11 +660,13 @@ class TestPerformance:
         # 10% trivial commits
         is_trivial = np.random.random(total_commits) < 0.1
 
-        return pd.DataFrame({
-            "repo_url": [repo_urls[i // n_commits_per_repo] for i in range(total_commits)],
-            "date": dates,
-            "is_trivial": is_trivial,
-        })
+        return pd.DataFrame(
+            {
+                "repo_url": [repo_urls[i // n_commits_per_repo] for i in range(total_commits)],
+                "date": dates,
+                "is_trivial": is_trivial,
+            }
+        )
 
     @pytest.fixture
     def large_prs_df(self, eval_end):
@@ -684,13 +701,15 @@ class TestPerformance:
                 closed_dates.append(None)
                 merged_dates.append(None)
 
-        return pd.DataFrame({
-            "repo_url": [repo_urls[i // n_prs_per_repo] for i in range(total_prs)],
-            "created_at": created_dates,
-            "closed_at": closed_dates,
-            "merged_at": merged_dates,
-            "state": states,
-        })
+        return pd.DataFrame(
+            {
+                "repo_url": [repo_urls[i // n_prs_per_repo] for i in range(total_prs)],
+                "created_at": created_dates,
+                "closed_at": closed_dates,
+                "merged_at": merged_dates,
+                "state": states,
+            }
+        )
 
     @pytest.fixture
     def large_meta_df(self):
@@ -700,14 +719,16 @@ class TestPerformance:
         n_repos = 100
         repo_urls = [f"https://github.com/test/repo-{i}" for i in range(n_repos)]
 
-        return pd.DataFrame({
-            "repo_url": repo_urls,
-            "stars": np.random.randint(0, 50000, n_repos),
-            "forks": np.random.randint(0, 10000, n_repos),
-            "watchers": np.random.randint(0, 5000, n_repos),
-            "open_issues": np.random.randint(0, 1000, n_repos),
-            "archived": np.random.random(n_repos) < 0.05,  # 5% archived
-        })
+        return pd.DataFrame(
+            {
+                "repo_url": repo_urls,
+                "stars": np.random.randint(0, 50000, n_repos),
+                "forks": np.random.randint(0, 10000, n_repos),
+                "watchers": np.random.randint(0, 5000, n_repos),
+                "open_issues": np.random.randint(0, 1000, n_repos),
+                "archived": np.random.random(n_repos) < 0.05,  # 5% archived
+            }
+        )
 
     def test_caching_commits(self, eval_end, large_commits_df, large_prs_df, large_meta_df):
         """Verify that commit extraction is cached - second call should be instant."""
@@ -862,35 +883,64 @@ class TestScoreRepos:
         # Commits: repo-a has commits, repo-b has none, repo-c has some
         commits_data = []
         for i in range(10):
-            commits_data.append({
-                "repo_url": repo_urls[0],
-                "date": eval_end - timedelta(days=30 + i * 10),
-                "is_trivial": False,
-            })
+            commits_data.append(
+                {
+                    "repo_url": repo_urls[0],
+                    "date": eval_end - timedelta(days=30 + i * 10),
+                    "is_trivial": False,
+                }
+            )
         for i in range(5):
-            commits_data.append({
-                "repo_url": repo_urls[2],
-                "date": eval_end - timedelta(days=60 + i * 20),
-                "is_trivial": False,
-            })
+            commits_data.append(
+                {
+                    "repo_url": repo_urls[2],
+                    "date": eval_end - timedelta(days=60 + i * 20),
+                    "is_trivial": False,
+                }
+            )
         commits_df = pd.DataFrame(commits_data)
 
         # PRs: only repo-a has PRs
-        prs_data = [{
-            "repo_url": repo_urls[0],
-            "created_at": eval_end - timedelta(days=100),
-            "closed_at": eval_end - timedelta(days=95),
-            "merged_at": eval_end - timedelta(days=95),
-            "state": "closed",
-        }]
+        prs_data = [
+            {
+                "repo_url": repo_urls[0],
+                "created_at": eval_end - timedelta(days=100),
+                "closed_at": eval_end - timedelta(days=95),
+                "merged_at": eval_end - timedelta(days=95),
+                "state": "closed",
+            }
+        ]
         prs_df = pd.DataFrame(prs_data)
 
         # Metadata for all repos
-        meta_df = pd.DataFrame([
-            {"repo_url": repo_urls[0], "stars": 1000, "forks": 100, "watchers": 50, "open_issues": 10, "archived": False},
-            {"repo_url": repo_urls[1], "stars": 500, "forks": 50, "watchers": 25, "open_issues": 5, "archived": False},
-            {"repo_url": repo_urls[2], "stars": 100, "forks": 10, "watchers": 5, "open_issues": 1, "archived": True},
-        ])
+        meta_df = pd.DataFrame(
+            [
+                {
+                    "repo_url": repo_urls[0],
+                    "stars": 1000,
+                    "forks": 100,
+                    "watchers": 50,
+                    "open_issues": 10,
+                    "archived": False,
+                },
+                {
+                    "repo_url": repo_urls[1],
+                    "stars": 500,
+                    "forks": 50,
+                    "watchers": 25,
+                    "open_issues": 5,
+                    "archived": False,
+                },
+                {
+                    "repo_url": repo_urls[2],
+                    "stars": 100,
+                    "forks": 10,
+                    "watchers": 5,
+                    "open_issues": 1,
+                    "archived": True,
+                },
+            ]
+        )
 
         packages = [
             ("pkg-a", repo_urls[0]),
@@ -923,16 +973,34 @@ class TestScoreRepos:
 
         # Check that all expected columns from notebook are present
         expected_columns = [
-            "source", "repo_url",
-            "das_score", "das_dc", "das_rc",
-            "mrs_score", "mrs_rdec", "mrs_ddec", "mrs_popen",
-            "mrs_n_prs", "mrs_n_terminated", "mrs_n_open",
-            "rmvs_score", "rmvs_archived", "rmvs_stars_phi",
-            "rmvs_forks_phi", "rmvs_issues_penalty",
-            "final_score", "final_score_100",
-            "n_commits_total", "n_commits_window",
-            "n_prs_total", "n_prs_window",
-            "stars", "forks", "watchers", "open_issues", "archived",
+            "source",
+            "repo_url",
+            "das_score",
+            "das_dc",
+            "das_rc",
+            "mrs_score",
+            "mrs_rdec",
+            "mrs_ddec",
+            "mrs_popen",
+            "mrs_n_prs",
+            "mrs_n_terminated",
+            "mrs_n_open",
+            "rmvs_score",
+            "rmvs_archived",
+            "rmvs_stars_phi",
+            "rmvs_forks_phi",
+            "rmvs_issues_penalty",
+            "final_score",
+            "final_score_100",
+            "n_commits_total",
+            "n_commits_window",
+            "n_prs_total",
+            "n_prs_window",
+            "stars",
+            "forks",
+            "watchers",
+            "open_issues",
+            "archived",
             "error",
         ]
         for col in expected_columns:
@@ -977,11 +1045,13 @@ class TestScoreRepos:
         base_date = eval_end - timedelta(days=365)
         for repo_url in repo_urls:
             for j in range(50):
-                commits_data.append({
-                    "repo_url": repo_url,
-                    "date": base_date + timedelta(days=np.random.randint(0, 365)),
-                    "is_trivial": np.random.random() < 0.1,
-                })
+                commits_data.append(
+                    {
+                        "repo_url": repo_url,
+                        "date": base_date + timedelta(days=np.random.randint(0, 365)),
+                        "is_trivial": np.random.random() < 0.1,
+                    }
+                )
         commits_df = pd.DataFrame(commits_data)
 
         # Generate PRs
@@ -989,24 +1059,31 @@ class TestScoreRepos:
         for repo_url in repo_urls:
             for j in range(10):
                 created = base_date + timedelta(days=np.random.randint(0, 300))
-                prs_data.append({
-                    "repo_url": repo_url,
-                    "created_at": created,
-                    "closed_at": created + timedelta(days=5),
-                    "merged_at": created + timedelta(days=5),
-                    "state": "closed",
-                })
+                prs_data.append(
+                    {
+                        "repo_url": repo_url,
+                        "created_at": created,
+                        "closed_at": created + timedelta(days=5),
+                        "merged_at": created + timedelta(days=5),
+                        "state": "closed",
+                    }
+                )
         prs_df = pd.DataFrame(prs_data)
 
         # Generate metadata
-        meta_df = pd.DataFrame([{
-            "repo_url": url,
-            "stars": np.random.randint(100, 10000),
-            "forks": np.random.randint(10, 1000),
-            "watchers": np.random.randint(10, 500),
-            "open_issues": np.random.randint(0, 100),
-            "archived": False,
-        } for url in repo_urls])
+        meta_df = pd.DataFrame(
+            [
+                {
+                    "repo_url": url,
+                    "stars": np.random.randint(100, 10000),
+                    "forks": np.random.randint(10, 1000),
+                    "watchers": np.random.randint(10, 500),
+                    "open_issues": np.random.randint(0, 100),
+                    "archived": False,
+                }
+                for url in repo_urls
+            ]
+        )
 
         packages = [(f"pkg-{i}", url) for i, url in enumerate(repo_urls)]
 
@@ -1031,16 +1108,34 @@ class TestScoreRepos:
         """Verify MaltaResult has all columns expected by the notebook."""
         # These are the columns used in the RQ1.ipynb notebook
         notebook_columns = {
-            "source", "repo_url",
-            "das_score", "das_dc", "das_rc",
-            "mrs_score", "mrs_rdec", "mrs_ddec", "mrs_popen",
-            "mrs_n_prs", "mrs_n_terminated", "mrs_n_open",
-            "rmvs_score", "rmvs_archived", "rmvs_stars_phi",
-            "rmvs_forks_phi", "rmvs_issues_penalty",
-            "final_score", "final_score_100",
-            "n_commits_total", "n_commits_window",
-            "n_prs_total", "n_prs_window",
-            "stars", "forks", "watchers", "open_issues", "archived",
+            "source",
+            "repo_url",
+            "das_score",
+            "das_dc",
+            "das_rc",
+            "mrs_score",
+            "mrs_rdec",
+            "mrs_ddec",
+            "mrs_popen",
+            "mrs_n_prs",
+            "mrs_n_terminated",
+            "mrs_n_open",
+            "rmvs_score",
+            "rmvs_archived",
+            "rmvs_stars_phi",
+            "rmvs_forks_phi",
+            "rmvs_issues_penalty",
+            "final_score",
+            "final_score_100",
+            "n_commits_total",
+            "n_commits_window",
+            "n_prs_total",
+            "n_prs_window",
+            "stars",
+            "forks",
+            "watchers",
+            "open_issues",
+            "archived",
             "error",
         }
 

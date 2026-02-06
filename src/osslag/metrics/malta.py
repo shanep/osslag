@@ -219,11 +219,11 @@ class Malta:
             return self._commits_cache
 
         # Extract columns as arrays (vectorized datetime conversion)
-        dates = pd.to_datetime(repo_commits_df[repo_dates_column], utc=True).to_numpy()
+        dates = pd.to_datetime(repo_commits_df[repo_dates_column], utc=True).dt.to_pydatetime()
         trivials = repo_commits_df[repo_is_trivial_column].to_numpy()
 
         # Build Commit objects from arrays (faster than iterrows/itertuples)
-        self._commits_cache = [Commit(date=d, is_trivial=t) for d, t in zip(dates, trivials)]
+        self._commits_cache = [Commit(date=d, is_trivial=bool(t)) for d, t in zip(dates, trivials)]
         return self._commits_cache
 
     def get_pull_requests_for_package(self) -> Sequence[PullRequest]:
@@ -244,14 +244,14 @@ class Malta:
             return self._prs_cache
 
         # Extract columns as arrays (vectorized datetime conversion)
-        created = pd.to_datetime(repo_prs_df[pr_created_at_column], utc=True).to_numpy()
-        closed = pd.to_datetime(repo_prs_df[pr_closed_at_column], utc=True).to_numpy()
-        merged = pd.to_datetime(repo_prs_df[pr_merged_at_column], utc=True).to_numpy()
+        created = pd.to_datetime(repo_prs_df[pr_created_at_column], utc=True).dt.to_pydatetime()
+        closed = pd.to_datetime(repo_prs_df[pr_closed_at_column], utc=True).dt.to_pydatetime()
+        merged = pd.to_datetime(repo_prs_df[pr_merged_at_column], utc=True).dt.to_pydatetime()
         states = repo_prs_df[pr_state_column].to_numpy()
 
         # Build PullRequest objects from arrays
         self._prs_cache = [
-            PullRequest(created_at=c, closed_at=cl, merged_at=m, state=s)
+            PullRequest(created_at=c, closed_at=cl, merged_at=m, state=str(s))
             for c, cl, m, s in zip(created, closed, merged, states)
         ]
         return self._prs_cache
@@ -832,19 +832,21 @@ def score_repos(
     # Prepare work items
     work_items = []
     for source, repo_url in packages:
-        work_items.append((
-            source,
-            repo_url,
-            commits_grouped.get(repo_url, empty_commits),
-            prs_grouped.get(repo_url, empty_prs),
-            meta_grouped.get(repo_url, empty_meta),
-            eval_end,
-            malta_constants,
-            das_constants,
-            mrs_constants,
-            repo_meta_constants,
-            final_agg_constants,
-        ))
+        work_items.append(
+            (
+                source,
+                repo_url,
+                commits_grouped.get(repo_url, empty_commits),
+                prs_grouped.get(repo_url, empty_prs),
+                meta_grouped.get(repo_url, empty_meta),
+                eval_end,
+                malta_constants,
+                das_constants,
+                mrs_constants,
+                repo_meta_constants,
+                final_agg_constants,
+            )
+        )
 
     results: list[MaltaResult] = []
 
@@ -853,6 +855,7 @@ def score_repos(
     if show_progress:
         try:
             from tqdm import tqdm
+
             progress = tqdm(total=len(work_items), desc="Scoring repos")
         except ImportError:
             show_progress = False
