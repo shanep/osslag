@@ -17,6 +17,7 @@ from rich.status import Status
 from osslag import __version__
 from osslag.distro import get_handler
 from osslag.executor import ParallelExecutor, SuppressConsoleLogging, TaskResult
+from osslag.pipeline import PipelineFiles, PipelineStepError, require_file, validate_columns
 from osslag.tasks import (
     _clone_task,
     _fetch_github_repo_metadata_task,
@@ -235,43 +236,48 @@ def run_dataset_pipeline(
         )
     )
 
-    # Suppress console logging for steps 1-4 (non-parallel steps)
-    with SuppressConsoleLogging():
-        # Step 1: Get and cache package data for each release
-        with Status("[bold cyan]Step 1/8:[/] Fetching packages...", console=console):
-            fetch_packages(distro=distro, releases=to_process, cache=cache_dir)
-        console.print("[green]✓[/] Step 1/8: Fetched packages")
+    try:
+        # Suppress console logging for steps 1-4 (non-parallel steps)
+        with SuppressConsoleLogging():
+            # Step 1: Get and cache package data for each release
+            with Status("[bold cyan]Step 1/8:[/] Fetching packages...", console=console):
+                fetch_packages(distro=distro, releases=to_process, cache=cache_dir)
+            console.print("[green]✓[/] Step 1/8: Fetched packages")
 
-        # Step 2: Filter GitHub repos
-        with Status("[bold cyan]Step 2/8:[/] Filtering GitHub repos...", console=console):
-            filter_debian_github_repos(distro=distro, release=to_process, cache=cache_dir, force=force)
-        console.print("[green]✓[/] Step 2/8: Filtered GitHub repos")
+            # Step 2: Filter GitHub repos
+            with Status("[bold cyan]Step 2/8:[/] Filtering GitHub repos...", console=console):
+                filter_debian_github_repos(distro=distro, release=to_process, cache=cache_dir, force=force)
+            console.print("[green]✓[/] Step 2/8: Filtered GitHub repos")
 
-        # Step 3: Extract the version string and add upstream version columns
-        with Status("[bold cyan]Step 3/8:[/] Extracting upstream versions...", console=console):
-            extract_upstream_versions(distro=distro, release=to_process, cache=cache_dir, force=force)
-        console.print("[green]✓[/] Step 3/8: Extracted upstream versions")
+            # Step 3: Extract the version string and add upstream version columns
+            with Status("[bold cyan]Step 3/8:[/] Extracting upstream versions...", console=console):
+                extract_upstream_versions(distro=distro, release=to_process, cache=cache_dir, force=force)
+            console.print("[green]✓[/] Step 3/8: Extracted upstream versions")
 
-        # Step 4: Merge releases into a single DataFrame with all required columns
-        with Status("[bold cyan]Step 4/8:[/] Merging releases...", console=console):
-            merge_releases(distro=distro, releases=to_process, cache=cache_dir, force=force)
-        console.print("[green]✓[/] Step 4/8: Merged releases")
+            # Step 4: Merge releases into a single DataFrame with all required columns
+            with Status("[bold cyan]Step 4/8:[/] Merging releases...", console=console):
+                merge_releases(distro=distro, releases=to_process, cache=cache_dir, force=force)
+            console.print("[green]✓[/] Step 4/8: Merged releases")
 
-    # Step 5: Clone all upstream GitHub repos (has its own UI)
-    console.print("\n[bold cyan]Step 5/8:[/] Cloning repositories...")
-    clone_upstream_repos(distro=distro, cache=cache_dir)
+        # Step 5: Clone all upstream GitHub repos (has its own UI)
+        console.print("\n[bold cyan]Step 5/8:[/] Cloning repositories...")
+        clone_upstream_repos(distro=distro, cache=cache_dir)
 
-    # Step 6: Extract all commits into a single DataFrame (has its own UI)
-    console.print("\n[bold cyan]Step 6/8:[/] Loading commits...")
-    load_commits_into_dataframe(distro=distro, cache=cache_dir, force=force)
+        # Step 6: Extract all commits into a single DataFrame (has its own UI)
+        console.print("\n[bold cyan]Step 6/8:[/] Loading commits...")
+        load_commits_into_dataframe(distro=distro, cache=cache_dir, force=force)
 
-    # Step 7: Fetch GitHub metadata for all repos (has its own UI)
-    console.print("\n[bold cyan]Step 7/8:[/] Fetching GitHub metadata...")
-    all_github_metadata(distro=distro, cache=cache_dir, force=force)
+        # Step 7: Fetch GitHub metadata for all repos (has its own UI)
+        console.print("\n[bold cyan]Step 7/8:[/] Fetching GitHub metadata...")
+        all_github_metadata(distro=distro, cache=cache_dir, force=force)
 
-    # Step 8: Fetch GitHub pull requests for all repos (has its own UI)
-    console.print("\n[bold cyan]Step 8/8:[/] Fetching GitHub pull requests...")
-    all_github_pull_requests(distro=distro, cache=cache_dir, force=force)
+        # Step 8: Fetch GitHub pull requests for all repos (has its own UI)
+        console.print("\n[bold cyan]Step 8/8:[/] Fetching GitHub pull requests...")
+        all_github_pull_requests(distro=distro, cache=cache_dir, force=force)
+
+    except PipelineStepError as e:
+        console.print(f"\n[red bold]Pipeline failed:[/] {e}")
+        raise typer.Exit(code=1)
 
     console.print(
         Panel(
@@ -301,7 +307,7 @@ def fetch_packages(
 
     handler = get_handler(distro)
     for rel in releases:
-        parquet_path = Path(cache_dir, f"{distro}_{rel}_all_packages.parquet")
+        parquet_path = PipelineFiles.all_packages(cache_dir, distro, rel)
         if parquet_path.exists():
             logger.info(f"Using cached {rel} packages from {parquet_path}")
             continue
@@ -314,11 +320,9 @@ def fetch_packages(
             logger.info(f"Fetching and caching {rel} packages to {parquet_path}")
             df: pd.DataFrame | None = handler.fetch_packages(rel)
             if df is None:
-                logger.error(f"Failed to fetch {rel} packages.")
-                console.print(f"[red]✗ Failed to fetch {rel} packages[/]")
-            else:
-                df.to_parquet(parquet_path)
-                console.print(f"[green]✓ Fetched {len(df):,} {rel} packages[/]")
+                raise PipelineStepError(f"Failed to fetch {rel} packages from upstream.")
+            df.to_parquet(parquet_path)
+            console.print(f"[green]✓ Fetched {len(df):,} {rel} packages[/]")
 
 
 @dataset_app.command(rich_help_panel="Step 2: Filter Repos")
@@ -336,20 +340,19 @@ def filter_debian_github_repos(
 
     handler = get_handler(distro)
     for rel in release:
-        filtered_parquet_path = Path(cache_dir, f"{distro}_{rel}_filtered_packages.parquet")
+        filtered_parquet_path = PipelineFiles.filtered_packages(cache_dir, distro, rel)
         if filtered_parquet_path.exists() and not force:
             logger.info(f"Using cached filtered packages from {filtered_parquet_path}")
             continue
 
-        parquet_path = Path(cache_dir, f"{distro}_{rel}_all_packages.parquet")
-        if not parquet_path.exists():
-            logger.error(
-                f"Required parquet file {parquet_path} does not exist. Please run the 'fetch-packages' command first."
-            )
-            continue
+        parquet_path = require_file(
+            PipelineFiles.all_packages(cache_dir, distro, rel),
+            "Run 'fetch-packages' first.",
+        )
 
         logger.info(f"Filtering GitHub repositories for {distro} release '{rel}'")
         df: pd.DataFrame = pd.read_parquet(parquet_path)
+        validate_columns(df, ["homepage"], f"Step 2 ({rel})")
         size_before = df.shape[0]
         filtered_df = handler.filter_github_repos(df)
         size_after = filtered_df.shape[0]
@@ -375,20 +378,19 @@ def extract_upstream_versions(
 
     handler = get_handler(distro)
     for rel in release:
-        versions_parquet_path = Path(cache_dir, f"{distro}_{rel}_packages_with_upstream_versions.parquet")
+        versions_parquet_path = PipelineFiles.packages_with_versions(cache_dir, distro, rel)
         if versions_parquet_path.exists() and not force:
             logger.info(f"Using cached upstream versions from {versions_parquet_path}")
             continue
 
-        filtered_parquet_path = Path(cache_dir, f"{distro}_{rel}_filtered_packages.parquet")
-        if not filtered_parquet_path.exists():
-            logger.error(
-                f"Required parquet file {filtered_parquet_path} does not exist. Please run the 'filter-debian-github-repos' command first."
-            )
-            continue
+        filtered_parquet_path = require_file(
+            PipelineFiles.filtered_packages(cache_dir, distro, rel),
+            "Run 'filter-debian-github-repos' first.",
+        )
 
         logger.info(f"Extracting upstream versions for {distro} release '{rel}'")
         df: pd.DataFrame = pd.read_parquet(filtered_parquet_path)
+        validate_columns(df, [f"{rel}_version"], f"Step 3 ({rel})")
         version_column = f"{rel}_upstream_version"
         df_with_versions = handler.add_upstream_version_column(df, f"{rel}_version", new_column_name=version_column)
         drop_before = df_with_versions.shape[0]
@@ -414,22 +416,21 @@ def merge_releases(
     cache_dir = os.getenv("CACHE_DIR") or cache
 
     handler = get_handler(distro)
-    merged_parquet_path = Path(cache_dir, f"{distro}_merged_releases_packages.parquet")
+    merged_parquet_path = PipelineFiles.merged_packages(cache_dir, distro)
     if merged_parquet_path.exists() and not force:
         logger.info(f"Using cached merged releases from {merged_parquet_path}")
         return
 
     dfs = []
     for rel in releases:
-        versions_parquet_path = Path(cache_dir, f"{distro}_{rel}_packages_with_upstream_versions.parquet")
-        if not versions_parquet_path.exists():
-            logger.error(
-                f"Required parquet file {versions_parquet_path} does not exist. Please run the 'extract-upstream-versions' command first."
-            )
-            continue
+        versions_parquet_path = require_file(
+            PipelineFiles.packages_with_versions(cache_dir, distro, rel),
+            "Run 'extract-upstream-versions' first.",
+        )
 
         logger.info(f"Loading packages with upstream versions for {distro} release '{rel}'")
         df: pd.DataFrame = pd.read_parquet(versions_parquet_path)
+        validate_columns(df, ["source"], f"Step 4 ({rel})")
         dfs.append(df)
     merged_df, dropped_after_merge = handler.merge_release_packages(dfs)
     logger.info(
@@ -438,8 +439,9 @@ def merge_releases(
     merged_df.reset_index(drop=True, inplace=True)
     merged_df.to_parquet(merged_parquet_path)
     logger.info(f"Merged release packages saved to {merged_parquet_path}")
-    dropped_after_merge.to_parquet(Path(cache_dir, f"{distro}_dropped_after_merge.parquet"))
-    logger.info(f"Dropped rows after merge saved to {Path(cache_dir, f'{distro}_dropped_after_merge.parquet')}")
+    dropped_path = PipelineFiles.dropped_after_merge(cache_dir, distro)
+    dropped_after_merge.to_parquet(dropped_path)
+    logger.info(f"Dropped rows after merge saved to {dropped_path}")
 
 
 @dataset_app.command(rich_help_panel="Step 5: Clone Repos")
@@ -454,16 +456,15 @@ def clone_upstream_repos(
     repos_cache = os.getenv("REPOS_CACHE_DIR") or repos_cache
     max_workers = int(os.getenv("MAX_WORKERS", str(max_workers)))
     get_handler(distro)  # validate distro name
-    parquet_path = Path(cache_dir, f"{distro}_merged_releases_packages.parquet")
-    if not parquet_path.exists():
-        console.print(
-            f"[red]Error:[/] Required parquet file {parquet_path} does not exist. Please run the 'merge-releases' command first."
-        )
-        return
+    parquet_path = require_file(
+        PipelineFiles.merged_packages(cache_dir, distro),
+        "Run 'merge-releases' first.",
+    )
 
     # Suppress logging during setup
     with SuppressConsoleLogging():
         df: pd.DataFrame = pd.read_parquet(parquet_path)
+        validate_columns(df, ["upstream_repo_url"], "Step 5 (clone)")
         repos_cache_path = pathlib.Path(repos_cache)
 
         vcs.ensure_dir(repos_cache_path)
@@ -520,20 +521,18 @@ def load_commits_into_dataframe(
     """Load all GitHub commits for the upstream repositories into a single DataFrame."""
     cache_dir = os.getenv("CACHE_DIR") or cache
     repo_cache_dir = os.getenv("REPOS_CACHE_DIR") or repos_cache
-    checkpoint_dir = Path(cache_dir, "commit_checkpoints")
+    checkpoint_dir = PipelineFiles.commit_checkpoints_dir(cache_dir)
     max_workers = int(os.getenv("MAX_WORKERS", str(max_workers)))
 
-    commits_parquet_path = Path(cache_dir, f"{distro}_all_upstream_commits.parquet")
+    commits_parquet_path = PipelineFiles.all_commits(cache_dir, distro)
     if commits_parquet_path.exists() and not force:
         console.print(f"[green]Using cached commits from {commits_parquet_path}[/]")
         return
 
-    all_packages_parquet_path = Path(cache_dir, f"{distro}_merged_releases_packages.parquet")
-    if not all_packages_parquet_path.exists():
-        console.print(
-            f"[red]Error:[/] Required parquet file {all_packages_parquet_path} does not exist. Please run the 'merge-releases' and 'clone-upstream-repos' commands first."
-        )
-        return
+    all_packages_parquet_path = require_file(
+        PipelineFiles.merged_packages(cache_dir, distro),
+        "Run 'merge-releases' and 'clone-upstream-repos' first.",
+    )
     # Create checkpoint directory
     vcs.ensure_dir(checkpoint_dir)
 
@@ -544,6 +543,7 @@ def load_commits_into_dataframe(
                 ck.unlink()
 
     df: pd.DataFrame = pd.read_parquet(all_packages_parquet_path)
+    validate_columns(df, ["upstream_repo_url", "source"], "Step 6 (commits)")
 
     # Build list of tasks (skip repos without local paths)
     tasks: list[tuple[str, str, str, str]] = []
@@ -582,7 +582,6 @@ def load_commits_into_dataframe(
     if all_commits:
         console.print(f"[green]Loaded commits from {len(all_commits)} repositories.[/]")
         combined_commits_df = pd.concat(all_commits, ignore_index=True)
-        commits_parquet_path = Path(cache_dir, f"{distro}_all_upstream_commits.parquet")
         combined_commits_df.to_parquet(commits_parquet_path)
         console.print(f"[green]Saved {len(combined_commits_df):,} commits to {commits_parquet_path}[/]")
     else:
@@ -599,9 +598,9 @@ def all_github_metadata(
     """Fetch GitHub repository metadata for all unique repos in the commits parquet file."""
     cache_dir = os.getenv("CACHE_DIR") or cache
     max_workers = int(os.getenv("MAX_WORKERS", str(max_workers)))
-    all_packages_parquet_path = Path(cache_dir, f"{distro}_merged_releases_packages.parquet")
-    output_parquet_path = Path(cache_dir, f"{distro}_github_repo_metadata.parquet")
-    checkpoint_dir = Path(cache_dir, "github_metadata_checkpoints")
+    all_packages_parquet_path = PipelineFiles.merged_packages(cache_dir, distro)
+    output_parquet_path = PipelineFiles.all_metadata(cache_dir, distro)
+    checkpoint_dir = PipelineFiles.metadata_checkpoints_dir(cache_dir)
     # Create checkpoint directory
     vcs.ensure_dir(checkpoint_dir)
 
@@ -615,13 +614,10 @@ def all_github_metadata(
         console.print(f"[green]Using cached GitHub metadata from {output_parquet_path}[/]")
         return
 
-    if not all_packages_parquet_path.exists():
-        console.print(
-            f"[red]Error:[/] Required parquet file {all_packages_parquet_path} does not exist. Please run the 'merge-releases' command first."
-        )
-        return
+    require_file(all_packages_parquet_path, "Run 'merge-releases' first.")
 
     df: pd.DataFrame = pd.read_parquet(all_packages_parquet_path)
+    validate_columns(df, ["upstream_repo_url", "source"], "Step 7 (metadata)")
 
     # Build list of tasks (skip repos without local paths)
     tasks: list[tuple[str, str, str]] = []
@@ -673,9 +669,8 @@ def all_github_metadata(
     if all_metadata:
         console.print(f"[green]Loaded metadata from {len(all_metadata)} repositories.[/]")
         combined_metadata_df = pd.concat(all_metadata, ignore_index=True)
-        metadata_parquet_path = Path(cache_dir, f"{distro}_all_upstream_metadata.parquet")
-        combined_metadata_df.to_parquet(metadata_parquet_path)
-        console.print(f"[green]Saved {len(combined_metadata_df):,} metadata entries to {metadata_parquet_path}[/]")
+        combined_metadata_df.to_parquet(output_parquet_path)
+        console.print(f"[green]Saved {len(combined_metadata_df):,} metadata entries to {output_parquet_path}[/]")
     else:
         console.print("[yellow]No metadata entries were loaded from any repositories.[/]")
 
@@ -690,9 +685,9 @@ def all_github_pull_requests(
     """Fetch GitHub repository pull requests for all unique repos in the commits parquet file."""
     cache_dir = os.getenv("CACHE_DIR") or cache
     max_workers = int(os.getenv("MAX_WORKERS", str(max_workers)))
-    all_packages_parquet_path = Path(cache_dir, f"{distro}_merged_releases_packages.parquet")
-    output_parquet_path = Path(cache_dir, f"{distro}_github_repo_pull_requests.parquet")
-    checkpoint_dir = Path(cache_dir, "github_pr_checkpoints")
+    all_packages_parquet_path = PipelineFiles.merged_packages(cache_dir, distro)
+    output_parquet_path = PipelineFiles.all_pull_requests(cache_dir, distro)
+    checkpoint_dir = PipelineFiles.pr_checkpoints_dir(cache_dir)
     # Create checkpoint directory
     vcs.ensure_dir(checkpoint_dir)
 
@@ -700,11 +695,7 @@ def all_github_pull_requests(
         console.print(f"[green]Using cached GitHub pull requests from {output_parquet_path}[/]")
         return
 
-    if not all_packages_parquet_path.exists():
-        console.print(
-            f"[red]Error:[/] Required parquet file {all_packages_parquet_path} does not exist. Please run the 'merge-releases' command first."
-        )
-        return
+    require_file(all_packages_parquet_path, "Run 'merge-releases' first.")
 
     if force and checkpoint_dir.exists():
         console.print(f"[yellow]Removing existing GitHub pull requests checkpoint at {checkpoint_dir}[/]")
@@ -713,6 +704,7 @@ def all_github_pull_requests(
                 ck.unlink()
 
     df: pd.DataFrame = pd.read_parquet(all_packages_parquet_path)
+    validate_columns(df, ["upstream_repo_url", "source"], "Step 8 (pull requests)")
 
     # Build list of tasks (skip repos without local paths)
     tasks: list[tuple[str, str, str]] = []
@@ -760,9 +752,8 @@ def all_github_pull_requests(
     if all_metadata:
         console.print(f"[green]Loaded pull requests from {len(all_metadata)} repositories.[/]")
         combined_metadata_df = pd.concat(all_metadata, ignore_index=True)
-        metadata_parquet_path = Path(cache_dir, f"{distro}_all_upstream_pull_requests.parquet")
-        combined_metadata_df.to_parquet(metadata_parquet_path)
-        console.print(f"[green]Saved {len(combined_metadata_df):,} pull request entries to {metadata_parquet_path}[/]")
+        combined_metadata_df.to_parquet(output_parquet_path)
+        console.print(f"[green]Saved {len(combined_metadata_df):,} pull request entries to {output_parquet_path}[/]")
     else:
         console.print("[yellow]No pull request entries were loaded from any repositories.[/]")
 
