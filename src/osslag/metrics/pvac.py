@@ -12,9 +12,33 @@ Description:
 """
 
 import re
+from typing import NamedTuple, TypedDict
 
 """Regular expression patterns for matching version strings"""
-version_mapping = [
+
+
+class VersionMapping(TypedDict):
+    pattern: re.Pattern[str]
+    class_group: str
+
+
+class VersionInfo(TypedDict):
+    category: str | None
+    epoch: int | None
+    major: int | None
+    minor: int | None
+    patch: int | None
+
+
+class VersionTuple(NamedTuple):
+    semantic: str
+    epoch: int
+    major: int
+    minor: int
+    patch: int
+
+
+version_mapping: list[VersionMapping] = [
     # Official Semantic
     {
         "pattern": re.compile(
@@ -39,20 +63,20 @@ version_mapping = [
 ]
 
 
-def lookup_category(version_string):
+def lookup_category(version_string: str) -> VersionInfo:
     """Given a version string, return a dictionary containing the category
 
     Args:
-        version_string (string): The version string to categorize
+        version_string: The version string to categorize
 
     Returns:
-        dict: A dictionary containing the category information
+        A dictionary containing the category information
 
     """
     # Clean the string for standardized processing
     version_string = version_string.strip()
 
-    version_dict = {
+    version_dict: VersionInfo = {
         "category": None,
         "epoch": None,
         "major": None,
@@ -62,47 +86,39 @@ def lookup_category(version_string):
     for map in version_mapping:
         m = map["pattern"].match(version_string.strip())
         if m is not None:
-            version_dict = {}
-            if "epoch" not in m.groupdict().keys() or m.groupdict()["epoch"] is None:
-                version_dict["epoch"] = 0
-            else:
-                version_dict["epoch"] = int(m.groupdict()["epoch"])
-
-            if "major" not in m.groupdict().keys() or m.groupdict()["major"] is None:
-                version_dict["major"] = 0
-            else:
-                version_dict["major"] = int(m.groupdict()["major"])
-
-            if "minor" not in m.groupdict().keys() or m.groupdict()["minor"] is None:
-                version_dict["minor"] = 0
-            else:
-                version_dict["minor"] = int(m.groupdict()["minor"])
-
-            if "patch" not in m.groupdict().keys() or m.groupdict()["patch"] is None:
-                version_dict["patch"] = 0
-            else:
-                version_dict["patch"] = int(m.groupdict()["patch"])
-
-            version_dict["category"] = map["class_group"]
+            groups = m.groupdict()
+            version_dict = VersionInfo(
+                category=map["class_group"],
+                epoch=int(groups["epoch"]) if groups.get("epoch") is not None else 0,
+                major=int(groups["major"]) if groups.get("major") is not None else 0,
+                minor=int(groups["minor"]) if groups.get("minor") is not None else 0,
+                patch=int(groups["patch"]) if groups.get("patch") is not None else 0,
+            )
             break
     return version_dict
 
 
-def version_delta(packages, major_weight, minor_weight, patch_weight):
+
+def version_delta(
+    packages: list[tuple[VersionTuple, VersionTuple]],
+    major_weight: float,
+    minor_weight: float,
+    patch_weight: float,
+) -> float:
     """Calculate the version delta between two packages based on the weighted
         sum of the major, minor, and patch version numbers.
 
     Args:
-        packages (tuple): A list of tuples containing version information
-        major_weight (float): The weight to apply to the major version number
-        minor_weight (float): The weight to apply to the minor version number
-        patch_weight (float): The weight to apply to the patch version number
+        packages: A list of tuples containing version information
+        major_weight: The weight to apply to the major version number
+        minor_weight: The weight to apply to the minor version number
+        patch_weight: The weight to apply to the patch version number
 
     Returns:
-        type: A single value representing the sum of the weighted version deltas
+        A single value representing the sum of the weighted version deltas
 
     """
-    version_delta = 0
+    version_delta: float = 0
 
     for version_tuple_A, version_tuple_B in packages:
         # Destructure the version tuples
@@ -122,15 +138,15 @@ def version_delta(packages, major_weight, minor_weight, patch_weight):
     return version_delta
 
 
-def categorize_development_activity(version_string_A, version_string_B):
+def categorize_development_activity(version_string_A: str, version_string_B: str) -> str:
     """Calculate the development activity level between two version strings
 
     Args:
-        version_string_A (string): The first version string to compare
-        version_string_B (string): The second version string to compare
+        version_string_A: The first version string to compare
+        version_string_B: The second version string to compare
 
     Returns:
-        string: A string representing the development activity level between
+        A string representing the development activity level between
         the two version strings
 
     """
