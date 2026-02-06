@@ -321,20 +321,18 @@ def fetch_packages(release: str) -> pd.DataFrame | None:
     if xz_bytes is None:
         logger.error(f"Failed to fetch Packages.xz for release {release}")
         return None
-    # Now xz_bytes contains the raw .xz data of the Sources file
-    data = lzma.decompress(xz_bytes)
-
-    # Deb822Source file may contain multiple stanzas
-    buf = io.BytesIO(data)
+    # Stream-decompress the .xz data to avoid materializing the full
+    # decompressed content in memory (can be 60-120 MB for Debian Sources).
     items = []
     stanza = b""
-    for line in buf.readlines():
-        if line.strip() == b"":
-            if stanza.strip():
-                items.append(stanza)
-                stanza = b""
-        else:
-            stanza += line
+    with lzma.LZMAFile(io.BytesIO(xz_bytes)) as lzf:
+        for line in lzf:
+            if line.strip() == b"":
+                if stanza.strip():
+                    items.append(stanza)
+                    stanza = b""
+            else:
+                stanza += line
     if stanza.strip():
         items.append(stanza)
     rows = []

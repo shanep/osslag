@@ -405,7 +405,7 @@ def load_commits(
                 # Diff flags for speed:
                 # - SKIP_BINARY_CHECK: Don't examine binary file contents
                 # Cast needed because pygit2 exports int constants but stubs expect DiffOption enum
-                flags = cast("DiffOption", pygit2.GIT_DIFF_SKIP_BINARY_CHECK)
+                flags = cast("DiffOption", pygit2.GIT_DIFF_SKIP_BINARY_CHECK | pygit2.GIT_DIFF_IGNORE_SUBMODULES)
 
                 if c.parents:
                     # Diff from parent to commit (shows what changed in this commit)
