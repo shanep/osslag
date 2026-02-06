@@ -154,10 +154,11 @@ def version_delta(
     weighted_b = (b.major * weights.major) + (b.minor * weights.minor) + (b.patch * weights.patch)
     raw_delta = weighted_a - weighted_b
 
-    assert raw_delta >= 0, (
-        f"Negative VND: upstream version {a} must be >= distro version {b} "
-        f"(weighted: {weighted_a} < {weighted_b})"
-    )
+    if raw_delta < 0:
+        raise ValueError(
+            f"Negative VND: upstream version {a} must be >= distro version {b} "
+            f"(weighted: {weighted_a} < {weighted_b})"
+        )
 
     return raw_delta
 

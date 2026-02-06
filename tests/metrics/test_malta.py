@@ -363,14 +363,14 @@ class TestDevelopmentActivityScore:
 
 
 class TestMaintainerResponsivenessScore:
-    def test_no_prs_returns_zero(self, eval_end):
-        """No PRs should return zero scores."""
+    def test_no_prs_returns_none(self, eval_end):
+        """No PRs should return None for s_resp (no data, not zero responsiveness)."""
         malta = create_malta(eval_end, [])
 
         result = malta.maintainer_responsiveness_score()
 
         assert isinstance(result, MRSComponents)
-        assert result.s_resp == 0.0
+        assert result.s_resp is None
         assert result.n_prs == 0
 
     def test_all_prs_closed_quickly(self, eval_end):
@@ -396,6 +396,7 @@ class TestMaintainerResponsivenessScore:
 
         result = malta.maintainer_responsiveness_score()
 
+        assert result.s_resp is not None
         assert result.s_resp > 0.9  # High responsiveness
         assert result.r_dec == 1.0  # All PRs decided
         assert result.n_terminated == 2
@@ -445,6 +446,7 @@ class TestMaintainerResponsivenessScore:
 
         result = malta.maintainer_responsiveness_score()
 
+        assert result.s_resp is not None
         assert 0.0 < result.s_resp < 1.0
         assert result.r_dec == 0.5  # Half decided
         assert result.n_terminated == 1

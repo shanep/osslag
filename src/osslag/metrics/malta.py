@@ -57,7 +57,7 @@ class DASComponents(NamedTuple):
 class MRSComponents(NamedTuple):
     """Maintenance Responsiveness Score and its components"""
 
-    s_resp: float  # Responsiveness score
+    s_resp: float | None  # Responsiveness score (None when no PR data available)
     r_dec: float  # Decision rate
     d_dec: float  # Decision delay (normalized median)
     p_open: float  # Open PR staleness penalty
@@ -83,7 +83,7 @@ class AggregateScoreComponents(NamedTuple):
     s_final: float  # Final S_dev
     s_final_100: float  # in [0,100]
     s_dev: float  # Development activity score
-    s_resp: float  # Responsiveness score
+    s_resp: float | None  # Responsiveness score (None when no PR data available)
     s_meta: float  # Metadata score
 
 
@@ -104,7 +104,7 @@ class MaltaConstants(NamedTuple):
 class DevelopmentActivityScoreConstants(NamedTuple):
     """Constants for development activity score computation."""
 
-    tau_days: float = 180.0  # Decay half-life in days
+    tau_days: float = 180.0  # Exponential decay time constant in days (1/e life)
 
 
 class MaintainerResponsivenessScoreConstants(NamedTuple):
@@ -308,8 +308,8 @@ class Malta:
         """
         commits = self.get_commits_for_package()
         # Partition commits into the baseline and evaluation sets, filtering trivial if needed.
-        commits_baseline: Sequence[Commit] = []
-        commits_eval: Sequence[Commit] = []
+        commits_baseline: list[Commit] = []
+        commits_eval: list[Commit] = []
         window_baseline_days: int = self.baseline_window.end.toordinal() - self.baseline_window.start.toordinal()
         window_eval_days: int = self.eval_window.end.toordinal() - self.eval_window.start.toordinal()
 
@@ -323,8 +323,6 @@ class Malta:
             raise ValueError("window_baseline_days and window_eval_days must be > 0")
         if self.baseline_window.end > self.eval_window.start:
             raise ValueError("Baseline window must end before evaluation window starts.")
-        if self.eval_window.start < self.baseline_window.end:
-            raise ValueError("Evaluation window must start after baseline window ends.")
 
         def _filter(cs: Sequence[Commit]) -> list[Commit]:
             if include_trivial:
@@ -383,7 +381,7 @@ class Malta:
         if not pull_requests:
             # No external contribution signal - Sresp is undefined per paper
             self.mrs = MRSComponents(
-                s_resp=0.0,
+                s_resp=None,
                 r_dec=0.0,
                 d_dec=0.0,
                 p_open=0.0,
@@ -398,7 +396,7 @@ class Malta:
         if not P:
             # No PRs in evaluation window
             self.mrs = MRSComponents(
-                s_resp=0.0,
+                s_resp=None,
                 r_dec=0.0,
                 d_dec=0.0,
                 p_open=0.0,
@@ -508,24 +506,12 @@ class Malta:
         i = self.__phi_count(meta.open_issues, self.rmv_constants.K_issues)
         i_pen = 1.0 - i
 
-        parts = {"stars": s, "forks": f, "watchers": w, "issues": i_pen}
-        observed = {k: v for k, v in parts.items() if v is not None}
-
-        if not observed:
-            # All fields missing
-            self.rmvs = RMVSComponents(
-                s_meta=0.0,
-                stars_phi=s,
-                forks_phi=f,
-                watchers_phi=w,
-                open_issues_penalty=i_pen,
-                archived=meta.archived,
-            )
-            return self.rmvs
-
-        # Renormalize betas over observed fields
-        wsum = sum(betas[k] for k in observed.keys())
-        linear = sum((betas[k] / wsum) * observed[k] for k in observed.keys())
+        linear = (
+            betas["stars"] * s
+            + betas["forks"] * f
+            + betas["watchers"] * w
+            + betas["issues"] * i_pen
+        )
 
         A = 1.0 if meta.archived else 0.0
         A_pen = 1.0 - self.rmv_constants.alpha_archived * A
@@ -677,6 +663,10 @@ def _score_single_repo(
         prs = m.get_pull_requests_for_package()
         meta = m.get_repo_meta_for_package()
 
+        # Count commits/PRs within the evaluation window (not total for repo)
+        commits_in_eval = [c for c in commits if m.eval_window.start <= c.date < m.eval_window.end]
+        prs_in_eval = [pr for pr in prs if m.eval_window.start <= pr.created_at < m.eval_window.end]
+
         return MaltaResult(
             source=source,
             repo_url=repo_url,
@@ -698,9 +688,9 @@ def _score_single_repo(
             final_score=final.s_final,
             final_score_100=final.s_final_100,
             n_commits_total=len(repo_commits_df),
-            n_commits_window=len(commits),
+            n_commits_window=len(commits_in_eval),
             n_prs_total=len(repo_prs_df),
-            n_prs_window=len(prs),
+            n_prs_window=len(prs_in_eval),
             stars=meta.stars,
             forks=meta.forks,
             watchers=meta.watchers,
