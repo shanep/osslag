@@ -1,5 +1,3 @@
-import math
-
 import pytest
 
 from osslag.metrics.pvac import (
@@ -149,12 +147,6 @@ class TestLookupCategory:
 
 V = VersionTuple
 W = VersionDeltaWeights
-K = 10.0  # default saturation constant
-
-
-def _expected_vnd(raw_delta: float, saturation: float = K) -> float:
-    """Compute expected normalized version delta: min(1, log(1+d)/log(1+K))."""
-    return min(1.0, math.log1p(raw_delta) / math.log1p(saturation))
 
 
 class TestVersionDelta:
@@ -164,25 +156,25 @@ class TestVersionDelta:
         packages = [
             (V("Semantic", 0, 2, 0, 0), V("Semantic", 0, 1, 0, 0)),
         ]
-        # raw delta = 2*1.0 - 1*1.0 = 1.0
+        # delta = 2*1.0 - 1*1.0 = 1.0
         result = version_delta_agg(packages, W(1.0, 0.1, 0.01))
-        assert result == pytest.approx(_expected_vnd(1.0))
+        assert result == pytest.approx(1.0)
 
     def test_single_pair_minor_diff(self):
         packages = [
             (V("Semantic", 0, 1, 5, 0), V("Semantic", 0, 1, 3, 0)),
         ]
-        # raw delta = (1 + 0.5) - (1 + 0.3) = 0.2
+        # delta = (1 + 0.5) - (1 + 0.3) = 0.2
         result = version_delta_agg(packages, W(1.0, 0.1, 0.01))
-        assert result == pytest.approx(_expected_vnd(0.2))
+        assert result == pytest.approx(0.2)
 
     def test_single_pair_patch_diff(self):
         packages = [
             (V("Semantic", 0, 1, 0, 10), V("Semantic", 0, 1, 0, 5)),
         ]
-        # raw delta = (1 + 0 + 0.10) - (1 + 0 + 0.05) = 0.05
+        # delta = (1 + 0 + 0.10) - (1 + 0 + 0.05) = 0.05
         result = version_delta_agg(packages, W(1.0, 0.1, 0.01))
-        assert result == pytest.approx(_expected_vnd(0.05))
+        assert result == pytest.approx(0.05)
 
     def test_identical_versions(self):
         packages = [
@@ -196,9 +188,9 @@ class TestVersionDelta:
             (V("Semantic", 0, 2, 0, 0), V("Semantic", 0, 1, 0, 0)),
             (V("Semantic", 0, 3, 0, 0), V("Semantic", 0, 1, 0, 0)),
         ]
-        # pair1 raw delta = 1.0, pair2 raw delta = 2.0
+        # pair1 delta = 1.0, pair2 delta = 2.0 -> total = 3.0
         result = version_delta_agg(packages, W(1.0, 0.1, 0.01))
-        assert result == pytest.approx(_expected_vnd(1.0) + _expected_vnd(2.0))
+        assert result == pytest.approx(3.0)
 
     def test_skips_different_epochs(self):
         packages = [
@@ -227,20 +219,20 @@ class TestVersionDelta:
 
     def test_mixed_valid_and_skipped(self):
         packages = [
-            (V("Semantic", 0, 2, 0, 0), V("Semantic", 0, 1, 0, 0)),  # valid: raw delta=1.0
+            (V("Semantic", 0, 2, 0, 0), V("Semantic", 0, 1, 0, 0)),  # valid: delta=1.0
             (V("Semantic", 1, 5, 0, 0), V("Semantic", 2, 1, 0, 0)),  # skipped: epoch mismatch
             (V("Unknown", 0, 1, 0, 0), V("Semantic", 0, 3, 0, 0)),  # skipped: unknown
         ]
         result = version_delta_agg(packages, W(1.0, 0.1, 0.01))
-        assert result == pytest.approx(_expected_vnd(1.0))
+        assert result == pytest.approx(1.0)
 
     def test_equal_weights(self):
         packages = [
             (V("Semantic", 0, 2, 2, 2), V("Semantic", 0, 1, 1, 1)),
         ]
-        # raw delta = (2+2+2) - (1+1+1) = 3
+        # delta = (2+2+2) - (1+1+1) = 3
         result = version_delta_agg(packages, W(1.0, 1.0, 1.0))
-        assert result == pytest.approx(_expected_vnd(3.0))
+        assert result == pytest.approx(3.0)
 
 
 # ── categorize_development_activity ──────────────────────────────────────

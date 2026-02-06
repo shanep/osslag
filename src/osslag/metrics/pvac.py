@@ -11,7 +11,6 @@ Description:
     numbers.
 """
 
-import math
 import re
 from collections.abc import Sequence
 from typing import NamedTuple, TypedDict
@@ -114,44 +113,35 @@ def lookup_category(version_string: str) -> VersionInfo:
 def version_delta_agg(
     packages: Sequence[tuple[VersionTuple, VersionTuple]],
     weights: VersionDeltaWeights,
-    saturation: float = 10.0,
 ) -> float:
-    """Calculate the sum of normalized version deltas across multiple package pairs.
+    """Calculate the sum of version deltas across multiple package pairs.
 
     Args:
         packages: A list of tuples containing version information
         weights: The weights to apply to the major, minor, and patch version numbers
-        saturation: The saturation constant K for log normalization passed to version_delta
 
     Returns:
-        The sum of the normalized version deltas (each in [0, 1])
+        The sum of the weighted version deltas
 
     """
-    return sum(version_delta(a, b, weights, saturation) for a, b in packages)
+    return sum(version_delta(a, b, weights) for a, b in packages)
 
 
 def version_delta(
     a: VersionTuple,
     b: VersionTuple,
     weights: VersionDeltaWeights,
-    saturation: float = 10.0,
 ) -> float:
-    """Calculate a normalized version delta between two versions.
-
-    Uses log-saturated normalization (same approach as MALTA's phi function)
-    to map the raw weighted delta to [0, 1].
+    """Calculate the weighted version delta between two versions.
 
     Args:
-        a: First version tuple
-        b: Second version tuple
+        a: Upstream version tuple (must be >= distro version)
+        b: Distro version tuple
         weights: The weights to apply to the major, minor, and patch version numbers
-        saturation: The saturation constant K for log normalization. Deltas at or
-            above this value map to 1.0.
 
     Returns:
-        A float in [0, 1] where 0 means identical versions and 1 means the
-        delta has reached or exceeded the saturation point. Returns 0.0 if
-        epochs differ or either version is Unknown.
+        The weighted version delta. Returns 0.0 if epochs differ or
+        either version is Unknown.
 
     """
     if a.epoch != b.epoch:
@@ -159,9 +149,6 @@ def version_delta(
 
     if a.semantic == "Unknown" or b.semantic == "Unknown":
         return 0.0
-
-    if saturation <= 0:
-        raise ValueError("saturation must be positive")
 
     weighted_a = (a.major * weights.major) + (a.minor * weights.minor) + (a.patch * weights.patch)
     weighted_b = (b.major * weights.major) + (b.minor * weights.minor) + (b.patch * weights.patch)
@@ -172,7 +159,7 @@ def version_delta(
         f"(weighted: {weighted_a} < {weighted_b})"
     )
 
-    return min(1.0, math.log1p(raw_delta) / math.log1p(saturation))
+    return raw_delta
 
 
 def categorize_development_activity(version_string_A: str, version_string_B: str) -> str:
