@@ -1,6 +1,6 @@
 import pytest
 
-from osslag.metrics.pvac import lookup_category, version_delta, categorize_development_activity
+from osslag.metrics.pvac import VersionTuple, lookup_category, version_delta, categorize_development_activity
 
 
 # ── lookup_category ──────────────────────────────────────────────────────
@@ -139,12 +139,15 @@ class TestLookupCategory:
 # ── version_delta ────────────────────────────────────────────────────────
 
 
+V = VersionTuple
+
+
 class TestVersionDelta:
     """Tests for version_delta()."""
 
     def test_single_pair_major_diff(self):
         packages = [
-            (("Semantic", 0, 2, 0, 0), ("Semantic", 0, 1, 0, 0)),
+            (V("Semantic", 0, 2, 0, 0), V("Semantic", 0, 1, 0, 0)),
         ]
         # delta = |1*1.0 + 0*0.1 + 0*0.01 - (2*1.0 + 0*0.1 + 0*0.01)| = 1.0
         result = version_delta(packages, 1.0, 0.1, 0.01)
@@ -152,7 +155,7 @@ class TestVersionDelta:
 
     def test_single_pair_minor_diff(self):
         packages = [
-            (("Semantic", 0, 1, 5, 0), ("Semantic", 0, 1, 3, 0)),
+            (V("Semantic", 0, 1, 5, 0), V("Semantic", 0, 1, 3, 0)),
         ]
         # delta = |1 + 0.3 + 0 - (1 + 0.5 + 0)| = 0.2
         result = version_delta(packages, 1.0, 0.1, 0.01)
@@ -160,7 +163,7 @@ class TestVersionDelta:
 
     def test_single_pair_patch_diff(self):
         packages = [
-            (("Semantic", 0, 1, 0, 10), ("Semantic", 0, 1, 0, 5)),
+            (V("Semantic", 0, 1, 0, 10), V("Semantic", 0, 1, 0, 5)),
         ]
         # delta = |1 + 0 + 0.05 - (1 + 0 + 0.10)| = 0.05
         result = version_delta(packages, 1.0, 0.1, 0.01)
@@ -168,15 +171,15 @@ class TestVersionDelta:
 
     def test_identical_versions(self):
         packages = [
-            (("Semantic", 0, 1, 2, 3), ("Semantic", 0, 1, 2, 3)),
+            (V("Semantic", 0, 1, 2, 3), V("Semantic", 0, 1, 2, 3)),
         ]
         result = version_delta(packages, 1.0, 0.1, 0.01)
         assert result == pytest.approx(0.0)
 
     def test_multiple_pairs_sum(self):
         packages = [
-            (("Semantic", 0, 1, 0, 0), ("Semantic", 0, 2, 0, 0)),
-            (("Semantic", 0, 1, 0, 0), ("Semantic", 0, 3, 0, 0)),
+            (V("Semantic", 0, 1, 0, 0), V("Semantic", 0, 2, 0, 0)),
+            (V("Semantic", 0, 1, 0, 0), V("Semantic", 0, 3, 0, 0)),
         ]
         # pair1 delta = 1.0, pair2 delta = 2.0 → total = 3.0
         result = version_delta(packages, 1.0, 0.1, 0.01)
@@ -184,21 +187,21 @@ class TestVersionDelta:
 
     def test_skips_different_epochs(self):
         packages = [
-            (("Semantic", 1, 5, 0, 0), ("Semantic", 2, 1, 0, 0)),
+            (V("Semantic", 1, 5, 0, 0), V("Semantic", 2, 1, 0, 0)),
         ]
         result = version_delta(packages, 1.0, 0.1, 0.01)
         assert result == pytest.approx(0.0)
 
     def test_skips_unknown_category(self):
         packages = [
-            (("Unknown", 0, 1, 0, 0), ("Semantic", 0, 2, 0, 0)),
+            (V("Unknown", 0, 1, 0, 0), V("Semantic", 0, 2, 0, 0)),
         ]
         result = version_delta(packages, 1.0, 0.1, 0.01)
         assert result == pytest.approx(0.0)
 
     def test_skips_both_unknown(self):
         packages = [
-            (("Unknown", 0, 1, 0, 0), ("Unknown", 0, 2, 0, 0)),
+            (V("Unknown", 0, 1, 0, 0), V("Unknown", 0, 2, 0, 0)),
         ]
         result = version_delta(packages, 1.0, 0.1, 0.01)
         assert result == pytest.approx(0.0)
@@ -209,16 +212,16 @@ class TestVersionDelta:
 
     def test_mixed_valid_and_skipped(self):
         packages = [
-            (("Semantic", 0, 2, 0, 0), ("Semantic", 0, 1, 0, 0)),  # valid: delta=1.0
-            (("Semantic", 1, 5, 0, 0), ("Semantic", 2, 1, 0, 0)),  # skipped: epoch mismatch
-            (("Unknown", 0, 1, 0, 0), ("Semantic", 0, 3, 0, 0)),   # skipped: unknown
+            (V("Semantic", 0, 2, 0, 0), V("Semantic", 0, 1, 0, 0)),  # valid: delta=1.0
+            (V("Semantic", 1, 5, 0, 0), V("Semantic", 2, 1, 0, 0)),  # skipped: epoch mismatch
+            (V("Unknown", 0, 1, 0, 0), V("Semantic", 0, 3, 0, 0)),   # skipped: unknown
         ]
         result = version_delta(packages, 1.0, 0.1, 0.01)
         assert result == pytest.approx(1.0)
 
     def test_equal_weights(self):
         packages = [
-            (("Semantic", 0, 1, 1, 1), ("Semantic", 0, 2, 2, 2)),
+            (V("Semantic", 0, 1, 1, 1), V("Semantic", 0, 2, 2, 2)),
         ]
         # delta = |(2+2+2) - (1+1+1)| = 3
         result = version_delta(packages, 1.0, 1.0, 1.0)

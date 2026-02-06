@@ -12,6 +12,7 @@ Description:
 """
 
 import re
+from collections.abc import Sequence
 from typing import NamedTuple, TypedDict
 
 """Regular expression patterns for matching version strings"""
@@ -100,7 +101,7 @@ def lookup_category(version_string: str) -> VersionInfo:
 
 
 def version_delta(
-    packages: list[tuple[VersionTuple, VersionTuple]],
+    packages: Sequence[tuple[VersionTuple, VersionTuple]],
     major_weight: float,
     minor_weight: float,
     patch_weight: float,

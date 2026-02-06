@@ -919,7 +919,7 @@ class TestScoreRepos:
         assert "error" in result_df.columns
 
         # All should have scores (no errors)
-        assert result_df["error"].isna().all()
+        assert bool(result_df["error"].isna().all())
 
         # Check that all expected columns from notebook are present
         expected_columns = [

@@ -4,7 +4,7 @@ import io
 import logging
 import lzma
 import os
-from typing import Any
+from typing import Any, cast
 
 import pandas as pd
 from debian import deb822  # from python-debian
@@ -171,7 +171,8 @@ def filter_github_repos(df: pd.DataFrame) -> pd.DataFrame:
 
     # First filter to rows containing github.com
     mask = df["homepage"].str.contains("github.com", na=False)
-    filtered_df = df[mask].copy()
+    # cast: pandas stubs type df[bool_mask] as DataFrame | Series, but boolean mask always returns DataFrame
+    filtered_df = cast(pd.DataFrame, df[mask].copy())
 
     # Normalize all GitHub URLs
     normalized = filtered_df["homepage"].apply(gh.normalize_https_repo_url)
@@ -180,10 +181,12 @@ def filter_github_repos(df: pd.DataFrame) -> pd.DataFrame:
     filtered_df["homepage"] = normalized.apply(lambda r: r.url)
 
     # Drop rows where normalization failed (url is None)
-    filtered_df = filtered_df[filtered_df["homepage"].notna()]
+    # cast: pandas stubs type df[bool_mask] as DataFrame | Series, but boolean mask always returns DataFrame
+    filtered_df = cast(pd.DataFrame, filtered_df[filtered_df["homepage"].notna()])
 
     # Drop duplicates based on normalized homepage
-    github_repos_df = filtered_df.drop_duplicates(subset=["homepage"], keep="first")
+    # cast: pandas stubs don't resolve drop_duplicates return type when called with subset kwarg
+    github_repos_df = cast(pd.DataFrame, filtered_df.drop_duplicates(subset=["homepage"], keep="first"))
 
     return github_repos_df
 
@@ -274,8 +277,9 @@ def merge_release_packages(
     merged_df = pd.merge(df1, df2, on="source", how="outer", indicator=True, suffixes=("_left", "_right"))
 
     # Separate matched and unmatched rows
-    matched = merged_df[merged_df["_merge"] == "both"].copy()
-    unmatched = merged_df[merged_df["_merge"].isin(["left_only", "right_only"])].copy()
+    # cast: pandas stubs type df[bool_mask] as DataFrame | Series, but boolean mask always returns DataFrame
+    matched = cast(pd.DataFrame, merged_df[merged_df["_merge"] == "both"].copy())
+    unmatched = cast(pd.DataFrame, merged_df[merged_df["_merge"].isin(["left_only", "right_only"])].copy())
 
     # Remove the merge indicator column
     matched = matched.drop(columns=["_merge"])
@@ -300,11 +304,13 @@ def merge_release_packages(
                 logger.warning(f"Column '{base_name}' has {mismatch_count} mismatches between releases")
 
             # Keep left column and rename it, drop right column
-            matched = matched.rename(columns={left_col: base_name})
+            # pyright: ignore - pandas stubs don't match rename(columns=dict) overload
+            matched = matched.rename(columns={left_col: base_name})  # pyright: ignore[reportCallIssue]
             matched = matched.drop(columns=[right_col])
 
-    matched = matched.rename(columns={"homepage": "upstream_repo_url"})
-    unmatched = unmatched.rename(columns={"homepage": "upstream_repo_url"})
+    # pyright: ignore - pandas stubs don't match rename(columns=dict) overload
+    matched = matched.rename(columns={"homepage": "upstream_repo_url"})  # pyright: ignore[reportCallIssue]
+    unmatched = unmatched.rename(columns={"homepage": "upstream_repo_url"})  # pyright: ignore[reportCallIssue]
 
     return matched, unmatched
 
