@@ -514,7 +514,9 @@ def clone_upstream_repos(
 def load_commits_into_dataframe(
     distro: str = typer.Argument(..., help="The Linux distribution to process (e.g., 'debian' 'fedora')"),
     cache: str = typer.Option("./cache", help="Cache directory"),
-    repos_cache: str = typer.Option("./cache/repos", help="Cache directory for cloned repositories (env: REPOS_CACHE_DIR)"),
+    repos_cache: str = typer.Option(
+        "./cache/repos", help="Cache directory for cloned repositories (env: REPOS_CACHE_DIR)"
+    ),
     max_workers: int = typer.Option(4, help="Maximum number of parallel worker processes (env: MAX_WORKERS)"),
     force: bool = typer.Option(False, "--force", "-f", help="Force re-processing even if cache exists"),
 ):

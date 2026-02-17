@@ -126,7 +126,4 @@ def validate_columns(df: pd.DataFrame, required: list[str], context: str) -> Non
     """
     missing = [c for c in required if c not in df.columns]
     if missing:
-        raise PipelineStepError(
-            f"{context}: missing required columns {missing}. "
-            f"Available columns: {list(df.columns)}"
-        )
+        raise PipelineStepError(f"{context}: missing required columns {missing}. Available columns: {list(df.columns)}")

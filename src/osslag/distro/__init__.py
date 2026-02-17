@@ -19,17 +19,13 @@ class DistroHandler(Protocol):
 
     def filter_github_repos(self, df: pd.DataFrame) -> pd.DataFrame: ...
 
-    def add_local_repo_cache_path_column(
-        self, df: pd.DataFrame, cache_dir: str
-    ) -> pd.DataFrame: ...
+    def add_local_repo_cache_path_column(self, df: pd.DataFrame, cache_dir: str) -> pd.DataFrame: ...
 
     def add_upstream_version_column(
         self, df: pd.DataFrame, version_column: str, new_column_name: str
     ) -> pd.DataFrame: ...
 
-    def merge_release_packages(
-        self, dfs: list[pd.DataFrame]
-    ) -> tuple[pd.DataFrame, pd.DataFrame]: ...
+    def merge_release_packages(self, dfs: list[pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]: ...
 
 
 class _DebianAdapter:
@@ -46,21 +42,13 @@ class _DebianAdapter:
     def filter_github_repos(self, df: pd.DataFrame) -> pd.DataFrame:
         return self._mod.filter_github_repos(df)
 
-    def add_local_repo_cache_path_column(
-        self, df: pd.DataFrame, cache_dir: str
-    ) -> pd.DataFrame:
+    def add_local_repo_cache_path_column(self, df: pd.DataFrame, cache_dir: str) -> pd.DataFrame:
         return self._mod.add_local_repo_cache_path_column(df, cache_dir=cache_dir)
 
-    def add_upstream_version_column(
-        self, df: pd.DataFrame, version_column: str, new_column_name: str
-    ) -> pd.DataFrame:
-        return self._mod.add_upstream_version_column(
-            df, version_column, new_column_name=new_column_name
-        )
+    def add_upstream_version_column(self, df: pd.DataFrame, version_column: str, new_column_name: str) -> pd.DataFrame:
+        return self._mod.add_upstream_version_column(df, version_column, new_column_name=new_column_name)
 
-    def merge_release_packages(
-        self, dfs: list[pd.DataFrame]
-    ) -> tuple[pd.DataFrame, pd.DataFrame]:
+    def merge_release_packages(self, dfs: list[pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
         return self._mod.merge_release_packages(dfs)
 
 
@@ -86,9 +74,7 @@ def get_handler(distro: str) -> DistroHandler:
     key = distro.lower()
     if key not in _HANDLERS:
         supported = ", ".join(sorted(_HANDLERS))
-        raise ValueError(
-            f"Unsupported distro '{distro}'. Supported: {supported}"
-        )
+        raise ValueError(f"Unsupported distro '{distro}'. Supported: {supported}")
     return _HANDLERS[key]
 
 

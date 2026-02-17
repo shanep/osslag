@@ -12,7 +12,7 @@ from dateutil.relativedelta import relativedelta
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
-    from tqdm import tqdm as TqdmType
+    pass
 
 
 class EvaluationWindow(NamedTuple):
@@ -567,12 +567,7 @@ class Malta:
         i = self.__phi_count(meta.open_issues, self.rmv_constants.K_issues)
         i_pen = 1.0 - i
 
-        linear = (
-            betas["stars"] * s
-            + betas["forks"] * f
-            + betas["watchers"] * w
-            + betas["issues"] * i_pen
-        )
+        linear = betas["stars"] * s + betas["forks"] * f + betas["watchers"] * w + betas["issues"] * i_pen
 
         A = 1.0 if meta.archived else 0.0
         A_pen = 1.0 - self.rmv_constants.alpha_archived * A

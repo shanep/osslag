@@ -156,8 +156,7 @@ def version_delta(
 
     if raw_delta < 0:
         raise ValueError(
-            f"Negative VND: upstream version {a} must be >= distro version {b} "
-            f"(weighted: {weighted_a} < {weighted_b})"
+            f"Negative VND: upstream version {a} must be >= distro version {b} (weighted: {weighted_a} < {weighted_b})"
         )
 
     return raw_delta
