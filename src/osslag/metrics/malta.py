@@ -1,4 +1,67 @@
-# Maintenance-Aware Lag and Technical Abandonment (MALTA) metrics
+"""Maintenance-Aware Lag and Technical Abandonment (MALTA) scoring framework.
+
+This module implements the MALTA metric described in "MALTA: Maintenance-Aware
+Technical Lag Estimation to Address Software Abandonment" (Panter & Eisty).
+Traditional version-lag metrics cannot distinguish between packages that appear
+current because they are well-maintained and those that appear current because
+upstream development has ceased. MALTA addresses this gap by combining three
+independent maintenance signals into a single composite score.
+
+Time Windows
+------------
+Two contiguous windows precede the evaluation date:
+
+- **Baseline window** (*W_b*): the 24-month period ending where the evaluation
+  window begins, aligned with the Debian LTS support policy.
+- **Evaluation window** (*W_e*): the most recent 18-month period under assessment.
+
+Component Scores
+----------------
+1. **Development Activity Score (DAS)** -- Compares commit velocity between the
+   baseline and evaluation windows, weighted by an exponential recency decay
+   (tau = 180 days). Trivial (documentation-only) commits are excluded by default.
+
+       D_c   = (C_e / |W_e|) / (C_b / |W_b|)
+       R_c   = exp(-t_last / tau)
+       S_dev = min(1, D_c) * R_c
+
+2. **Maintainer Responsiveness Score (MRS)** -- Measures engagement with external
+   contributions (pull requests) during the evaluation window through decision
+   rate, decision timeliness, and open-PR staleness.
+
+       S_resp = R_dec * (1 - D_dec) * (1 - P_open)
+
+3. **Repository Metadata Viability Score (RMVS)** -- Normalizes GitHub social
+   signals (stars, forks, watchers) with a log-saturating function and applies
+   an archived-repository penalty.
+
+       phi(x; K) = min(1, log(1+x) / log(1+K))
+       S_meta    = A_pen * (beta_s * S* + beta_f * F* + beta_w * W* + beta_i * I_pen)
+
+Final Aggregation
+-----------------
+The three scores are combined with fixed weights, with automatic re-normalization
+when a component (e.g., MRS for repos with no pull requests) is unavailable:
+
+    S_final = 0.55 * S_dev + 0.35 * S_resp + 0.10 * S_meta
+
+The result is mapped to a 0--100 interpretive scale:
+
+    80--100  Sustained Maintenance
+    60--79   Stable Maintenance
+    40--59   Declining Maintenance
+    20--39   Probable Abandonment
+     0--19   Effective Abandonment
+
+Public API
+----------
+Malta
+    Per-repository scorer; call each component method then ``final_aggregation_score()``.
+score_repos
+    Batch scorer that evaluates many repositories in parallel using ``ProcessPoolExecutor``.
+MaltaResult
+    NamedTuple returned by the batch scorer containing all component values.
+"""
 from __future__ import annotations
 
 import logging
