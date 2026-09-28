@@ -5,6 +5,7 @@ import logging.config
 import os
 import pathlib
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -214,6 +215,11 @@ def run_dataset_pipeline(
     ),
     cache: str = typer.Option("./cache", help="Cache directory (EV: CACHE_DIR)"),
     force: bool = typer.Option(False, "--force", "-f", help="Force re-processing even if cache exists"),
+    commits_since: str | None = typer.Option(
+        None,
+        "--commits-since",
+        help="Only load commits on or after this date (YYYY-MM-DD, UTC). Default: full history. For MALTA scoring, use a date no later than the baseline window start (eval_end minus 42 months with the default windows).",
+    ),
 ):
     """Run the full pipeline: fetch packages, filter repos, extract versions,
     merge releases, clone repos, load commits, pull GitHub data.
@@ -265,7 +271,7 @@ def run_dataset_pipeline(
 
         # Step 6: Extract all commits into a single DataFrame (has its own UI)
         console.print("\n[bold cyan]Step 6/8:[/] Loading commits...")
-        load_commits_into_dataframe(distro=distro, cache=cache_dir, force=force)
+        load_commits_into_dataframe(distro=distro, cache=cache_dir, force=force, since=commits_since)
 
         # Step 7: Fetch GitHub metadata for all repos (has its own UI)
         console.print("\n[bold cyan]Step 7/8:[/] Fetching GitHub metadata...")
@@ -510,6 +516,16 @@ def clone_upstream_repos(
     )
 
 
+def parse_since_date(since: str | None) -> datetime | None:
+    """Parse a YYYY-MM-DD ``--since`` value as midnight UTC; None means the full history."""
+    if since is None:
+        return None
+    try:
+        return datetime.strptime(since, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    except ValueError as e:
+        raise typer.BadParameter(f"--since must be YYYY-MM-DD, got {since!r}") from e
+
+
 @dataset_app.command(rich_help_panel="Step 6: Load Commits")
 def load_commits_into_dataframe(
     distro: str = typer.Argument(..., help="The Linux distribution to process (e.g., 'debian' 'fedora')"),
@@ -519,12 +535,18 @@ def load_commits_into_dataframe(
     ),
     max_workers: int = typer.Option(4, help="Maximum number of parallel worker processes (env: MAX_WORKERS)"),
     force: bool = typer.Option(False, "--force", "-f", help="Force re-processing even if cache exists"),
+    since: str | None = typer.Option(
+        None,
+        "--since",
+        help="Only load commits on or after this date (YYYY-MM-DD, UTC). Default: full history. For MALTA scoring, use a date no later than the baseline window start (eval_end minus 42 months with the default windows). Changing it requires --force, since checkpoints are reused.",
+    ),
 ):
     """Load all GitHub commits for the upstream repositories into a single DataFrame."""
     cache_dir = os.getenv("CACHE_DIR") or cache
     repo_cache_dir = os.getenv("REPOS_CACHE_DIR") or repos_cache
     checkpoint_dir = PipelineFiles.commit_checkpoints_dir(cache_dir)
     max_workers = int(os.getenv("MAX_WORKERS", str(max_workers)))
+    since_dt = parse_since_date(since)
 
     commits_parquet_path = PipelineFiles.all_commits(cache_dir, distro)
     if commits_parquet_path.exists() and not force:
@@ -548,7 +570,7 @@ def load_commits_into_dataframe(
     validate_columns(df, ["upstream_repo_url", "source"], "Step 6 (commits)")
 
     # Build list of tasks (skip repos without local paths)
-    tasks: list[tuple[str, str, str, str]] = []
+    tasks: list[tuple[str, str, str, str, datetime | None]] = []
     skipped = 0
     for row in df.itertuples():
         repo_url = str(row.upstream_repo_url)
@@ -560,7 +582,7 @@ def load_commits_into_dataframe(
         if Path(checkpoint_dir, f"{source}.parquet").exists():
             skipped += 1
             continue
-        tasks.append((str(local_repo_path), repo_url, source, str(checkpoint_dir)))
+        tasks.append((str(local_repo_path), repo_url, source, str(checkpoint_dir), since_dt))
     results: list[TaskResult] = []
     # Run tasks if any
     if len(tasks) > 0:

@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 import pandas as pd
 import pygit2
 import requests
-from dateutil.relativedelta import relativedelta
 from dotenv import load_dotenv
 
 load_dotenv()  # Load environment variables from .env file if present
@@ -345,8 +344,10 @@ def load_commits(
         repo_path: Path to the local Git repository directory.
         branch: Branch name to walk from. If None, uses HEAD.
         include_files: If True, include list of changed files per commit. Default True.
-        since: Only include commits after this date. If None, defaults to 4 years ago.
-               Pass a very old date (e.g., datetime(1970, 1, 1)) to get all commits.
+        since: Only include commits whose committer time is on or after this date. If None
+               (the default), include the full history. A cutoff relative to the current date
+               would make the result depend on when the data is collected, so callers that
+               score MALTA windows must pass a date no later than the baseline window start.
 
     Returns:
         A pandas DataFrame with columns: 'hash', 'author', 'email', 'message',
@@ -363,9 +364,6 @@ def load_commits(
         RuntimeError: For other git-related errors.
 
     """
-    # Default to 4 years ago if not specified
-    if since is None:
-        since = datetime.now(tz=timezone.utc) - relativedelta(years=4)
     repo_path = pathlib.Path(repo_path)
 
     if not repo_path.exists():
@@ -432,7 +430,7 @@ def load_commits(
 
         # Walk all commits
         walker = repo.walk(start_id, pygit2.GIT_SORT_TOPOLOGICAL | pygit2.GIT_SORT_TIME)  # type: ignore[arg-type]
-        since_timestamp = since.timestamp()
+        since_timestamp = since.timestamp() if since is not None else None
 
         # Build a mapping from commit id to tag names
         commit_tags: dict[str, list[str]] = {}
@@ -451,7 +449,7 @@ def load_commits(
         commits_data = []
         for commit in walker:
             # Skip commits older than the cutoff date
-            if commit.commit_time < since_timestamp:
+            if since_timestamp is not None and commit.commit_time < since_timestamp:
                 continue
             row = {
                 "hash": str(commit.id),

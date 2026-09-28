@@ -451,6 +451,31 @@ def test_get_all_commits_returns_dataframe(demo_repo):
     assert len(df) == 13
 
 
+def test_load_commits_default_is_full_history(demo_repo):
+    """Without since, load_commits returns the full history rather than a window relative to now."""
+    if demo_repo is None:
+        pytest.skip("Test repository not available")
+
+    df_default = load_commits(demo_repo)
+    df_all = load_commits(demo_repo, since=datetime(1970, 1, 1))
+
+    assert len(df_default) == len(df_all) == 13
+    assert set(df_default["hash"]) == set(df_all["hash"])
+
+
+def test_load_commits_since_excludes_older_commits(demo_repo):
+    """Commits with a committer time before since are excluded."""
+    if demo_repo is None:
+        pytest.skip("Test repository not available")
+
+    df_all = load_commits(demo_repo, include_files=False)
+    cutoff = df_all["date"].sort_values().iloc[len(df_all) // 2]
+    df_since = load_commits(demo_repo, include_files=False, since=cutoff.to_pydatetime())
+
+    assert 0 < len(df_since) < len(df_all)
+    assert (df_since["date"] >= cutoff).all()
+
+
 def test_get_all_commits_has_expected_columns(demo_repo):
     """Test that DataFrame has all expected columns."""
     if demo_repo is None:
@@ -614,21 +639,6 @@ def test_get_all_commits_since_date_filters(demo_repo):
     assert df_recent is not None
     # Recent filter should return fewer or equal commits
     assert len(df_recent) <= len(df_all)
-
-
-def test_get_all_commits_default_since_is_4_years(demo_repo):
-    """Test that default since is 4 years from now."""
-    if demo_repo is None:
-        pytest.skip("Test repository not available")
-
-    # Default behavior (4 years) should filter out very old commits
-    df_default = load_commits(demo_repo)
-    df_all = load_commits(demo_repo, since=datetime(1970, 1, 1))
-
-    assert df_default is not None
-    assert df_all is not None
-    # shanep/demo commits are older than 4 years, so default should return fewer
-    assert len(df_default) < len(df_all)
 
 
 # Tests for find_upstream_version_tag_commit function
