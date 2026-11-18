@@ -26,6 +26,18 @@ const MAX_RATE_WAIT: Duration = Duration::from_secs(3700);
 pub trait GitHubApi: Sync {
     /// `Ok` when the repo exists, otherwise the reason it could not be found.
     fn check_repo_exists(&self, owner: &str, repo: &str) -> Result<(), String>;
+
+    fn repo_metadata(&self, repo_url: &str) -> Result<RepoMetadata> {
+        bail!("repo_metadata is not available for {repo_url}")
+    }
+
+    fn pull_requests(&self, repo_url: &str, _months: Option<u32>) -> Result<Vec<PullRequestRow>> {
+        bail!("pull_requests is not available for {repo_url}")
+    }
+
+    fn rate_limit(&self) -> Result<RateLimit> {
+        bail!("rate_limit is not available")
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -312,6 +324,18 @@ impl GitHub {
 }
 
 impl GitHubApi for GitHub {
+    fn repo_metadata(&self, repo_url: &str) -> Result<RepoMetadata> {
+        GitHub::repo_metadata(self, repo_url)
+    }
+
+    fn pull_requests(&self, repo_url: &str, months: Option<u32>) -> Result<Vec<PullRequestRow>> {
+        GitHub::pull_requests(self, repo_url, months)
+    }
+
+    fn rate_limit(&self) -> Result<RateLimit> {
+        GitHub::rate_limit(self)
+    }
+
     fn check_repo_exists(&self, owner: &str, repo: &str) -> Result<(), String> {
         let url = format!("{API}/repos/{owner}/{repo}");
         let response = self.get(&url).map_err(|e| format!("{e:#}"))?;

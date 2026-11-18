@@ -1,3 +1,3 @@
-fn main() {
-    println!("osslag {}", env!("CARGO_PKG_VERSION"));
+fn main() -> std::process::ExitCode {
+    osslag::cli::main()
 }
