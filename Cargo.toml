@@ -1,0 +1,29 @@
+[package]
+name = "osslag"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "Technical Lag tools for Open Source Software Projects"
+license = "MIT"
+repository = "https://github.com/shanep/osslag"
+keywords = ["oss", "technical-lag", "software-maintenance"]
+
+[dependencies]
+anyhow = "1"
+arrow = { version = "60", default-features = false, features = ["prettyprint"] }
+chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
+parquet = { version = "60", default-features = false, features = ["arrow", "snap", "zstd"] }
+rayon = "1"
+regex = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tracing = "0.1"
+
+[dev-dependencies]
+arrow = { version = "60", default-features = false }
+approx = "0.5"
+tempfile = "3"
+
+[profile.release]
+lto = "thin"

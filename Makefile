@@ -1,6 +1,6 @@
 VENV ?= .venv
 
-.PHONY: bootstrap install lint fmt typecheck test check build clean help
+.PHONY: bootstrap install lint fmt typecheck test check rust-check build clean help
 
 help:
 	@echo "Makefile commands:"
@@ -37,7 +37,12 @@ typecheck:
 test:
 	uv run pytest
 
-check: lint typecheck test
+check: lint typecheck test rust-check
+
+rust-check:
+	cargo fmt --check
+	cargo clippy --all-targets --locked -- -D warnings
+	cargo test --locked
 
 install:
 	uv tool install . -e

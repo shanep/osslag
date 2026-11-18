@@ -1,0 +1,44 @@
+[
+ {
+  "files": [],
+  "is_trivial": true
+ },
+ {
+  "files": [
+   "README.md"
+  ],
+  "is_trivial": true
+ },
+ {
+  "files": [
+   "docs/a.MD",
+   "b.md"
+  ],
+  "is_trivial": true
+ },
+ {
+  "files": [
+   "a.md",
+   "src/x.rs"
+  ],
+  "is_trivial": false
+ },
+ {
+  "files": [
+   "Makefile"
+  ],
+  "is_trivial": false
+ },
+ {
+  "files": [
+   "notes.markdown"
+  ],
+  "is_trivial": false
+ },
+ {
+  "files": [
+   ".md"
+  ],
+  "is_trivial": false
+ }
+]

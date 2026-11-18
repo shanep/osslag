@@ -40,3 +40,6 @@ Thumbs.db
 github_debug.log
 osslag.log
 CLAUDE.md
+
+# Rust build output
+/target/

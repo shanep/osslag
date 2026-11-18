@@ -1,0 +1,8020 @@
+{
+ "cases": [
+  {
+   "input": "",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "Invalid URL: None or not a string"
+  },
+  {
+   "input": "\nExtra in MaltaResult: ",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "   ",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "  1.2.3  ",
+   "upstream_version": "1.2.3",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 3
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "  1.2.3-4  ",
+   "upstream_version": "1.2.3",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 3
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "  https://github.com/Foo/Bar.js  ",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/Foo/Bar.js",
+   "normalize_error": null
+  },
+  {
+   "input": "  https://github.com/owner/repo.git  ",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/owner/repo",
+   "normalize_error": null
+  },
+  {
+   "input": " 2:1.0-1 ",
+   "upstream_version": "1.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 2,
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": ".2f",
+   "upstream_version": ".2f",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": ".3f",
+   "upstream_version": ".3f",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": ".git",
+   "upstream_version": ".git",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "/nonexistent/path/to/repo",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "0.0.0",
+   "upstream_version": "0.0.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "0.1.0",
+   "upstream_version": "0.1.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 0,
+    "minor": 1,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "0.5.0",
+   "upstream_version": "0.5.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 0,
+    "minor": 5,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "0.5.0-2ubuntu1",
+   "upstream_version": "0.5.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 0,
+    "minor": 5,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "0.9.0",
+   "upstream_version": "0.9.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 0,
+    "minor": 9,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "01.02.03",
+   "upstream_version": "01.02.03",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 3
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "07/31/2021",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "0:1.2.3",
+   "upstream_version": "1.2.3",
+   "pvac": {
+    "category": "Extended-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 3
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1",
+   "upstream_version": "1",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.0",
+   "upstream_version": "1.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.0+dfsg-1",
+   "upstream_version": "1.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.0-1",
+   "upstream_version": "1.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.0.0",
+   "upstream_version": "1.0.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.0.0+build.123",
+   "upstream_version": "1.0.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.0.0-alpha.1",
+   "upstream_version": "1.0.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.0.1",
+   "upstream_version": "1.0.1",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 0,
+    "patch": 1
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.0.5",
+   "upstream_version": "1.0.5",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 0,
+    "patch": 5
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.0~rc1-2",
+   "upstream_version": "1.0",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.1",
+   "upstream_version": "1.1",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 1,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.1-1",
+   "upstream_version": "1.1",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 1,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.1.0",
+   "upstream_version": "1.1.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 1,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.1.1",
+   "upstream_version": "1.1.1",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 1,
+    "patch": 1
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.10.0",
+   "upstream_version": "1.10.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 10,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.10.0+git20230101-1",
+   "upstream_version": "1.10.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 10,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.10.0+git20230112.1.a437a45-1",
+   "upstream_version": "1.10.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 10,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.2",
+   "upstream_version": "1.2",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.2-alpha",
+   "upstream_version": "1.2",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.2-alpha-3",
+   "upstream_version": "1.2-alpha",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.2.3",
+   "upstream_version": "1.2.3",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 3
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.2.3+dfsg",
+   "upstream_version": "1.2.3",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 3
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.2.3-01",
+   "upstream_version": "1.2.3",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 3
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.2.3-4",
+   "upstream_version": "1.2.3",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 3
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.2.3.4",
+   "upstream_version": "1.2.3.4",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.2p3",
+   "upstream_version": "1.2p3",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 3
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.2p4",
+   "upstream_version": "1.2p4",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 4
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.2pl3",
+   "upstream_version": "1.2pl3",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 3
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.2pl4",
+   "upstream_version": "1.2pl4",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 2,
+    "patch": 4
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.5.0",
+   "upstream_version": "1.5.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 5,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.7",
+   "upstream_version": "1.7",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 7,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1.7+git20191031.4036a9c",
+   "upstream_version": "1.7",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 1,
+    "minor": 7,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "10.20.30",
+   "upstream_version": "10.20.30",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 10,
+    "minor": 20,
+    "patch": 30
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "100.200.300",
+   "upstream_version": "100.200.300",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 100,
+    "minor": 200,
+    "patch": 300
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1:0.9.0-5",
+   "upstream_version": "0.9.0",
+   "pvac": {
+    "category": "Extended-Semantic",
+    "epoch": 1,
+    "major": 0,
+    "minor": 9,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1:1.0.0",
+   "upstream_version": "1.0.0",
+   "pvac": {
+    "category": "Extended-Semantic",
+    "epoch": 1,
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1:2.0",
+   "upstream_version": "2.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 1,
+    "major": 2,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1:2.0.0",
+   "upstream_version": "2.0.0",
+   "pvac": {
+    "category": "Extended-Semantic",
+    "epoch": 1,
+    "major": 2,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1:2.0.0-rc.1+build.5",
+   "upstream_version": "2.0.0",
+   "pvac": {
+    "category": "Extended-Semantic",
+    "epoch": 1,
+    "major": 2,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1:3.0-beta-2",
+   "upstream_version": "3.0-beta",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 1,
+    "major": 3,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "1:3.4",
+   "upstream_version": "3.4",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 1,
+    "major": 3,
+    "minor": 4,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.0",
+   "upstream_version": "2.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.0+ds-2",
+   "upstream_version": "2.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.0-1",
+   "upstream_version": "2.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.0-2",
+   "upstream_version": "2.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.0-rc1",
+   "upstream_version": "2.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.0-rc1-1",
+   "upstream_version": "2.0-rc1",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.0.0",
+   "upstream_version": "2.0.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.0.0~rc1",
+   "upstream_version": "2.0.0",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.0.1",
+   "upstream_version": "2.0.1",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 0,
+    "patch": 1
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.0.1-1",
+   "upstream_version": "2.0.1",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 0,
+    "patch": 1
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.1",
+   "upstream_version": "2.1",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 1,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.1-1",
+   "upstream_version": "2.1",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 1,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.1.0",
+   "upstream_version": "2.1.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 1,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.1.0-beta.2+build.456",
+   "upstream_version": "2.1.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 1,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2.3.0",
+   "upstream_version": "2.3.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 2,
+    "minor": 3,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "20200101",
+   "upstream_version": "20200101",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "20200101-1",
+   "upstream_version": "20200101",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2021-07-31",
+   "upstream_version": "2021-07",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "20230101",
+   "upstream_version": "20230101",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2:1.0-1",
+   "upstream_version": "1.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 2,
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2:1.0.0",
+   "upstream_version": "1.0.0",
+   "pvac": {
+    "category": "Extended-Semantic",
+    "epoch": 2,
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2:1.2.3",
+   "upstream_version": "1.2.3",
+   "pvac": {
+    "category": "Extended-Semantic",
+    "epoch": 2,
+    "major": 1,
+    "minor": 2,
+    "patch": 3
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2:1.2.3-4",
+   "upstream_version": "1.2.3",
+   "pvac": {
+    "category": "Extended-Semantic",
+    "epoch": 2,
+    "major": 1,
+    "minor": 2,
+    "patch": 3
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "2:7.4.052-1ubuntu3.1",
+   "upstream_version": "7.4.052",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 2,
+    "major": 7,
+    "minor": 4,
+    "patch": 52
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "3.0",
+   "upstream_version": "3.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 3,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "3.0-beta",
+   "upstream_version": "3.0",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 3,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "3.0.0",
+   "upstream_version": "3.0.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 3,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "3.0.0-beta",
+   "upstream_version": "3.0.0",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 3,
+    "minor": 0,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "3.0.1",
+   "upstream_version": "3.0.1",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 3,
+    "minor": 0,
+    "patch": 1
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "3.1",
+   "upstream_version": "3.1",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 3,
+    "minor": 1,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "3.4.5",
+   "upstream_version": "3.4.5",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 3,
+    "minor": 4,
+    "patch": 5
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "3:1.5.0",
+   "upstream_version": "1.5.0",
+   "pvac": {
+    "category": "Extended-Semantic",
+    "epoch": 3,
+    "major": 1,
+    "minor": 5,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "4.1",
+   "upstream_version": "4.1",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 4,
+    "minor": 1,
+    "patch": 0
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "4.3.2",
+   "upstream_version": "4.3.2",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 4,
+    "minor": 3,
+    "patch": 2
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "42",
+   "upstream_version": "42",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "5:4.3.2-1",
+   "upstream_version": "4.3.2",
+   "pvac": {
+    "category": "Extended-Semantic",
+    "epoch": 5,
+    "major": 4,
+    "minor": 3,
+    "patch": 2
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "7.4.052",
+   "upstream_version": "7.4.052",
+   "pvac": {
+    "category": "Semi-Semantic",
+    "epoch": 0,
+    "major": 7,
+    "minor": 4,
+    "patch": 52
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "7add680f",
+   "upstream_version": "7add680f",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "8.8.1",
+   "upstream_version": "8.8.1",
+   "pvac": {
+    "category": "Semantic",
+    "epoch": 0,
+    "major": 8,
+    "minor": 8,
+    "patch": 1
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "8.8.1+ds+~cs25.17.7",
+   "upstream_version": "8.8.1",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "A standard semver string should match Semantic, not Extended or Semi.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "A standard semver vs a two-component semi-semver should still compare.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "All PRs closed quickly should have high responsiveness.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "All PRs still open should have zero responsiveness.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "All trivial baseline commits should allow D_c=1 when eval is active.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "All trivial eval commits should result in 0 when include_trivial=False.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Archived repo should have reduced viability.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Archived repo should reduce final score via responsiveness.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Batch scoring took ",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "CHANGELOG.md",
+   "upstream_version": "CHANGELOG.md",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Clone demo repository once for all tests.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Clone failed",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Column mismatch!\nMissing from MaltaResult: ",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Commits with a committer time before since are excluded.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Create temporary directory for testing.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "D_c > 1 should be clamped to 1 in final score.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Equal commit rates with recent eval commits should score high.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Eval with more commits per day than baseline should have D_c > 1 clamped.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Extended-Semantic",
+   "upstream_version": "Extended",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Final score should combine all component scores.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Full scoring took ",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Generate a large PRs DataFrame with 5,000 PRs across 100 repos.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Generate a large commits DataFrame with 10,000 commits across 100 repos.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Generate metadata for 100 repos.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "GitHub API error",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Helper to create a Malta instance with test data.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Helper to create a PRs DataFrame from PullRequest objects.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Helper to create a commits DataFrame from Commit objects.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Helper to create a metadata DataFrame from RepoMeta.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "If baseline has no commits but eval is active, D_c = 1.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "If eval has no commits, score should be 0.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "If major differs, result is Very Active even if minor also differs.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "If neither baseline nor eval has commits, score should be 0.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Inquirer.js",
+   "upstream_version": "Inquirer.js",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Invalid URL: None or not a string",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Lightly Active",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Many open issues should reduce viability.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Missing column: ",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Mix of open and closed PRs should have partial responsiveness.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Moderately Active",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Naive datetime should raise ValueError.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "No PRs should return None for s_resp (no data, not zero responsiveness).",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Older eval commits should decay more with smaller tau.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Performance tests for Malta class with large datasets.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Popular non-archived repo should have high viability.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "README.md",
+   "upstream_version": "README.md",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Repository not found",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Scoring 10 repos took ",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Sedentary",
+   "upstream_version": "Sedentary",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Semantic",
+   "upstream_version": "Semantic",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Semi-Semantic",
+   "upstream_version": "Semi",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Shane",
+   "upstream_version": "Shane",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Slow PR decisions should reduce the score.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test FTP git URLs.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test FTPS git URLs.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test GitHub URL without .git extension but with trailing slash is accepted.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test GitHub URL without .git extension is accepted.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test HTTP git URLs.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test HTTPS URL with extra parameters.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test SSH URL with username.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test SSH git URLs.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test URL with trailing garbage after .git.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test adding upstream version column with custom naming.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test adding upstream version column with default naming.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test adding upstream version for multiple release columns.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test basic batch scoring functionality.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test behavior when tags column is missing.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test behavior when tags is not a list.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test cloning non-existent repository returns failure result.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test cloning specific branch.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test cloning when repo already exists returns success without re-cloning.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test cloning with GitHub token authentication.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test cloning with None URL returns failure result.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test cloning with empty URL returns failure result.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test cloning with include_tags=False skips tag fetching.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test cloning with include_tags=True fetches tags.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test cloning with invalid URL returns failure result.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test commit with multiple tags, one matching.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test complex real-world version strings.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test empty string returns None.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test error when version column doesn't exist.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test finding complex version formats with special characters.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test finding exact version match without prefix.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test finding version with 'release_' prefix.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test finding version with 'v' prefix.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test finding version with 'version_' prefix.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test full scoring pipeline completes in reasonable time.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test git:// protocol URLs.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test handling of GitHub API exception returns failure result.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test handling of pygit2 clone error returns failure result and cleans up.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test invalid input handling.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test merging when all rows match on source column.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test merging when no rows match on source column.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test merging when only some rows match on source column.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test plain string without protocol returns None.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test regular HTTP URL (not a git repo) returns None.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test repository not available",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test scoring multiple repos from the same DataFrames.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test simple upstream version only.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test standard HTTPS git URLs.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that DataFrame has all expected columns.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that None input returns None.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that column data types are correct.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that commits are sorted oldest to newest.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that commits with only .md files are marked as trivial.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that errors are captured and don't crash the batch.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that first matching commit is returned when multiple commits have matching tags.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that function raises error when not given exactly 2 DataFrames.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that get_all_commits returns a valid DataFrame.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that http:// URLs are converted to https://.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that include_files=False excludes files column.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that include_files=True includes files column with valid data.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that leading/trailing whitespace is handled.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that missing files column doesn't add label.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that non-repo directory raises FileNotFoundError.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that nonexistent path raises FileNotFoundError.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that original DataFrame is not modified.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that parallel processing improves performance.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that since parameter filters out older commits.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that tags column contains lists.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that the first commit is from Shane K. Panter.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test that v1.0.0 tag is associated with the correct commit.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test upstream version that contains hyphens.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test version string with debian revision.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test version string with epoch and debian revision.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test version string with epoch but no debian revision.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test version strings with Debian-specific suffixes.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test version strings with git suffixes.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test when commits have no tags.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test when no tag matches the version.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test with empty commits DataFrame.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Test with mixed tag naming conventions.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Tests for categorize_development_activity().",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Tests for lookup_category().",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Tests for the score_repos batch processing function.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Tests for version_delta_agg().",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "URL does not match expected git repository patterns",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Unknown",
+   "upstream_version": "Unknown",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Verify MaltaResult has all columns expected by the notebook.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Verify that PR extraction is cached - second call should be instant.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Verify that commit extraction is cached - second call should be instant.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Verify that metadata extraction is cached - second call should be instant.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Very Active",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Very old eval commits should have strong recency decay.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Very recent eval commits should have minimal recency decay.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "When include_trivial=True, trivial commits should be counted.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Windows should be computed based on constants.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "Without since, load_commits returns the full history rather than a window relative to now.",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "__int__",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "abc",
+   "upstream_version": "abc",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "abc123",
+   "upstream_version": "abc123",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "archived",
+   "upstream_version": "archived",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "author",
+   "upstream_version": "author",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "bar",
+   "upstream_version": "bar",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "bookworm_version",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "bookworm_version_upstream",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "category",
+   "upstream_version": "category",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "closed",
+   "upstream_version": "closed",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "closed_at",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "created_at",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "das_dc",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "das_rc",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "das_score",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "date",
+   "upstream_version": "date",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "def456",
+   "upstream_version": "def456",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "develop",
+   "upstream_version": "develop",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "docs/README.md",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "email",
+   "upstream_version": "email",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "epoch",
+   "upstream_version": "epoch",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "error",
+   "upstream_version": "error",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "files",
+   "upstream_version": "files",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "final_score",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "final_score_100",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "foo",
+   "upstream_version": "foo",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "forks",
+   "upstream_version": "forks",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "ftp://example.com/repo.git",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "ftp://github.com/foo/bar",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "ftps://example.com/repo.git",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "garbage",
+   "upstream_version": "garbage",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "ghi789",
+   "upstream_version": "ghi789",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "git://github.com/foo/bar",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "git://github.com/owner/repo.git",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "git@github.com:foo/bar.git",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": null
+  },
+  {
+   "input": "git@github.com:owner/repo",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": null
+  },
+  {
+   "input": "git@github.com:owner/repo.git",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": null
+  },
+  {
+   "input": "git@gitlab.com:group/subgroup/project.git",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "hash",
+   "upstream_version": "hash",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "homepage",
+   "upstream_version": "homepage",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "http://a.com",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "http://b.com",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "http://c.com",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "http://d.com",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "http://example.com/repo.git",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "http://github.com/foo/bar.git",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/foo/bar",
+   "normalize_error": null
+  },
+  {
+   "input": "http://github.com/owner/repo.git",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/owner/repo",
+   "normalize_error": null
+  },
+  {
+   "input": "https://example.com/page.html",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "https://github.com/foo",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "https://github.com/foo/bar",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/foo/bar",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/foo/bar#readme",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/foo/bar",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/foo/bar.git/",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/foo/bar.git",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/foo/bar/",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/foo/bar",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/foo/bar/tree/main",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/foo/bar",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/jazzband/django-haystack-redis",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/jazzband/django-haystack-redis",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/jazzband/django-haystack-redis cache/repos/django-haystack-redis",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/jazzband/django-haystack-redis",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/node-modules/address",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/node-modules/address",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/node-modules/address#readme",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/node-modules/address",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/nonexistent/repo",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/nonexistent/repo",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/owner/repo",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/owner/repo",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/owner/repo.git",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/owner/repo",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/owner/repo/",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/owner/repo",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/sboudrias/Inquirer.js",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/sboudrias/Inquirer.js",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/shanep/demo",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/shanep/demo",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/snoyberg/tar-conduit",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/snoyberg/tar-conduit",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/test/good",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/test/good",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/test/missing",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/test/missing",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/test/repo",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/test/repo",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/test/repo-",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/test/repo-",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/test/repo-0",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/test/repo-0",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/test/repo-a",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/test/repo-a",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/test/repo-b",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/test/repo-b",
+   "normalize_error": null
+  },
+  {
+   "input": "https://github.com/test/repo-c",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": "https://github.com/test/repo-c",
+   "normalize_error": null
+  },
+  {
+   "input": "https://gitlab.com/foo/bar",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "https://user@github.com/foo/bar",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "is_trivial",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "jkl012",
+   "upstream_version": "jkl012",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "latest",
+   "upstream_version": "latest",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "major",
+   "upstream_version": "major",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "merged_at",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "message",
+   "upstream_version": "message",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "minor",
+   "upstream_version": "minor",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "module",
+   "upstream_version": "module",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "mrs_ddec",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "mrs_n_open",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "mrs_n_prs",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "mrs_n_terminated",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "mrs_popen",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "mrs_rdec",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "mrs_score",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "n_commits_total",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "n_commits_window",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "n_prs_total",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "n_prs_window",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "nonexistent",
+   "upstream_version": "nonexistent",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "nonexistent_column",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "not-a-url",
+   "upstream_version": "not-a",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "not-a-version",
+   "upstream_version": "not-a",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "old-tag",
+   "upstream_version": "old",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "open",
+   "upstream_version": "open",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "open_issues",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "origin",
+   "upstream_version": "origin",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "os.getenv",
+   "upstream_version": "os.getenv",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "osslag.utils.github_helper.gh_check_repo_exists",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "owner",
+   "upstream_version": "owner",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "package-",
+   "upstream_version": "package-",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "package_version",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "patch",
+   "upstream_version": "patch",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "pkg-",
+   "upstream_version": "pkg-",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "pkg-a",
+   "upstream_version": "pkg",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "pkg-b",
+   "upstream_version": "pkg",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "pkg-c",
+   "upstream_version": "pkg",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "pkg-good",
+   "upstream_version": "pkg",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "pkg-missing",
+   "upstream_version": "pkg",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "pkg1",
+   "upstream_version": "pkg1",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "pkg2",
+   "upstream_version": "pkg2",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "pkg3",
+   "upstream_version": "pkg3",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "pkg4",
+   "upstream_version": "pkg4",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "pygit2.clone_repository",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "readme.md",
+   "upstream_version": "readme.md",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "release-2.1.0",
+   "upstream_version": "release",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "release-3.0.0",
+   "upstream_version": "release",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "release_2.0.0",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "repo",
+   "upstream_version": "repo",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "repo_url",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "rmvs_archived",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "rmvs_forks_phi",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "rmvs_issues_penalty",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "rmvs_score",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "rmvs_stars_phi",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "s, expected < 0.1s",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "s, expected < 1.0s",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "s, expected < 10s",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "sboudrias",
+   "upstream_version": "sboudrias",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "snoyberg",
+   "upstream_version": "snoyberg",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "source",
+   "upstream_version": "source",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "src/app.py",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "src/main.py",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "stable",
+   "upstream_version": "stable",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "stars",
+   "upstream_version": "stars",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "state",
+   "upstream_version": "state",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "tags",
+   "upstream_version": "tags",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "tar-conduit",
+   "upstream_version": "tar",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "test",
+   "upstream_version": "test",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "test-package",
+   "upstream_version": "test",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "test_clone_",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "test_get_all_commits_",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "test_token_123",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "timestamp",
+   "upstream_version": "timestamp",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "timezone-aware",
+   "upstream_version": "timezone",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "trixie_version",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "trixie_version_upstream",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "upstream",
+   "upstream_version": "upstream",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "v1.0.0",
+   "upstream_version": "v1.0.0",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "v1.1.0",
+   "upstream_version": "v1.1.0",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "v1.2.3",
+   "upstream_version": "v1.2.3",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "v1.2.3+dfsg",
+   "upstream_version": "v1.2.3",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "v2.0.0",
+   "upstream_version": "v2.0.0",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "v2.0.0~rc1",
+   "upstream_version": "v2.0.0",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "version",
+   "upstream_version": "version",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "version-1.1.0",
+   "upstream_version": "version",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "version_1.0.0",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "version_upstream",
+   "upstream_version": null,
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  },
+  {
+   "input": "watchers",
+   "upstream_version": "watchers",
+   "pvac": {
+    "category": null,
+    "epoch": null,
+    "major": null,
+    "minor": null,
+    "patch": null
+   },
+   "normalized_url": null,
+   "normalize_error": "URL does not match expected git repository patterns"
+  }
+ ],
+ "activity": [
+  {
+   "a": "1.2.3",
+   "b": "1.2.3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2.3",
+   "b": "0:1.2.3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2.3",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3",
+   "b": "01.02.03",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2.3",
+   "b": "1.2",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2.3",
+   "b": "1.2p3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2.3",
+   "b": "1.2pl4",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2.3",
+   "b": "1.2.3-01",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2.3",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.2.3",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3",
+   "b": "1.2-alpha-3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2.3",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3",
+   "b": "3.0.0-beta",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2.3",
+   "b": "0.0.0",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2.3",
+   "b": "10.20.30",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "1.2.3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "0:1.2.3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "01.02.03",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "1.2",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "1.2p3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "1.2pl4",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "1.2.3-01",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "1.2-alpha-3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "3.0.0-beta",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "0.0.0",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0:1.2.3",
+   "b": "10.20.30",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "0:1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "01.02.03",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "1.2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "1.2p3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "1.2pl4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "1.2.3-01",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "1.2-alpha-3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "3.0.0-beta",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "0.0.0",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1:2.0.0-rc.1+build.5",
+   "b": "10.20.30",
+   "activity": "Unknown"
+  },
+  {
+   "a": "01.02.03",
+   "b": "1.2.3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "01.02.03",
+   "b": "0:1.2.3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "01.02.03",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "01.02.03",
+   "b": "01.02.03",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "01.02.03",
+   "b": "1.2",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "01.02.03",
+   "b": "1.2p3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "01.02.03",
+   "b": "1.2pl4",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "01.02.03",
+   "b": "1.2.3-01",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "01.02.03",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "01.02.03",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "01.02.03",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "01.02.03",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "01.02.03",
+   "b": "1.2-alpha-3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "01.02.03",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "01.02.03",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "01.02.03",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "01.02.03",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "01.02.03",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "01.02.03",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "01.02.03",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "01.02.03",
+   "b": "3.0.0-beta",
+   "activity": "Very Active"
+  },
+  {
+   "a": "01.02.03",
+   "b": "0.0.0",
+   "activity": "Very Active"
+  },
+  {
+   "a": "01.02.03",
+   "b": "10.20.30",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2",
+   "b": "1.2.3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2",
+   "b": "0:1.2.3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2",
+   "b": "01.02.03",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2",
+   "b": "1.2",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2",
+   "b": "1.2p3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2",
+   "b": "1.2pl4",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2",
+   "b": "1.2.3-01",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.2",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2",
+   "b": "1.2-alpha-3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2",
+   "b": "3.0.0-beta",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2",
+   "b": "0.0.0",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2",
+   "b": "10.20.30",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2p3",
+   "b": "1.2.3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2p3",
+   "b": "0:1.2.3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2p3",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2p3",
+   "b": "01.02.03",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2p3",
+   "b": "1.2",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2p3",
+   "b": "1.2p3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2p3",
+   "b": "1.2pl4",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2p3",
+   "b": "1.2.3-01",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2p3",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2p3",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2p3",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.2p3",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2p3",
+   "b": "1.2-alpha-3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2p3",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2p3",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2p3",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2p3",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2p3",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2p3",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2p3",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2p3",
+   "b": "3.0.0-beta",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2p3",
+   "b": "0.0.0",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2p3",
+   "b": "10.20.30",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "1.2.3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "0:1.2.3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "01.02.03",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "1.2",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "1.2p3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "1.2pl4",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "1.2.3-01",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "1.2-alpha-3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "3.0.0-beta",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "0.0.0",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2pl4",
+   "b": "10.20.30",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "1.2.3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "0:1.2.3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "01.02.03",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "1.2",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "1.2p3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "1.2pl4",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "1.2.3-01",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "1.2-alpha-3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "3.0.0-beta",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "0.0.0",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2.3-01",
+   "b": "10.20.30",
+   "activity": "Very Active"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "0:1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "01.02.03",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "1.2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "1.2p3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "1.2pl4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "1.2.3-01",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "1.2-alpha-3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "3.0.0-beta",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "0.0.0",
+   "activity": "Unknown"
+  },
+  {
+   "a": "2:7.4.052-1ubuntu3.1",
+   "b": "10.20.30",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "0:1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "01.02.03",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "1.2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "1.2p3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "1.2pl4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "1.2.3-01",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "1.2-alpha-3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "3.0.0-beta",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "0.0.0",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.0~rc1-2",
+   "b": "10.20.30",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "1.2.3",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "0:1.2.3",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "01.02.03",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "1.2",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "1.2p3",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "1.2pl4",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "1.2.3-01",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "1.2-alpha-3",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "3.0.0-beta",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "0.0.0",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.10.0+git20230101-1",
+   "b": "10.20.30",
+   "activity": "Very Active"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "0:1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "01.02.03",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "1.2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "1.2p3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "1.2pl4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "1.2.3-01",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "1.2-alpha-3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "3.0.0-beta",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "0.0.0",
+   "activity": "Unknown"
+  },
+  {
+   "a": "8.8.1+ds+~cs25.17.7",
+   "b": "10.20.30",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "1.2.3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "0:1.2.3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "01.02.03",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "1.2",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "1.2p3",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "1.2pl4",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "1.2.3-01",
+   "activity": "Lightly Active"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Moderately Active"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "1.2-alpha-3",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "3.0.0-beta",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "0.0.0",
+   "activity": "Very Active"
+  },
+  {
+   "a": "1.2-alpha-3",
+   "b": "10.20.30",
+   "activity": "Very Active"
+  },
+  {
+   "a": "",
+   "b": "1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "0:1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "01.02.03",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "1.2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "1.2p3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "1.2pl4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "1.2.3-01",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "1.2-alpha-3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "3.0.0-beta",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "0.0.0",
+   "activity": "Unknown"
+  },
+  {
+   "a": "",
+   "b": "10.20.30",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "0:1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "01.02.03",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "1.2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "1.2p3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "1.2pl4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "1.2.3-01",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "1.2-alpha-3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "3.0.0-beta",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "0.0.0",
+   "activity": "Unknown"
+  },
+  {
+   "a": "   ",
+   "b": "10.20.30",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "0:1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "01.02.03",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "1.2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "1.2p3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "1.2pl4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "1.2.3-01",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "1.2-alpha-3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "3.0.0-beta",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "0.0.0",
+   "activity": "Unknown"
+  },
+  {
+   "a": "abc",
+   "b": "10.20.30",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "0:1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "01.02.03",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "1.2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "1.2p3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "1.2pl4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "1.2.3-01",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "1.2-alpha-3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "3.0.0-beta",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "0.0.0",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1",
+   "b": "10.20.30",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "0:1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "01.02.03",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "1.2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "1.2p3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "1.2pl4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "1.2.3-01",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "1.2-alpha-3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "3.0.0-beta",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "0.0.0",
+   "activity": "Unknown"
+  },
+  {
+   "a": "1.2.3.4",
+   "b": "10.20.30",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "0:1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "01.02.03",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "1.2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "1.2p3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "1.2pl4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "1.2.3-01",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "1.2-alpha-3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "3.0.0-beta",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "0.0.0",
+   "activity": "Unknown"
+  },
+  {
+   "a": "v1.2.3",
+   "b": "10.20.30",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "0:1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "01.02.03",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "1.2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "1.2p3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "1.2pl4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "1.2.3-01",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "1.2-alpha-3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "3.0.0-beta",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "0.0.0",
+   "activity": "Unknown"
+  },
+  {
+   "a": "20230101",
+   "b": "10.20.30",
+   "activity": "Unknown"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "1.2.3",
+   "activity": "Very Active"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "0:1.2.3",
+   "activity": "Very Active"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "01.02.03",
+   "activity": "Very Active"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "1.2",
+   "activity": "Very Active"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "1.2p3",
+   "activity": "Very Active"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "1.2pl4",
+   "activity": "Very Active"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "1.2.3-01",
+   "activity": "Very Active"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Very Active"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "1.2-alpha-3",
+   "activity": "Very Active"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "3.0.0-beta",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "0.0.0",
+   "activity": "Very Active"
+  },
+  {
+   "a": "3.0.0-beta",
+   "b": "10.20.30",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0.0.0",
+   "b": "1.2.3",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0.0.0",
+   "b": "0:1.2.3",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0.0.0",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0.0.0",
+   "b": "01.02.03",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0.0.0",
+   "b": "1.2",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0.0.0",
+   "b": "1.2p3",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0.0.0",
+   "b": "1.2pl4",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0.0.0",
+   "b": "1.2.3-01",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0.0.0",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0.0.0",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0.0.0",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0.0.0",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0.0.0",
+   "b": "1.2-alpha-3",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0.0.0",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0.0.0",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0.0.0",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0.0.0",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0.0.0",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0.0.0",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0.0.0",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "0.0.0",
+   "b": "3.0.0-beta",
+   "activity": "Very Active"
+  },
+  {
+   "a": "0.0.0",
+   "b": "0.0.0",
+   "activity": "Sedentary"
+  },
+  {
+   "a": "0.0.0",
+   "b": "10.20.30",
+   "activity": "Very Active"
+  },
+  {
+   "a": "10.20.30",
+   "b": "1.2.3",
+   "activity": "Very Active"
+  },
+  {
+   "a": "10.20.30",
+   "b": "0:1.2.3",
+   "activity": "Very Active"
+  },
+  {
+   "a": "10.20.30",
+   "b": "1:2.0.0-rc.1+build.5",
+   "activity": "Unknown"
+  },
+  {
+   "a": "10.20.30",
+   "b": "01.02.03",
+   "activity": "Very Active"
+  },
+  {
+   "a": "10.20.30",
+   "b": "1.2",
+   "activity": "Very Active"
+  },
+  {
+   "a": "10.20.30",
+   "b": "1.2p3",
+   "activity": "Very Active"
+  },
+  {
+   "a": "10.20.30",
+   "b": "1.2pl4",
+   "activity": "Very Active"
+  },
+  {
+   "a": "10.20.30",
+   "b": "1.2.3-01",
+   "activity": "Very Active"
+  },
+  {
+   "a": "10.20.30",
+   "b": "2:7.4.052-1ubuntu3.1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "10.20.30",
+   "b": "1.0~rc1-2",
+   "activity": "Unknown"
+  },
+  {
+   "a": "10.20.30",
+   "b": "1.10.0+git20230101-1",
+   "activity": "Very Active"
+  },
+  {
+   "a": "10.20.30",
+   "b": "8.8.1+ds+~cs25.17.7",
+   "activity": "Unknown"
+  },
+  {
+   "a": "10.20.30",
+   "b": "1.2-alpha-3",
+   "activity": "Very Active"
+  },
+  {
+   "a": "10.20.30",
+   "b": "",
+   "activity": "Unknown"
+  },
+  {
+   "a": "10.20.30",
+   "b": "   ",
+   "activity": "Unknown"
+  },
+  {
+   "a": "10.20.30",
+   "b": "abc",
+   "activity": "Unknown"
+  },
+  {
+   "a": "10.20.30",
+   "b": "1",
+   "activity": "Unknown"
+  },
+  {
+   "a": "10.20.30",
+   "b": "1.2.3.4",
+   "activity": "Unknown"
+  },
+  {
+   "a": "10.20.30",
+   "b": "v1.2.3",
+   "activity": "Unknown"
+  },
+  {
+   "a": "10.20.30",
+   "b": "20230101",
+   "activity": "Unknown"
+  },
+  {
+   "a": "10.20.30",
+   "b": "3.0.0-beta",
+   "activity": "Very Active"
+  },
+  {
+   "a": "10.20.30",
+   "b": "0.0.0",
+   "activity": "Very Active"
+  },
+  {
+   "a": "10.20.30",
+   "b": "10.20.30",
+   "activity": "Sedentary"
+  }
+ ]
+}
