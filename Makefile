@@ -1,6 +1,6 @@
 VENV ?= .venv
 
-.PHONY: bootstrap install lint fmt typecheck test clean help
+.PHONY: bootstrap install lint fmt typecheck test check build clean help
 
 help:
 	@echo "Makefile commands:"
@@ -10,6 +10,7 @@ help:
 	@echo "  fmt         - Format the code using ruff"
 	@echo "  typecheck   - Type check the code using pyright"
 	@echo "  test        - Run tests using pytest"
+	@echo "  check       - Run every check CI and the pre-push hook run"
 	@echo "  clean       - Clean up build artifacts and caches"
 
 bootstrap:
@@ -35,6 +36,8 @@ typecheck:
 
 test:
 	uv run pytest
+
+check: lint typecheck test
 
 install:
 	uv tool install . -e
