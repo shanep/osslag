@@ -5,6 +5,7 @@
 //! today (large_string, timestamp[us, UTC]) so Python notebooks read the files unchanged.
 
 pub mod columns;
+pub mod table;
 
 use std::fs::File;
 use std::path::Path;

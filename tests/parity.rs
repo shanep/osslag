@@ -165,3 +165,36 @@ fn malta_scores_match_python_exactly() {
         failures.iter().take(40).cloned().collect::<Vec<_>>().join("\n")
     );
 }
+
+fn table(name: &str) -> osslag::io::table::StringTable {
+    osslag::io::table::StringTable::from_batch(&read_parquet(&fixture(name)).unwrap()).unwrap()
+}
+
+#[test]
+fn debian_steps_match_python() {
+    use osslag::distro::debian;
+
+    // SAFETY: no other test in this binary reads REPOS_CACHE_DIR.
+    unsafe { std::env::remove_var("REPOS_CACHE_DIR") };
+    let empty_cache = tempfile::tempdir().unwrap();
+    let mut releases = Vec::new();
+    for rel in ["bookworm", "trixie"] {
+        let xz = std::fs::read(fixture(&format!("debian_{rel}_Sources.xz"))).unwrap();
+        let all = debian::parse_sources(xz2::read::XzDecoder::new(xz.as_slice()), rel).unwrap();
+        assert_eq!(all, table(&format!("debian_{rel}_all_packages.parquet")), "{rel} all packages");
+
+        let mut filtered = debian::filter_github_repos(&all).unwrap();
+        debian::add_local_repo_cache_path_column(&mut filtered, empty_cache.path()).unwrap();
+        assert_eq!(filtered, table(&format!("debian_{rel}_filtered_packages.parquet")), "{rel} filtered");
+
+        let col = format!("{rel}_upstream_version");
+        debian::add_upstream_version_column(&mut filtered, &format!("{rel}_version"), &col).unwrap();
+        let keep: Vec<bool> = filtered.column(&col).unwrap().iter().map(Option::is_some).collect();
+        let versions = filtered.filter(&keep);
+        assert_eq!(versions, table(&format!("debian_{rel}_packages_with_upstream_versions.parquet")), "{rel} versions");
+        releases.push(versions);
+    }
+    let merged = debian::merge_release_packages(&releases).unwrap();
+    assert_eq!(merged.matched, table("debian_merged_releases_packages.parquet"), "merged");
+    assert_eq!(merged.unmatched, table("debian_dropped_after_merge.parquet"), "dropped");
+}

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import ast
 import json
+import os
 import random
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -144,9 +145,70 @@ def gen_malta() -> None:
     (OUT / "malta_eval_end.txt").write_text(EVAL_END.isoformat() + "\n")
 
 
+DEBIAN_SOURCES = {
+    "bookworm": (
+        b"Package: alpha\nVersion: 1.2.3-1\nHomepage: https://github.com/o/alpha\nMaintainer: A <a@x.org>\n\n"
+        b"Package: beta\nVersion: 2:4.5-2\nHomepage: http://github.com/o/beta.git\nDepends: libc6,\n libz\n\n"
+        b"  \t\n"
+        b"Package: gamma\nVersion: 1.0~rc1-1\nHomepage: https://github.com/o/gamma/tree/main\r\n\n"
+        b"Package: delta\nVersion: 3.0+dfsg-1\nHomepage: https://gitlab.com/o/delta\n\n"
+        b"Package: epsilon\nVersion: 1.0-1\n\n"
+        b"Package: zeta\nVersion: 1.0-1\nHomepage: https://githubXcom/o/zeta\n\n"
+        b"Package: eta\nVersion: 1.0-1\nHomepage: git@github.com:o/eta.git\n\n"
+        b"Package: theta\nVersion: 5.0-1\nHomepage: https://github.com/o/alpha#readme\n\n"
+        b"# comment\nSource: iota\nVersion: a:b\nHomepage: https://github.com/o/iota\nMaintainer: Bj\xf6rn <b@x>\n\n"
+        b"Package: kappa\nVersion: 7.1-1\nHomepage: https://github.com/o/kappa\n\n"
+        b"Package: kappa\nVersion: 7.2-1\nHomepage: https://github.com/o/kappa2\n\n"
+        b"Package: only-old\nVersion: 0.1-1\nHomepage: https://github.com/o/only-old\n\n"
+        b"Package: lambda\nVersion: 1:2.0-3\nHomepage: HTTPS://github.com/o/lambda\n"
+    ),
+    "trixie": (
+        b"Package: kappa\nVersion: 7.3-1\nHomepage: https://github.com/o/kappa\n\n"
+        b"Package: alpha\nVersion: 1.3.0-1\nHomepage: https://github.com/o/alpha\nMaintainer: New <n@x.org>\n\n"
+        b"Package: beta\nVersion: 2:4.6-1\nHomepage: https://github.com/o/beta\n\n"
+        b"Package: gamma\nVersion: 1.0-1\nHomepage: https://github.com/o/gamma\n\n"
+        b"Package: iota\nVersion: 2.0-1\nHomepage: https://github.com/o/iota\n\n"
+        b"Package: only-new\nVersion: 9.9-1\nHomepage: https://github.com/o/only-new\n\n"
+    ),
+}
+
+
+def gen_debian() -> None:
+    """Run pipeline steps 1-4 the way the CLI does, on two small Sources files with edge cases."""
+    import lzma
+    import tempfile
+
+    from osslag.distro import debian
+
+    os.environ.pop("REPOS_CACHE_DIR", None)
+    tables = []
+    with tempfile.TemporaryDirectory() as empty_cache:
+        for rel, text in DEBIAN_SOURCES.items():
+            xz = lzma.compress(text)
+            (OUT / f"debian_{rel}_Sources.xz").write_bytes(xz)
+            debian.gh.fetch_file = lambda url, xz=xz: xz  # type: ignore[assignment]
+            all_df = debian.fetch_packages(rel)
+            assert all_df is not None
+            all_df.to_parquet(OUT / f"debian_{rel}_all_packages.parquet", index=False)
+            filtered = debian.filter_github_repos(all_df)
+            filtered = debian.add_local_repo_cache_path_column(filtered, cache_dir=empty_cache)
+            filtered.reset_index(drop=True, inplace=True)
+            filtered.to_parquet(OUT / f"debian_{rel}_filtered_packages.parquet", index=False)
+            col = f"{rel}_upstream_version"
+            versions = debian.add_upstream_version_column(filtered, f"{rel}_version", new_column_name=col)
+            versions.dropna(subset=[col], inplace=True)
+            versions.reset_index(drop=True, inplace=True)
+            versions.to_parquet(OUT / f"debian_{rel}_packages_with_upstream_versions.parquet", index=False)
+            tables.append(versions)
+    merged, dropped = debian.merge_release_packages(tables)
+    merged.reset_index(drop=True).to_parquet(OUT / "debian_merged_releases_packages.parquet", index=False)
+    dropped.reset_index(drop=True).to_parquet(OUT / "debian_dropped_after_merge.parquet", index=False)
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     gen_strings()
     gen_trivial()
     gen_malta()
+    gen_debian()
     print(f"wrote fixtures to {OUT}")
