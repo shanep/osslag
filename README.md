@@ -68,6 +68,14 @@ This writes `debian_malta_scores.parquet` to the cache, one row per package.
 Use `--commits-since` on `dataset run` only if the date is at or before the
 start of the MALTA baseline window (42 months before `--eval-end`).
 
+The paper sets the RMVS saturation constants from the data instead of the
+default 10,000. Pass `--rmvs-quantile 0.95` to use the 95th percentile of
+stars, forks, watchers and open issues over the scored packages:
+
+```bash
+osslag score --eval-end 2025-01-31 --rmvs-quantile 0.95
+```
+
 ## Changes from the Python version
 
 Versions 1.x on PyPI were written in Python. The Rust rewrite starts over at

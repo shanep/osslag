@@ -23,8 +23,8 @@ use crate::distro::{DistroHandler, get_handler};
 use crate::github::{GitHubApi, metadata_to_batch, pull_requests_to_batch};
 use crate::io::table::StringTable;
 use crate::io::{read_parquet, write_parquet};
-use crate::metrics::frames::{RepoTables, results_to_batch};
-use crate::metrics::malta::{Constants, Package, score_repos};
+use crate::metrics::frames::{RepoTables, quantile_rmvs_constants, results_to_batch};
+use crate::metrics::malta::{Constants, Package, RmvsConstants, score_repos};
 use crate::vcs::git::{clone_repo, commits_to_batch, load_commits};
 use crate::vcs::url::construct_repo_local_path;
 
@@ -814,7 +814,22 @@ impl Engine {
 
 /// Score every merged package with MALTA and write `{distro}_malta_scores.parquet`.
 /// Returns the output path and the number of packages scored.
-pub fn score_dataset(files: &Files, eval_end: DateTime<FixedOffset>) -> Result<(PathBuf, usize)> {
+/// What `score_dataset` wrote.
+#[derive(Debug, Clone)]
+pub struct ScoreSummary {
+    pub path: PathBuf,
+    pub packages: usize,
+    /// The RMVS constants used, which differ from the defaults when a quantile was given.
+    pub rmvs: RmvsConstants,
+}
+
+/// Score every merged package with MALTA. With `rmvs_quantile`, the RMVS saturation constants
+/// come from that quantile of the scored repos' metadata instead of the defaults.
+pub fn score_dataset(
+    files: &Files,
+    eval_end: DateTime<FixedOffset>,
+    rmvs_quantile: Option<f64>,
+) -> Result<ScoreSummary> {
     let merged = read_table(&require_file(files.merged_packages(), "Run 'dataset run' first.")?)?;
     let sources = merged.require("source", "score")?;
     let urls = merged.require("upstream_repo_url", "score")?;
@@ -833,11 +848,19 @@ pub fn score_dataset(files: &Files, eval_end: DateTime<FixedOffset>) -> Result<(
     if prs.is_none() {
         warn!("No pull request file, so every responsiveness score is missing");
     }
+    let mut constants = Constants::default();
+    if let Some(q) = rmvs_quantile {
+        let Some(meta) = &meta else {
+            bail!("--rmvs-quantile needs the metadata file. Run 'all-github-metadata' first.");
+        };
+        let urls: HashSet<String> = packages.iter().map(|p| p.repo_url.clone()).collect();
+        constants.rmvs = quantile_rmvs_constants(meta, &urls, q, constants.rmvs)?;
+    }
     let tables = RepoTables::new(&commits, prs.as_ref(), meta.as_ref())?;
-    let results = score_repos(&packages, |url| tables.repo_data(url), eval_end, Constants::default())?;
-    let out = files.malta_scores();
-    write_parquet(&out, &results_to_batch(&results)?)?;
-    Ok((out, results.len()))
+    let results = score_repos(&packages, |url| tables.repo_data(url), eval_end, constants)?;
+    let path = files.malta_scores();
+    write_parquet(&path, &results_to_batch(&results)?)?;
+    Ok(ScoreSummary { path, packages: results.len(), rmvs: constants.rmvs })
 }
 
 #[cfg(test)]

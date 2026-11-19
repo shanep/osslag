@@ -54,6 +54,10 @@ enum Command {
         eval_end: DateTime<FixedOffset>,
         #[arg(long, env = "CACHE_DIR", default_value = "./cache")]
         cache: PathBuf,
+        /// Set the RMVS saturation constants to this quantile (0 to 1) of the scored repos' stars,
+        /// forks, watchers and open issues, as the paper does with 0.95. Default: fixed constants.
+        #[arg(long)]
+        rmvs_quantile: Option<f64>,
     },
     /// Dataset pipeline commands for building package analysis datasets.
     #[command(subcommand)]
@@ -271,9 +275,14 @@ fn run(cli: Cli) -> Result<()> {
             let cache = std::env::var("CACHE_DIR").unwrap_or_else(|_| "./cache".into());
             println!("Current cache directory: {cache}");
         }
-        Command::Score { distro, eval_end, cache } => {
-            let (path, n) = score_dataset(&Files::new(&cache, &distro), eval_end)?;
-            println!("Scored {n} packages, saved to {}", path.display());
+        Command::Score { distro, eval_end, cache, rmvs_quantile } => {
+            let summary = score_dataset(&Files::new(&cache, &distro), eval_end, rmvs_quantile)?;
+            let k = summary.rmvs;
+            println!(
+                "RMVS saturation: stars {}, forks {}, watchers {}, open issues {}",
+                k.k_stars, k.k_forks, k.k_watchers, k.k_issues
+            );
+            println!("Scored {} packages, saved to {}", summary.packages, summary.path.display());
         }
         Command::Dataset(dataset) => run_dataset(dataset)?,
     }
