@@ -1,7 +1,8 @@
 # Releasing osslag
 
-The version lives in `Cargo.toml`. Publishing a GitHub release builds `osslag`
-for Linux and macOS (x86_64 and arm64) and attaches a tarball for each one.
+The version lives in `Cargo.toml`. Each release goes to crates.io with
+`cargo publish`. Publishing a GitHub release builds `osslag` for Linux and
+macOS (x86_64 and arm64) and attaches a tarball for each one.
 The release workflow fails if the tag does not match the version in
 `Cargo.toml`.
 
@@ -24,7 +25,13 @@ git push origin master
 
 ## 2. Tag and publish
 
+crates.io never lets you replace a version once it is up, so run the dry run
+first. A broken version can only be yanked, which stops new installs from
+picking it.
+
 ```bash
+cargo publish --dry-run --locked
+cargo publish --locked
 git tag -a v2.1.0 -m "Release v2.1.0"
 git push origin v2.1.0
 gh release create v2.1.0 --generate-notes

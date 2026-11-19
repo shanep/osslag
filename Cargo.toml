@@ -1,11 +1,15 @@
 [package]
 name = "osslag"
-version = "2.0.0-dev"
+version = "2.0.0"
 edition = "2024"
 rust-version = "1.85"
 description = "Technical Lag tools for Open Source Software Projects"
 license = "MIT"
 repository = "https://github.com/shanep/osslag"
+homepage = "https://github.com/shanep/osslag"
+readme = "README.md"
+categories = ["command-line-utilities", "science", "development-tools"]
+exclude = [".github/", ".githooks/", ".vscode/", "Makefile", "rustfmt.toml", "env.template", "docs/"]
 keywords = ["oss", "technical-lag", "software-maintenance"]
 
 [dependencies]

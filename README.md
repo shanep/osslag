@@ -10,16 +10,17 @@ Estimation to Address Software Abandonment" (Panter and Eisty).
 
 ## Install
 
-Download the tarball for your platform from the
+Install it from [crates.io](https://crates.io/crates/osslag) with a Rust
+toolchain (1.85 or newer):
+
+```bash
+cargo install osslag --locked
+```
+
+Or download the tarball for your platform from the
 [releases page](https://github.com/shanep/osslag/releases) and put `osslag`
 somewhere on your `PATH`. Builds are there for Linux and macOS, on x86_64 and
 arm64.
-
-Or build it from source with a Rust toolchain (1.85 or newer):
-
-```bash
-cargo install --git https://github.com/shanep/osslag --locked
-```
 
 ## Setup
 
