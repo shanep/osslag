@@ -17,6 +17,7 @@ dotenvy = "0.15.7"
 git2 = { version = "0.21.0", default-features = false, features = ["https", "vendored-libgit2"] }
 indicatif = "0.18.6"
 parquet = { version = "60", default-features = false, features = ["arrow", "snap", "zstd"] }
+ratatui = "0.29.0"
 rayon = "1"
 regex = "1"
 reqwest = { version = "0.13.5", default-features = false, features = ["blocking", "rustls", "json"] }
@@ -31,6 +32,7 @@ xz2 = "0.1.7"
 arrow = { version = "60", default-features = false, features = ["chrono-tz"] }
 approx = "0.5"
 tempfile = "3"
+insta = "1.49.0"
 
 [profile.release]
 lto = "thin"

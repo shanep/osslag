@@ -83,27 +83,41 @@ struct Workers {
     limit: Option<usize>,
 }
 
+#[derive(Args, Clone)]
+struct RunArgs {
+    /// The Linux distribution to process.
+    #[arg(long, default_value = "debian")]
+    distro: String,
+    /// One or more releases. Repeat the flag or separate them with commas.
+    #[arg(long = "release", required = true)]
+    releases: Vec<String>,
+    #[command(flatten)]
+    common: Common,
+    #[command(flatten)]
+    workers: Workers,
+    /// Only load commits on or after this date (YYYY-MM-DD, UTC). Default: full history.
+    /// For MALTA scoring, use a date no later than the baseline window start
+    /// (eval_end minus 42 months with the default windows).
+    #[arg(long, value_parser = parse_since_date)]
+    commits_since: Option<i64>,
+}
+
+impl RunArgs {
+    fn config(&self) -> Config {
+        let mut config =
+            config(&self.distro, &self.releases, &self.common.cache, self.common.force, Some(&self.workers));
+        config.commits_since = self.commits_since;
+        config
+    }
+}
+
 #[derive(Subcommand)]
 enum Dataset {
     /// Run the full pipeline: fetch packages, filter repos, extract versions, merge releases,
     /// clone repos, load commits, pull GitHub data. Uses cached data when available.
-    Run {
-        /// The Linux distribution to process.
-        #[arg(long, default_value = "debian")]
-        distro: String,
-        /// One or more releases. Repeat the flag or separate them with commas.
-        #[arg(long = "release", required = true)]
-        releases: Vec<String>,
-        #[command(flatten)]
-        common: Common,
-        #[command(flatten)]
-        workers: Workers,
-        /// Only load commits on or after this date (YYYY-MM-DD, UTC). Default: full history.
-        /// For MALTA scoring, use a date no later than the baseline window start
-        /// (eval_end minus 42 months with the default windows).
-        #[arg(long, value_parser = parse_since_date)]
-        commits_since: Option<i64>,
-    },
+    Run(RunArgs),
+    /// Run the pipeline in a full-screen view: r runs every step, 1 to 8 run one, s stops, q quits.
+    Tui(RunArgs),
     /// Step 1: fetch and cache distribution package data for the given releases.
     FetchPackages {
         distro: String,
@@ -268,11 +282,11 @@ fn run(cli: Cli) -> Result<()> {
 
 fn run_dataset(dataset: Dataset) -> Result<()> {
     match dataset {
-        Dataset::Run { distro, releases, common, workers, commits_since } => {
-            let mut config = config(&distro, &releases, &common.cache, common.force, Some(&workers));
-            config.commits_since = commits_since;
+        Dataset::Run(args) => {
+            let config = args.config();
             println!(
-                "Dataset pipeline: distro {distro}, releases {}, cache {}{}",
+                "Dataset pipeline: distro {}, releases {}, cache {}{}",
+                config.distro,
                 config.releases.join(", "),
                 config.cache_dir.display(),
                 if config.force { ", --force" } else { "" }
@@ -280,6 +294,7 @@ fn run_dataset(dataset: Dataset) -> Result<()> {
             run_steps(config, &Step::ALL).context("Pipeline failed")?;
             println!("Pipeline completed successfully!");
         }
+        Dataset::Tui(args) => crate::tui::run(args.config(), Arc::new(GitHub::from_env()?))?,
         Dataset::FetchPackages { distro, releases, cache } => {
             run_steps(config(&distro, &releases, &cache, false, None), &[Step::FetchPackages])?;
         }

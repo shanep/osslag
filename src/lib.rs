@@ -8,4 +8,5 @@ pub mod io;
 pub mod logging;
 pub mod metrics;
 pub mod progress;
+pub mod tui;
 pub mod vcs;
