@@ -70,9 +70,9 @@ start of the MALTA baseline window (42 months before `--eval-end`).
 
 ## Changes from the Python version
 
-Versions 1.x were written in Python. Version 2 is a Rust rewrite that reads
-and writes the same parquet files, so old caches still work, and gives the same
-MALTA scores. A few things changed on purpose:
+Versions 1.x on PyPI were written in Python. The Rust rewrite starts over at
+0.1.0 on crates.io. It reads and writes the same parquet files, so old caches
+still work, and gives the same MALTA scores. A few things changed on purpose:
 
 1. A failed task leaves one marker, `{checkpoint_dir}/{source}.failed`, and
    every step skips it next time. Python wrote a marker it never read, so
