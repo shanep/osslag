@@ -106,7 +106,9 @@ fn compare(args: &Args) -> Result<usize> {
         }
     }
     let mut columns: Vec<String> = args.keys.clone();
-    columns.extend(lt.keys().filter(|c| rt.contains_key(*c) && !args.ignore.contains(*c) && !args.keys.contains(c)).cloned());
+    columns.extend(
+        lt.keys().filter(|c| rt.contains_key(*c) && !args.ignore.contains(*c) && !args.keys.contains(c)).cloned(),
+    );
     let (mut lrows, mut rrows) = (rows(&left, &columns)?, rows(&right, &columns)?);
     lrows.sort();
     rrows.sort();
